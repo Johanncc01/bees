@@ -55,4 +55,26 @@ void Collider::clamp(){
     center = newcen;
 }
 
+Vec2d Collider::directionTo(Vec2d to) const{
+    Vec2d from(center);
+    Vec2d max(to);
+    auto worldSize = getApp().getEnvSize();
+    auto width  = worldSize.x(); // largeur
+    auto height = worldSize.y(); // hauteur
+
+    Vec2d h(0,height);
+    Vec2d w(width, 0);
+
+    for (int i(-1); i<2; ++i){
+       for(int j(-1); j<2; ++j){
+           double dist_max(distance(from, max));
+           Vec2d comp(to+i*w+j*h);
+           if (distance(from, comp) < dist_max){
+               max = comp;
+           }
+       }
+    }
+    return max;
+}
+
 
