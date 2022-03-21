@@ -13,12 +13,15 @@ class Collider
 {
 public:
     Collider(Vec2d cen, double rad);
-
-
+    Collider(Collider const& other);
+    const Vec2d& getPosition() const;
+    double getRadius() const;
+    Collider& operator=(Collider source);
 
 
 private:
     Vec2d center;
     double radius;
+    void clamp();
 };
 
