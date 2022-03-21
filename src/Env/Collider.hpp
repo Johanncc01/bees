@@ -4,7 +4,6 @@
  */
 
 #pragma once
-#include <Vec2d>
 #include <Utility/Vec2d.hpp>
 #include <ostream>
 
@@ -12,18 +11,14 @@
 
 class Collider
 {
-public :
-    Collider(const Vec2d& cen, const double& rad)
-    : center(cen) , radius(rad)
-    {
+public:
+    Collider(Vec2d cen, double rad);
 
 
 
-    }
 
-private :
+private:
     Vec2d center;
     double radius;
-
 };
 
