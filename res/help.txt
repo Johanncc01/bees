@@ -1,0 +1,24 @@
+--------- Help ----------------
+CC : current control (in red)
+MW : mouse wheel
+RM: mouse right button
+CP : cursor position
+-------------------------------
+Space	: toggle pause
+D	: toggle debug mode
+G	: generate new simulation
+         (world built from json)
+MW	: Zoom
+Esc	: close window
+C	: reload configuration
+Arrows	: move simulation view
+Tab	: switch to next control
+PageUp	  : increase CC
+PageDown  : decrease CC
+R	  : reset world from file
+O	  : save world to file
+W	  : toggle humidity display
+F	  : add flower at CP
+H	  : add hive at CP
+RM	  : track/untrack bee
+
