@@ -20,6 +20,10 @@ public:
     Collider& operator=(Collider source);
 
     Vec2d directionTo(Vec2d to) const;
+    Vec2d directionTo(Collider const& col) const;
+    double distanceTo(Vec2d to) const;
+    double distanceTo(Collider const& col) const;
+    void move(Vec2d dx);
 
 
 private:

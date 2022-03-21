@@ -77,4 +77,21 @@ Vec2d Collider::directionTo(Vec2d to) const{
     return max;
 }
 
+Vec2d Collider::directionTo(Collider const& col) const{
+    Vec2d to(col.getPosition());
+    return directionTo(to);
+}
 
+double Collider::distanceTo(Vec2d to) const{
+    return directionTo(to).length();
+}
+
+double Collider::distanceTo(Collider const& col) const{
+    Vec2d to(col.getPosition());
+    return distanceTo(to);
+}
+
+void Collider::move(Vec2d dx){
+    center += dx;
+    clamp();
+}
