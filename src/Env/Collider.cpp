@@ -10,13 +10,11 @@
 
 /* TO BE COMPLETED */
 
-Collider::Collider(Vec2d cen, double rad)
+Collider::Collider(Vec2d const& cen, double rad)
     : center(cen)
     , radius(rad)
 
-{
-    clamp();
-}
+{ clamp(); }
 
 Collider::Collider(Collider const& other)
     : center(other.center)
@@ -31,8 +29,9 @@ double Collider::getRadius() const{
     return radius;
 }
 
-Collider& Collider::operator=(Collider source){                 // Regarder demain en prog
-    std::swap(*this, source);
+Collider& Collider::operator=(Collider const& source){
+    center = source.center;
+    radius = source.radius;
     return *this;
 }
 
@@ -55,9 +54,9 @@ void Collider::clamp(){
     center = newcen;
 }
 
-Vec2d Collider::directionTo(Vec2d to) const{
+Vec2d Collider::directionTo(Vec2d const& to) const{
     Vec2d from(center);
-    Vec2d max(to);
+    Vec2d min(to);
     auto worldSize = getApp().getEnvSize();
     auto width  = worldSize.x(); // largeur
     auto height = worldSize.y(); // hauteur
@@ -67,14 +66,14 @@ Vec2d Collider::directionTo(Vec2d to) const{
 
     for (int i(-1); i<2; ++i){
        for(int j(-1); j<2; ++j){
-           double dist_max(distance(from, max));
+           double dist_min(distance(from, min));
            Vec2d comp(to+i*w+j*h);
-           if (distance(from, comp) < dist_max){
-               max = comp;
+           if (distance(from, comp) < dist_min){
+               min = comp;
            }
        }
     }
-    return max;
+    return min-from;
 }
 
 Vec2d Collider::directionTo(Collider const& col) const{
@@ -82,7 +81,7 @@ Vec2d Collider::directionTo(Collider const& col) const{
     return directionTo(to);
 }
 
-double Collider::distanceTo(Vec2d to) const{
+double Collider::distanceTo(Vec2d const& to) const{
     return directionTo(to).length();
 }
 
@@ -91,12 +90,12 @@ double Collider::distanceTo(Collider const& col) const{
     return distanceTo(to);
 }
 
-void Collider::move(Vec2d dx){
+void Collider::move(Vec2d const& dx){
     center += dx;
     clamp();
 }
 
-Collider& Collider::operator+=(Vec2d dx){
+Collider& Collider::operator+=(Vec2d const& dx){
     move(dx);
     return *this;
 }
@@ -109,7 +108,7 @@ bool Collider::isColliding(Collider const& other) const{
     return ((distanceTo(other)) <= (radius + other.radius));
 }
 
-bool Collider::isPointInside(Vec2d point) const{
+bool Collider::isPointInside(Vec2d const& point) const{
     return (distanceTo(point) <= radius);
 }
 
@@ -117,7 +116,7 @@ bool Collider::operator>(Collider const& source) const{
     return isColliderInside(source);
 }
 
-bool Collider::operator>(Vec2d source) const{
+bool Collider::operator>(Vec2d const& source) const{
     return isPointInside(source);
 }
 
