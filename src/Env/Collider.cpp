@@ -73,55 +73,55 @@ Vec2d Collider::directionTo(Vec2d const& to) const{
     return min-from;                                    // Création du vecteur "directionTo" à partir de "from" et du meilleur "to"
 }
 
-Vec2d Collider::directionTo(Collider const& col) const{
+Vec2d Collider::directionTo(Collider const& col) const{ // Même travail que version précédente mais avec un "Collider" en argument
     Vec2d to(col.getPosition());
     return directionTo(to);
 }
 
-double Collider::distanceTo(Vec2d const& to) const{
+double Collider::distanceTo(Vec2d const& to) const{     // Retourne la longueur du vecteur torique calculé par "directionTo"
     return directionTo(to).length();
 }
 
-double Collider::distanceTo(Collider const& col) const{
+double Collider::distanceTo(Collider const& col) const{ // Surcharge de la méthode précédente mais avec un "Vec2d" en argument"
     Vec2d to(col.getPosition());
     return distanceTo(to);
 }
 
-void Collider::move(Vec2d const& dx){
+void Collider::move(Vec2d const& dx){                   // ajoute à la position de l'instance courante un "Vec2d"
     center += dx;
     clamp();
 }
 
-Collider& Collider::operator+=(Vec2d const& dx){
+Collider& Collider::operator+=(Vec2d const& dx){        // Surcharge l'opérateur '+=' lui donnant la même fonction que "move"
     move(dx);
     return *this;
 }
 
-bool Collider::isColliderInside(Collider const& other) const{
+bool Collider::isColliderInside(Collider const& other) const{   // Cherche si un "Collider" est à l'intérieur d'un autre "Collider"
     return ((radius >= other.radius) and (distanceTo(other) <= radius - (other.radius)));
 }
 
-bool Collider::isColliding(Collider const& other) const{
+bool Collider::isColliding(Collider const& other) const{        // Retourne si un "Collider" est en contact avec un autre "Collider"
     return ((distanceTo(other)) <= (radius + other.radius));
 }
 
-bool Collider::isPointInside(Vec2d const& point) const{
+bool Collider::isPointInside(Vec2d const& point) const{         // Retourne si un point est dans un "Collider"
     return (distanceTo(point) <= radius);
 }
 
-bool Collider::operator>(Collider const& source) const{
+bool Collider::operator>(Collider const& source) const{         // Surcharge l'opérateur '>' pour la fonction "isColliderInside" si l'argument est un "Collider"
     return isColliderInside(source);
 }
 
-bool Collider::operator>(Vec2d const& source) const{
+bool Collider::operator>(Vec2d const& source) const{            // Surcharge encore une fois l'opérateur '>' pour la fonction "isPointInside" si l'argument est un "Vec2d"
     return isPointInside(source);
 }
 
-bool Collider::operator|(Collider const& source) const{
+bool Collider::operator|(Collider const& source) const{         // Surcharge l'opérateur '|' pour la fonction "isColliding" si l'argument est un "Collider"
     return isColliding(source);
 }
 
-std::ostream& operator<<(std::ostream& out, Collider const& source){
+std::ostream& operator<<(std::ostream& out, Collider const& source){    // Surcharge l'opérateur '<<' pour formater la sortie d'une instance de la classe "Collider"
     Vec2d center(source.getPosition());
     out << "Collider: position = (" << center.x() << "," << center.y() << ") radius = " << source.getRadius() << std::endl;
     return out;
