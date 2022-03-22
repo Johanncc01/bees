@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Bee_Colony_Simulator_SSV_2022_STEP1)
+project(Bee_Colony_Simulator_SSV_2022_STEP2)
 
 #set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_STANDARD 14)
@@ -71,19 +71,24 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
       message(STATUS "Found SFML ${SFML_VERSION_MAJOR}.${SFML_VERSION_MINOR}.${SFML_VERSION_PATCH}")
       
       #main application:
-     ## not yet available
+      # not yet available
 	
       ##Units tests:
       ## Collider
         add_executable (colliderTest  ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
-        target_link_libraries(colliderTest sfml-graphics sfml-window sfml-system)
+	target_link_libraries(colliderTest sfml-graphics sfml-window sfml-system)
 	#JSON parser
-#       add_executable (jsonTest  ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
-#       target_link_libraries(jsonTest sfml-graphics sfml-window sfml-system)
+       #add_executable (jsonTest  ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
+       #target_link_libraries(jsonTest sfml-graphics sfml-window sfml-system)
 
        ##Vec2d
-      add_executable (vec2dTest  ${TEST_DIR}/UnitTests/Vec2dTest.cpp ${SOURCES} ${CACHE_SOURCES})
-        target_link_libraries(vec2dTest sfml-graphics sfml-window sfml-system)
+      #add_executable (vec2dTest  ${TEST_DIR}/UnitTests/Vec2dTest.cpp ${SOURCES} ${CACHE_SOURCES})
+       # target_link_libraries(vec2dTest sfml-graphics sfml-window sfml-system)
+
+	# #Graphical tests:
+	## WorldTest
+        #add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+       #target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
 
        
     else()
@@ -98,21 +103,25 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
             include_directories(${SFML_INCLUDE_DIR})
 	    
 	    #main application:
-	    # not yet available
-	    
+            # not yet available
+
 	    ##Units tests:
 	    ## Collider
-             add_executable (colliderTest ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
+	     add_executable (colliderTest ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
              target_link_libraries(colliderTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 	     ## JSON parser
-#	     add_executable (jsonTest ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
-#             target_link_libraries(jsonTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+	     #add_executable (jsonTest ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
+             #target_link_libraries(jsonTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	     ## Vec2d
-	    add_executable (vec2dTest ${TEST_DIR}/UnitTests/Vec2dTest.cpp ${SOURCES} ${CACHE_SOURCES})
-              target_link_libraries(vec2dTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+	    #add_executable (vec2dTest ${TEST_DIR}/UnitTests/Vec2dTest.cpp ${SOURCES} ${CACHE_SOURCES})
+             # target_link_libraries(vec2dTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 	    
+	      ##Graphical tests:
 
+	      ## WorldTest
+	      #add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+             #target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
         else()
             message(STATUS "SFML NOT FOUND ! ")
         endif() ## SFML 2

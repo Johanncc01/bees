@@ -1,0 +1,155 @@
+{
+    "debug" : false,
+    "simulation" : {
+        "time" : {
+            "factor" : 5,
+            "max dt" : 0.05,
+	     "fixed step" : 0.01
+        },
+        "bees" : {
+            "scout" : {
+                "visibility range" : 30,
+                "moving behaviour" : {
+                    "random" : {
+                        "rotation probability" : 0.02,
+                        "rotation angle max" : 0.785398163
+                    },
+                    "target" : {
+                        "avoidance delay" : 0.4
+                    }
+                },
+                "size" : 10,
+                "energy" : {
+                    "initial" : 100,
+                    "to leave hive" : 90,
+                    "to seek flowers" : 40,
+                    "consumption rates" : {
+                       "idle" :  0.1,
+                       "moving": 0.5,
+                       "eating": 20
+                    }
+                },
+                "sharing" : {
+                    "max" : 2
+                },
+                "speed" : 20,
+                "texture" : "scout3.png"
+            },
+            "worker" : {
+                "visibility range" : 30,
+                "moving behaviour" : {
+                    "random" : {
+                        "comment" : "not relevant"
+                    },
+                    "target" : {
+                        "avoidance delay" : 0.2
+                    }
+                },
+                "size" : 15,
+                "energy" : {
+                    "initial" : 100,
+                    "to leave hive" : 70,
+                    "consumption rates" : {
+                       "idle" :  0.15,
+                       "moving": 0.6,
+                       "eating": 20
+                    }
+                },
+                "transfer rate" : 15,
+                "harvest rate" : 15,
+                "max pollen capacity" : 100,
+                "speed" : 10,
+                "texture" : "worker1.png"
+            }
+        },
+        "flower" : {
+            "textures" : [ "flowerA.png", "flowerB.png", "flowerC.png" ],
+            "growth" : {
+                "threshold" : 200,
+                "split" : 300
+            }
+        },
+        "flower generator" : {
+            "active" : true,
+            "delay" : 5.0
+        },
+        "hive" : {
+            "initial" : {
+                "nectar" : 1000
+            },
+            "reproduction" : {
+                "nectar threshold" : 600,
+                "scout probability" : 0.5,
+                "max bees" : 25
+            },
+            "texture" : "hive.png"
+        },
+        "world" : {
+            "default size" : 1000,
+            "default cells" : 400,
+            "seeds" : {
+                "grass" : 50,
+                "water" : 5,
+                "water teleport probability" : 0.0001
+            },
+            "generation" : {
+                "steps" : 20000,
+                "smoothness" : {
+                    "level" : 10,
+                    "grass neighbourhood ratio" : 0.5,
+                    "water neighbourhood ratio" : 0.75
+                },
+                "humidity" : {
+                    "decay rate" : 20,
+                    "initial level" : 25,
+                    "threshold" : 0.5
+                }
+            },
+            "textures" : {
+                "grass" : "grass2.jpg",
+                "rock" : "sand.jpg",
+                "water" : "water.jpg"
+            },
+            "show humidity" : false,
+            "file" : "world2.map"
+        },
+        "env" : {
+            "initial" : {
+                "flower" : {
+                    "count" : 0,
+                    "max failures" : 1000,
+                    "size" : {
+                        "min" : 5,
+                        "max" : 15,
+                        "manual" : 10
+                    },
+                    "nectar" : {
+                        "min" : 50,
+                        "max" : 200
+                    }
+                },
+                "hive" : {
+                    "count" : 0,
+                    "max failures" : 1000,
+                    "size" : {
+                        "min" : 20,
+                        "max" : 40,
+                        "manual" : 30
+                    },
+                    "hiveable factor" : 3
+                }
+            },
+            "max flowers" : 300
+        }
+    },
+    "stats" : {
+        "refresh rate" : 1
+    },
+    "window" : {
+        "antialiasing level" : 4,
+        "title" : "INFOSV Simulation",
+        "simulation" : { "size" : 500 },
+        "stats" : { "height" : 100 },
+	"control" : { "width" : 200 }
+    }
+}

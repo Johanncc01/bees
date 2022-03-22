@@ -1,7 +1,7 @@
 /*
- * POOSV EPFL 2021-22
+ * POOSV 2021-22
  * Marco Antognini & Jamila Sam
- * STEP : 1
+ * STEP : 2
  */
 
 #ifndef INFOSV_APPLICATION_HPP
@@ -40,7 +40,7 @@ public:
      * @param argc argument count
      * @param argv launch arguments
      */
-    Application(int argc, char const** argv);
+	Application(int argc, char const** argv);
 
     /// Forbid copy
     Application(Application const&) = delete;
@@ -59,7 +59,12 @@ public:
      * @note Don't forget to call init() before run() !
      */
     void run();
-
+  
+  /*!
+     * @return the title of the graphical window
+     *
+     */
+  std::string virtual getWindowTitle() const;
 
     /*!
      * @brief Get access to the application's configuration
@@ -125,25 +130,25 @@ public:
      */
     Vec2d getCursorPositionInView() const;
 
-    // TODO: to adapt if new controls are added
-    enum Control { STATS, NB_CONTROLS=1	};
-
+	// TODO: to adapt if new controls are added
+	enum Control { STATS, NB_CONTROLS=1	};
+	
 protected:
-    /**
+	/**
      *  @brief controls the display of statitics
      */
-    void setStats(bool);
-    void setConfig(const j::Value&);
+  void setStats(bool);
+  void setConfig(const j::Value&);
 
-    void setResetting(bool reset);
+  void setResetting(bool reset);
     /**
      *  @brief initialize the text to be displayed in help
-     *  menu
+	 *  menu
      */
-    void initHelpBox();
-    virtual std::string getHelpTextFile() const;
-
-
+	void initHelpBox();
+	virtual std::string getHelpTextFile() const;
+	
+ 
     /*!
      *  @brief Called once before starting the main loop
      *
@@ -185,11 +190,11 @@ protected:
      * @param target a render target
      */
     virtual void onDraw(sf::RenderTarget& target);
-    /*!
+/*!
      * @brief Subclass can override this method to change the policy for
-     * background handling
-     */
-    void chooseBackground();
+	 * background handling
+	 */
+	void chooseBackground();
 
 
 protected:
@@ -218,10 +223,10 @@ protected:
      *  @param statsBackground      Background of the stats frame
      */
     void render(sf::Drawable const& simulationBackground,
-                sf::Drawable const& statsBackground,
-                sf::Drawable const& controlBackground,
-                sf::Drawable const& helpBackground
-               );
+				sf::Drawable const& statsBackground,
+				sf::Drawable const& controlBackground,
+				sf::Drawable const& helpBackground
+				);
 
 
     /*!
@@ -253,51 +258,55 @@ protected:
      */
     void updateSimulationView();
 
-    /*!
+   /*!
      * @brief toggle debug mode
      */
-    void switchDebug();
+	void switchDebug();
 
-
+  /*!
+   * @brief enables bypassing the Env attribute
+     */
+  void setIgnoreEnv(bool ignore);
+  
     void drawOnHelp(sf::RenderWindow& window) const;
 
     void drawControls(sf::RenderWindow& target);
+	
+	void drawOneControl(sf::RenderWindow& target
+						, Control control
+						, size_t xcoord
+						, size_t ycoord
+						, size_t font_size
+						);
+	
+	void drawTitle(sf::RenderWindow& target, sf::Color color
+				  	, size_t xcoord
+				  , size_t ycoord
+				  , size_t font_size
+				  );
 
-    void drawOneControl(sf::RenderWindow& target
-                        , Control control
-                        , size_t xcoord
-                        , size_t ycoord
-                        , size_t font_size
-                       );
-
-    void drawTitle(sf::RenderWindow& target, sf::Color color
-                   , size_t xcoord
-                   , size_t ycoord
-                   , size_t font_size
-                  );
-
-
+	virtual void resetStats();
 private:
 
     // The order is important since some fields need other to be initialised
     std::string const mAppDirectory; ///< Path to the executable's directory
     std::string const mCfgFile;      ///< Relative path to the CFG
-    //   j::Value          mJSONRead;       ///< Application configuration
+  //   j::Value          mJSONRead;       ///< Application configuration
     Config*          mConfig;       ///< Application configuration
-
+	
     sf::View mStatsView;             ///< View for the stats area
-    sf::View mControlView;             ///< View for the control area
+	sf::View mControlView;             ///< View for the control area
     int      mCurrentGraphId;        ///< Current graph ID
 
 
-    sf::View mHelpView;         ///< View for commands help
+  sf::View mHelpView;         ///< View for commands help
 
 
-    sf::Font mFont;                  ///< A font
+  sf::Font mFont;                  ///< A font
 
-    sf::RenderWindow mRenderWindow;  ///< SFML window / render target
-    sf::View mSimulationView;        ///< View for simulation area
-    sf::View mEnvView;        ///< View for simulation area
+  sf::RenderWindow mRenderWindow;  ///< SFML window / render target
+  sf::View mSimulationView;        ///< View for simulation area
+  sf::View mEnvView;        ///< View for simulation area
 
     using TexturePool = std::map<std::string, sf::Texture*>;
     TexturePool mTextures;           ///< Pool of textures
@@ -306,23 +315,23 @@ private:
 
     bool         mPaused;            ///< Tells if the application is in pause or not
     bool         mIsResetting;       ///< Is true for one main loop iteration when resetting.
-    ///  This is useful to pause the clock while generating
-    ///  a new world. Without this, a huge dt would result from
-    ///  rebuilding the world.
+                                     ///  This is useful to pause the clock while generating
+                                     ///  a new world. Without this, a huge dt would result from
+                                     ///  rebuilding the world.
     bool         mIsDragging;        ///< Tells whether or not the user is dragging the view
     sf::Vector2i mLastCursorPosition;///< For handling dragging logic
-    sf::RectangleShape mSimulationBackground;
-    sf::RectangleShape mEnvBackground;
+	sf::RectangleShape mSimulationBackground;
+	sf::RectangleShape mEnvBackground;
 
-    Control mCurrentControl;
+	Control mCurrentControl;
 
-    // Views
-    sf::View mCurrentView;
-    sf::Text helpText;
+	// Views
+	sf::View mCurrentView;
+	sf::Text helpText;
     sf::RectangleShape helpBox;
 
-    // display of stats
-    bool isStatsOn;
+	// display of stats
+	bool isStatsOn;
 };
 
 /*!
@@ -390,15 +399,15 @@ bool isDebugOn();
  *
  * @param APPLICATION_CLASS a class name (it must be a subclass of Application)
  */
-#define IMPLEMENT_MAIN(APPLICATION_CLASS)		\
-  int main(int argc, char const** argv)			\
-    try {						\
-      APPLICATION_CLASS app(argc, argv);		\
-      app.run();					\
-      return 0;						\
-    } catch (std::exception const& e) {			\
-      std::cerr << "FATAL ERROR: " << e.what() << "\n";	\
-      return 1;						\
+#define IMPLEMENT_MAIN(APPLICATION_CLASS)                   \
+    int main(int argc, char const** argv)                   \
+    try {                                                   \
+        APPLICATION_CLASS app(argc, argv);                  \
+        app.run();                                          \
+        return 0;                                           \
+    } catch (std::exception const& e) {                     \
+        std::cerr << "FATAL ERROR: " << e.what() << "\n";   \
+        return 1;                                           \
     }
 
 #define INIT_DEFAULT_APP(argc, argv) Application app((argc), (argv));
