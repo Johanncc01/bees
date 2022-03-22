@@ -10,16 +10,13 @@
 
 /* TO BE COMPLETED */
 
-Collider::Collider(Vec2d const& cen, double rad)
-    : center(cen)
-    , radius(rad)
-
+Collider::Collider(Vec2d const& cen, double rad)        // Constructeur de base
+    : center(cen), radius(rad)
 { clamp(); }
 
-Collider::Collider(Collider const& other)
-    : center(other.center)
-    , radius(other.radius)
-{}
+Collider::Collider(Collider const& other)               // Constructeur de copie
+    : center(other.center), radius(other.radius)
+{}                                                      // Aucun appel à clamp() nécessaire car déjà fait dans le Collider copié
 
 const Vec2d& Collider::getPosition() const{
     return center;
@@ -41,11 +38,11 @@ void Collider::clamp(){
     auto height = worldSize.y(); // hauteur
 
     double reste_x(fmod(center.x(), width));
+    double reste_y(fmod(center.y(), height));
+
     if (reste_x < 0){
         reste_x += width;
     }
-
-    double reste_y(fmod(center.y(), height));
     if (reste_y < 0){
         reste_y += height;
     }
