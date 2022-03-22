@@ -95,3 +95,43 @@ void Collider::move(Vec2d dx){
     center += dx;
     clamp();
 }
+
+Collider& Collider::operator+=(Vec2d dx){
+    move(dx);
+    return *this;
+}
+
+bool Collider::isColliderInside(Collider const& other) const{
+    return ((radius >= other.radius) and (distanceTo(other) <= radius - (other.radius)));
+}
+
+bool Collider::isColliding(Collider const& other) const{
+    return ((distanceTo(other)) <= (radius + other.radius));
+}
+
+bool Collider::isPointInside(Vec2d point) const{
+    return (distanceTo(point) <= radius);
+}
+
+bool Collider::operator>(Collider const& source) const{
+    return isColliderInside(source);
+}
+
+bool Collider::operator>(Vec2d source) const{
+    return isPointInside(source);
+}
+
+bool Collider::operator|(Collider const& source) const{
+    return isColliding(source);
+}
+
+std::ostream& operator<<(std::ostream& out, Collider const& source){
+    Vec2d center(source.getPosition());
+    out << "Collider: position = (" << center.x() << "," << center.y() << ") radius = " << source.getRadius() << std::endl;
+    return out;
+}
+
+
+
+
+

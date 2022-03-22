@@ -13,10 +13,13 @@ En utilisant deux boucles imbriquées avec des indices de -1 à 1, on peut parco
 Il suffit de comparer la distance entre le nouveau vecteur et le vecteur max à chaque tour de boucle.
 **************************************************************
 ## Q1.3
-Il faut passer les Collider en référence constante, car c'est des classes.
+Il faut passer les Collider en référence constante, car c'est des classes complexes.
 Pas besoin en revanche pour les Vec2d.
 **************************************************************
 ## Q1.4
 Les méthodes affichant la distance et la direction n'ont pas besoin de modifier les attributs privés.
 Pour la fonction move, elle déplace le Collider, et doit donc accéder à "center". Elle ne doit pas être déclarée comme const.
+**************************************************************
+## Q1.5
+Il suffit de return les résultats des fonctions rédigées auparavant.
 **************************************************************
