@@ -18,59 +18,59 @@ Collider::Collider(Collider const& other)               // Constructeur de copie
     : center(other.center), radius(other.radius)
 {}                                                      // Aucun appel à clamp() nécessaire car déjà fait dans le Collider copié
 
-const Vec2d& Collider::getPosition() const{
+const Vec2d& Collider::getPosition() const{             // Getter de la position
     return center;
 }
 
-double Collider::getRadius() const{
+double Collider::getRadius() const{                     // Getter du rayon
     return radius;
 }
 
-Collider& Collider::operator=(Collider const& source){
+Collider& Collider::operator=(Collider const& source){  // Surcharge de l'opérateur de copie
     center = source.center;
     radius = source.radius;
-    return *this;
+    return *this;                                       // Retourne une référence pour que l'opération ait une valeur
 }
 
 void Collider::clamp(){
-    auto worldSize = getApp().getEnvSize();
-    auto width  = worldSize.x(); // largeur
-    auto height = worldSize.y(); // hauteur
+    auto worldSize = getApp().getEnvSize();             // Récupération des dimensions prédéfinies
+    auto width  = worldSize.x();
+    auto height = worldSize.y();
 
-    double reste_x(fmod(center.x(), width));
+    double reste_x(fmod(center.x(), width));            // Reste de la division afin de contrôler si toujours dans le monde torique
     double reste_y(fmod(center.y(), height));
 
     if (reste_x < 0){
-        reste_x += width;
+        reste_x += width;                               // Recalage du x dans les limites si besoin
     }
     if (reste_y < 0){
-        reste_y += height;
+        reste_y += height;                              // Recalage du y dans les limites si besoin
     }
 
     Vec2d newcen(reste_x, reste_y);
-    center = newcen;
+    center = newcen;                                    // Affectation du centre redimensionné à l'objet
 }
 
 Vec2d Collider::directionTo(Vec2d const& to) const{
     Vec2d from(center);
     Vec2d min(to);
-    auto worldSize = getApp().getEnvSize();
-    auto width  = worldSize.x(); // largeur
-    auto height = worldSize.y(); // hauteur
+    auto worldSize = getApp().getEnvSize();             // Récupération des dimensions prédéfinies
+    auto width  = worldSize.x();
+    auto height = worldSize.y();
 
-    Vec2d h(0,height);
-    Vec2d w(width, 0);
+    Vec2d h(0,height);                                  // Création de vecteurs de base à ajouter/soustraire
+    Vec2d w(width, 0);                                  // pour trouver le meilleur vecteur "to"
 
-    for (int i(-1); i<2; ++i){
-       for(int j(-1); j<2; ++j){
+    for (int i(-1); i<2; ++i){                          // La boucle parcourt toutes les possibilités
+       for(int j(-1); j<2; ++j){                        // et retient celle avec la plus faible distance
            double dist_min(distance(from, min));
-           Vec2d comp(to+i*w+j*h);
+           Vec2d comp(to+i*w+j*h);                      // Toutes les combinaisons (-1, 0, +1) de h et w sont calculées ici
            if (distance(from, comp) < dist_min){
                min = comp;
            }
        }
     }
-    return min-from;
+    return min-from;                                    // Création du vecteur "directionTo" à partir de "from" et du meilleur "to"
 }
 
 Vec2d Collider::directionTo(Collider const& col) const{
