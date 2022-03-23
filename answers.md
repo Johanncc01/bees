@@ -1,7 +1,6 @@
-#Projet programmation orientée objet (SSV)
+# Projet programmation orientée objet (SSV)
 
-##REPONSES du groupe *No groupe* (*Johann Clausen* & *Victor Galhaud*)
-
+## REPONSES du groupe *86* (*Johann Clausen* & *Victor Galhaud*)
 
 **************************************************************
 ## /Q1.1\
