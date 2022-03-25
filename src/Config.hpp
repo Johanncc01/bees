@@ -76,6 +76,7 @@ public:
   const int world_size;
   const int world_nb_grass_seeds;
   const int world_nb_water_seeds;
+  //const auto world_textures;
   
   //const bool show_world_humidity;
   const double world_humidity_init_level;

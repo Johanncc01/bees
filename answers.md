@@ -2,6 +2,9 @@
 
 ## REPONSES du groupe *86* (*Johann Clausen* & *Victor Galhaud*)
 
+
+## Partie 1
+
 **************************************************************
 ## /Q1.1\
 Pour éviter la duplication de code, il faut mettre le clamping dans une méthode de la classe. 
@@ -34,3 +37,17 @@ Notons qu'il est nécesssaire de passer le "ostream" par référence (non consta
 Les seules méthodes qui peuvent modifier l'instance de "Collider" devraient être l'opérateur "=" et "+=".
 Toutes les autres méthodes peuvent être déclarées comme "const".
 **************************************************************
+
+## Partie 2
+
+**************************************************************
+## /Q2.1\
+Le nombre de cellules totales dans le vector est world_size * cell_size.
+**************************************************************
+## /Q2.2\
+world_cells : "simulation", "world", "default cells"
+world_size : "simulation", "world", "default size"
+**************************************************************
+## /Q2.3\
+Il faut d'abord appeler reloadConfig(), qui s'occupera des arguments nb_cells, cell_size, et du tableau cells_.
+Ensuite, reloadCacheStructure() utilisera les nouvelles valeurs des attributs pour initialiser les vertexes et renderingCache_.

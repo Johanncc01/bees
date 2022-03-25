@@ -87,8 +87,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 
 	# #Graphical tests:
 	## WorldTest
-        #add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-       #target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
+       add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+       target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
 
        
     else()
@@ -120,8 +120,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	      ##Graphical tests:
 
 	      ## WorldTest
-	      #add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-             #target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+             add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+             target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
         else()
             message(STATUS "SFML NOT FOUND ! ")
         endif() ## SFML 2
