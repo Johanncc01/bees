@@ -16,13 +16,11 @@ void World::reloadConfig(){
 }
 
 void World::reloadCacheStructure(){
-        auto test(getValueConfig()["simulation"]["world"]["textures"]);            // A AJOUTER : raccourci dans config.cpp
-        int size(nb_cells*cell_size);
-        std::vector<sf::Vertex> vertexes(generateVertexes(getValueConfig()["simulation"]["world"]["textures"], nb_cells, cell_size));
+        std::vector<sf::Vertex> vertexes(generateVertexes(getAppConfig().world_textures, nb_cells, cell_size));
         grassVertexes_ = vertexes;
         waterVertexes_ = vertexes;
         rockVertexes_ = vertexes;
-        renderingCache_.create(size, size);
+        renderingCache_.create(nb_cells*cell_size, nb_cells*cell_size);
 }
 
 void World::drawOn(sf::RenderTarget& target){

@@ -30,7 +30,7 @@ Config::Config (const j::Value& cfg): mConfig(cfg)
 , world_size(mConfig["simulation"]["world"]["default size"].toInt())
 , world_nb_grass_seeds(mConfig["simulation"]["world"]["seeds"]["grass"].toInt())
 , world_nb_water_seeds(mConfig["simulation"]["world"]["seeds"]["water"].toInt())
-//, world_textures(mConfig["simulation"]["world"]["textures"])
+, world_textures(mConfig["simulation"]["world"]["textures"])
 
 , world_humidity_init_level(mConfig["simulation"]["world"]["generation"]["humidity"]["initial level"].toDouble())
 , world_humidity_decay_rate(mConfig["simulation"]["world"]["generation"]["humidity"]["initial level"].toDouble())
