@@ -18,6 +18,8 @@ public :
     void updateCache();
     void reset(bool = true);
 
+    void loadFromFile();
+
 private :
     int nb_cells;
     float cell_size;

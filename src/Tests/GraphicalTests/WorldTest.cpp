@@ -42,7 +42,7 @@ void WorldTest::onEvent(sf::Event event, sf::RenderWindow&)
 
         case sf::Keyboard::L:
 	  // TODO : UNCOMMENT WHEN THE METHOD IS CODED
-          //  mWorld.loadFromFile();
+        mWorld.loadFromFile();
 	    resetViewOnLoad();
             break;
 
