@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include <Application.hpp>
 #include <Utility/Vertex.hpp>
+#include <Random/Random.hpp>
 #include <iostream>
 #include <fstream>
 
@@ -16,6 +17,11 @@ void World::reloadConfig(){
     cell_size = (world_size / nb_cells);
     std::vector<Kind> grid((nb_cells*nb_cells), Kind::roche);
     cells_ = grid;
+    nb_wseed = getAppConfig().world_nb_water_seeds;
+    nb_gseed = getAppConfig().world_nb_grass_seeds;
+    std::vector<Seed> seeds_init(nb_wseed + nb_gseed);
+    seeds_=seeds_init;
+
 }
 
 void World::reloadCacheStructure(){
@@ -67,7 +73,7 @@ void World::updateCache(){
     renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rs_w);
 
     sf::RenderStates rs_r;
-    rs_r.texture = &getAppTexture(getAppConfig().rock_texture); // texture liée à la roche
+    rs_r.texture = &getAppTexture(getAppConfig().rock_texture); // textugre liée à la roche
     renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs_r);
 
     renderingCache_.display();
@@ -76,7 +82,31 @@ void World::updateCache(){
 void World::reset(bool regenerate){
     reloadConfig();
     reloadCacheStructure();
+    int temp_wseed(nb_wseed);
+    for (auto& id : seeds_) {
+        int x(uniform(0 , nb_cells-1));
+        int y(uniform(0 , nb_cells-1));
+        sf::Vector2i temp(x,y);
+        id.coords = temp;
+        if (temp_wseed > 0) {
+            --temp_wseed;
+            id.type = Kind::eau;
+        } else {
+            id.type = Kind::herbe;
+        }
+
+        int i(x+y*nb_cells);
+
+        if (cells_[i] != Kind::eau) {
+            cells_[i] = id.type;
+        }
+
+
+    }
+
+
     updateCache();
+
 }
 
 void World::loadFromFile(){

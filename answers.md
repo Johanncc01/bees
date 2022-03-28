@@ -1,4 +1,4 @@
- # Projet programmation orientée objet (SSV)
+# Projet programmation orientée objet (SSV)
 
 ## REPONSES du groupe *86* (*Johann Clausen* & *Victor Galhaud*)
 
@@ -47,7 +47,7 @@ Le nombre de cellules totales dans le vector est nb_cells * nb_cells.
 En effet, il ne s'agit pas de world_size au carré, car cette valeur sera utilisée par SFML pour afficher nos cellules de largeur cell_size.
 **************************************************************
 ### /Q2.2\
-world_cells : "simulation", "world", "default cells"
+world_cells : "simulation", "world", "default cells" <br>
 world_size : "simulation", "world", "default size"
 **************************************************************
 ### /Q2.3\
@@ -63,7 +63,10 @@ On peut, à l'aide de paramètres de ligne de commande, modifier le fichier dés
 Elle doit appeler les fonctions : reloadCacheStructure() et updateCache().
 Ces appels permettront d'initialiser les vertexes et renderingCache_, ainsi que de d'actualiser les changements.
 **************************************************************
-### /Q2.6\
+### /Q2.6\ 
+Nous avons choisi de représenter l'ensemble "seeds_" par un vector de Seeds.
+Nous avons privilégié le type vector au type array car nous ne connaissons pas la taille de cet ensemble au moment où nous l'initialisons.
+
 
 
 **************************************************************
