@@ -18,11 +18,23 @@ public :
     float getSize() const;
 
     void reloadConfig();
-    void drawOn(sf::RenderTarget& target);
+    void drawOn(sf::RenderTarget&);
 
     void reloadCacheStructure();
     void updateCache();
     void reset(bool = true);
+
+    void step();
+    void steps(int, bool = false);
+    void smooth();
+    void smooths(int, bool = false);
+
+    int get_id(int, int);
+    int get_x(int);
+    int get_y(int);
+
+    sf::Vector2i randomN();
+    void clamp(sf::Vector2i&);
 
     void loadFromFile();
 
@@ -35,8 +47,10 @@ private :
     std::vector<sf::Vertex> rockVertexes_;
     sf::RenderTexture renderingCache_;
     std::vector<Seed> seeds_;
-    int nb_wseed;
-    int nb_gseed;
+    size_t nb_wseed;
+    size_t nb_gseed;
 };
+
+
 
 #endif // WORLD_HPP
