@@ -15,17 +15,17 @@ void World::reloadConfig(){
     size_t world_size(getAppConfig().world_size);
     nb_cells = getAppConfig().world_cells;
     cell_size = (world_size / nb_cells);
-    std::vector<Kind> grid((nb_cells*nb_cells), Kind::roche);
+    Grille grid((nb_cells*nb_cells), Kind::roche);
     cells_ = grid;
     nb_wseed = getAppConfig().world_nb_water_seeds;
     nb_gseed = getAppConfig().world_nb_grass_seeds;
-    std::vector<Seed> seeds_init(nb_wseed + nb_gseed);
+    Seeds seeds_init(nb_wseed + nb_gseed);
     seeds_=seeds_init;
 
 }
 
 void World::reloadCacheStructure(){
-        std::vector<sf::Vertex> vertexes(generateVertexes(getAppConfig().world_textures, nb_cells, cell_size));
+        Vertexes vertexes(generateVertexes(getAppConfig().world_textures, nb_cells, cell_size));
         grassVertexes_ = vertexes;
         waterVertexes_ = vertexes;
         rockVertexes_ = vertexes;
@@ -42,14 +42,13 @@ void World::updateCache(){
     for (int x(0); x < nb_cells; ++x) {
          for (int y(0); y < nb_cells; ++y) {
              std::vector<size_t> indexes(indexesForCellVertexes(x,y, nb_cells));
-             size_t i(x+y*nb_cells);
-             if (cells_[i] == Kind::herbe){
+             if (cells_[get_id(x,y)] == Kind::herbe){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 255;
                      waterVertexes_[var].color.a = 0;
                      rockVertexes_[var].color.a = 0;
                  }
-             } else if (cells_[i] == Kind::eau){
+             } else if (cells_[get_id(x,y)] == Kind::eau){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 0;
                      waterVertexes_[var].color.a = 255;
@@ -83,23 +82,21 @@ void World::reset(bool regenerate){
     reloadConfig();
     reloadCacheStructure();
     size_t temp_wseed(nb_wseed);
-    for (auto& id : seeds_) {
+    for (auto& seed : seeds_) {
         int cells(nb_cells);
         size_t x(uniform(0 , cells-1));
         size_t y(uniform(0 , cells-1));
         sf::Vector2i temp(x,y);
-        id.coords = temp;
+        seed.coords = temp;
 
         if (temp_wseed > 0) {
             --temp_wseed;
-            id.type = Kind::eau;
+            seed.type = Kind::eau;
         } else {
-            id.type = Kind::herbe;
+            seed.type = Kind::herbe;
         }
-
-        size_t i(x+y*nb_cells);
-        if (cells_[i] != Kind::eau) {
-            cells_[i] = id.type;
+        if (cells_[get_id(x,y)] != Kind::eau) {
+            cells_[get_id(x,y)] = seed.type;
         }
     }
     if (regenerate){
@@ -120,7 +117,7 @@ void World::loadFromFile(){
     } else {
         std::cout << "Fichier chargé : " << path << std::endl;
         entree >> nb_cells >> std::ws >> cell_size >> std::ws;
-        std::vector<Kind> grid(nb_cells*nb_cells);
+        Grille grid(nb_cells*nb_cells);
         short lu(0);
         for (size_t i(0); i < grid.size(); ++i){
             entree >> lu;
@@ -134,26 +131,26 @@ void World::loadFromFile(){
 }
 
 void World::step(){
-    for (auto& id : seeds_){
-        if (id.type == Kind::herbe){
+    for (auto& seed : seeds_){
+        if (seed.type == Kind::herbe){
             sf::Vector2i temp(randomN());
-            id.coords += temp;
-            clamp(id.coords);
+            seed.coords += temp;
+            clamp(seed.coords);
         } else {
             if (bernoulli(getAppConfig().water_seeds_teleport_proba) == 0){
                 sf::Vector2i temp(randomN());
-                id.coords += temp;
-                clamp(id.coords);
+                seed.coords += temp;
+                clamp(seed.coords);
             } else {
                 int x(uniform(0 , nb_cells-1));
                 int y(uniform(0 , nb_cells-1));
                 sf::Vector2i temp(x,y);
-                id.coords = temp;
+                seed.coords = temp;
             }
         }
-        size_t i(id.coords.x+id.coords.y*nb_cells);
+        size_t i(seed.coords.x+seed.coords.y*nb_cells);
         if (cells_[i] != Kind::eau) {
-            cells_[i] = id.type;
+            cells_[i] = seed.type;
         }
     }
 }
@@ -187,6 +184,8 @@ sf::Vector2i World::randomN(){
     }
 }
 
+
+
 void World::clamp(sf::Vector2i& vect){
     if (vect.x > nb_cells-1){
         vect.x = nb_cells-1;
@@ -207,12 +206,12 @@ void World::smooth(){
     auto copie_de_cells_ = cells_;
     double seuil_w(getAppConfig().smoothness_water_neighbor_ratio);
     double seuil_g(getAppConfig().smoothness_grass_neighbor_ratio);
-    for (size_t i(0); i < copie_de_cells_.size(); ++i){
-        int x(get_x(i));
-        int y(get_y(i));
-        if (copie_de_cells_[i] != Kind::eau){
-            int water_counter(0);
-            int neighbour_counter(0);
+    for (size_t id(0); id < copie_de_cells_.size(); ++id){
+        int x(get_x(id));
+        int y(get_y(id));
+        double neighbour_counter(0);
+        if (copie_de_cells_[id] != Kind::eau){
+            double water_counter(0);
 
            for (int a(-1); a <= 1 ; ++a){
                for (int b(-1); b <= 1 ; ++b){
@@ -221,20 +220,19 @@ void World::smooth(){
                    clamp(index);
                    if (index == copie){
                        ++neighbour_counter;
-
                        if (copie_de_cells_[get_id(x+a, y+b)] == Kind::eau){
                            ++water_counter;
                        }
                    }
                }
            }
-           if (water_counter/(neighbour_counter-1) > seuil_w){
-               copie_de_cells_[i] = Kind::eau;
+           --neighbour_counter;
+           if (water_counter/neighbour_counter > seuil_w){
+               copie_de_cells_[id] = Kind::eau;
            }
         }
-        if (copie_de_cells_[i] == Kind::roche){
-            int grass_counter(0);
-            int neighbour_counter(0);
+        if (copie_de_cells_[id] == Kind::roche){
+            double grass_counter(0);
 
            for (int a(-1); a <= 1 ; ++a){
                for (int b(-1); b <= 1 ; ++b){
@@ -242,17 +240,14 @@ void World::smooth(){
                    sf::Vector2i copie(index);
                    clamp(index);
                    if (index == copie){
-                       ++neighbour_counter;
-
                        if (copie_de_cells_[get_id(x+a, y+b)] == Kind::herbe){
                            ++grass_counter;
                        }
                    }
-
                }
            }
-           if (grass_counter/(neighbour_counter-1) > seuil_g){
-               copie_de_cells_[i] = Kind::herbe;
+           if (grass_counter/neighbour_counter > seuil_g){
+               copie_de_cells_[id] = Kind::herbe;
            }
         }
     }

@@ -5,72 +5,73 @@
 ## Partie 1
 
 **************************************************************
-### /Q1.1\
-Pour éviter la duplication de code, il faut mettre le clamping dans une méthode de la classe. 
+### Q1.1
+Pour éviter la duplication de code, il faut mettre <tt>clamp()</tt> dans une méthode de la classe. 
 Comme cette méthode ne sera appelée qu'à l'intérieur de la classe, il serait judicieux de la prototyper en private (détail d'implémentation).
 **************************************************************
-### /Q1.2\
+### Q1.2
 En utilisant deux boucles imbriquées avec des indices de -1 à 1, on peut parcourir toutes les combinaisons de vecteurs de l'espace torique.
 Il suffit de comparer la distance entre le nouveau vecteur et le vecteur max à chaque tour de boucle.
 **************************************************************
-### /Q1.3\
-Il faut passer les "Collider" et les "Vec2d" en référence constante, car c'est des classes complexes.
-Pour les "double", le passage par valeur suffit.
+### Q1.3
+Il faut passer les <tt>Collider</tt> et les <tt>Vec2d</tt> en référence constante, car c'est des classes complexes.
+Pour les <tt>double</tt>, le passage par valeur suffit.
 **************************************************************
-### /Q1.4\
+### Q1.4
 Les méthodes affichant la distance et la direction n'ont pas besoin de modifier les attributs privés.
-Pour la fonction move, elle déplace le "Collider", et doit donc accéder à "center". Elle ne doit pas être déclarée comme const.
+Pour la fonction move, elle déplace le <tt>Collider</tt>, et doit donc accéder à <tt>center</tt>. Elle ne doit pas être déclarée comme <tt>const</tt>.
 **************************************************************
-### /Q1.5\
+### Q1.5
 Il suffit de return les résultats des fonctions rédigées auparavant.
 **************************************************************
-### /Q1.6\
+### Q1.6
 Pour tous les opérateurs (sauf <<), il faut utiliser la surcharge interne. Les opérateurs sont "proches de la classe", ils ont besoin d'accès internes (+= modifie l'objet). 
-Pour l'opérateur d'affichage, il faut le faire en externe car on ne peut pas redéfinir la classe iostream, et que "Collider" n'est pas l'opérande de gauche.
+Pour l'opérateur d'affichage, il faut le faire en externe car on ne peut pas redéfinir la classe iostream, et que <tt>Collider</tt> n'est pas l'opérande de gauche.
 **************************************************************
-### /Q1.7\
-Comme auparavant, il faut passer les classes ("Collider", "Vec2d") en référence constante, les types de base ("double") par valeur.
-Notons qu'il est nécesssaire de passer le "ostream" par référence (non constante), car il s'agit d'un flot.
+### Q1.7
+Comme auparavant, il faut passer les classes (<tt>Collider</tt>, <tt>Vec2d</tt>) en référence constante, les types de base (<tt>double</tt>) par valeur.
+Notons qu'il est nécesssaire de passer le <tt>ostream</tt> par référence (non constante), car il s'agit d'un flot.
 **************************************************************
-### /Q1.8\
-Les seules méthodes qui peuvent modifier l'instance de "Collider" devraient être l'opérateur "=" et "+=".
-Toutes les autres méthodes peuvent être déclarées comme "const".
+### Q1.8
+Les seules méthodes qui peuvent modifier l'instance de <tt>Collider</tt> devraient être l'opérateur "=" et "+=".
+Toutes les autres méthodes peuvent être déclarées comme <tt>const</tt>.
 **************************************************************
-
 
 
 ## Partie 2
 
 **************************************************************
-### /Q2.1\
-Le nombre de cellules totales dans le vector est nb_cells * nb_cells.
-En effet, il ne s'agit pas de world_size au carré, car cette valeur sera utilisée par SFML pour afficher nos cellules de largeur cell_size.
+### Q2.1
+Le nombre de cellules totales dans le vector est <tt>nb_ cells</tt> * <tt>nb_ cells</tt>.
+En effet, il ne s'agit pas de <tt>world_ size</tt> au carré, car cette valeur sera utilisée par SFML pour afficher nos cellules de largeur <tt>cell_size</tt>.
 **************************************************************
-### /Q2.2\
-world_cells : "simulation", "world", "default cells" <br>
-world_size : "simulation", "world", "default size"
+### Q2.2
+<tt> world_cells : "simulation", "world", "default cells" <br>
+world_size : "simulation", "world", "default size"</tt>
 **************************************************************
-### /Q2.3\
-Il faut d'abord appeler reloadConfig(), qui s'occupera des arguments nb_cells, cell_size, et du tableau cells_.
-Ensuite, reloadCacheStructure() utilisera les nouvelles valeurs des attributs pour initialiser les vertexes et renderingCache_.
-Enfin, updateCache(), afin d'appliquer les changements dans renderingCache_.
+### Q2.3
+Il faut d'abord appeler <tt>reloadConfig()</tt>, qui s'occupera des arguments <tt>nb_cells</tt>, <tt>cell_size</tt>, et du tableau <tt>cells_ </tt>.
+Ensuite, <tt>reloadCacheStructure()</tt> utilisera les nouvelles valeurs des attributs pour initialiser les vertexes et <tt>renderingCache_ </tt>.
+Enfin, <tt>updateCache()</tt>, afin d'appliquer les changements dans renderingCache_.
 **************************************************************
-### /Q2.4\
+### Q2.4
 Le changement de fichier source pour le terrain peut se faire sans recompiler le programme en entier.
-On peut, à l'aide de paramètres de ligne de commande, modifier le fichier désiré pour le chargement (info retrouvée à l'aide de getApp() et getAppConfig())
+On peut, à l'aide de paramètres de ligne de commande, modifier le fichier désiré pour le chargement (info retrouvée à l'aide de <tt>getApp()</tt> et <tt>getAppConfig()</tt>)
 **************************************************************
-### /Q2.5\
-Elle doit appeler les fonctions : reloadCacheStructure() et updateCache().
-Ces appels permettront d'initialiser les vertexes et renderingCache_, ainsi que de d'actualiser les changements.
+### Q2.5
+Elle doit appeler les fonctions : <tt>reloadCacheStructure()</tt> et <tt>updateCache()</tt>.
+Ces appels permettront d'initialiser les <tt>vertexes</tt> et <tt>renderingCache_</tt>, ainsi que de d'actualiser les changements.
 **************************************************************
-### /Q2.6\ 
-Nous avons choisi de représenter l'ensemble "seeds_" par un vector de Seeds.
-Nous avons privilégié le type vector au type array car nous ne connaissons pas la taille de cet ensemble au moment où nous l'initialisons.
-
-
-
+### Q2.6 
+Nous avons choisi de représenter l'ensemble <tt>seeds_</tt> par un vector de <tt>Seeds</tt>.
+Nous avons privilégié le type <tt>vector</tt> au type <tt>array</tt> car nous ne connaissons pas la taille de cet ensemble au moment où nous l'initialisons.
 **************************************************************
-
 
 
 ## Partie 3
+
+**************************************************************
+### Q3.1
+
+
+**************************************************************
