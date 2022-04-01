@@ -277,7 +277,25 @@ int World::get_y(int id){
 }
 
 
-
+void World::saveToFile(){
+    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
+    std::ofstream sortie(path);
+    if (sortie.fail()){
+        sortie.close();
+        std::string error("impossible d'écrire le fichier sous ");
+        throw std::runtime_error(error+path);
+        return;
+    } else {
+        std::cout << "Ecriture dans : " << path << std::endl;
+        sortie << nb_cells << std::endl << cell_size << std::endl;
+        for (size_t i(0); i < cells_.size(); ++i){
+            short lu(static_cast<short>(cells_[i]));
+            sortie << lu << " ";
+        }
+        std::cout << "Opération terminée!" << std::endl;
+        sortie.close();
+    }
+}
 
 
 

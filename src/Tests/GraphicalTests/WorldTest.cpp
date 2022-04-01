@@ -48,7 +48,7 @@ void WorldTest::onEvent(sf::Event event, sf::RenderWindow&)
 
         case sf::Keyboard::O:
 	  // TODO : UNCOMMENT WHEN THE METHOD IS CODED
-	  //mWorld.saveToFile();
+      mWorld.saveToFile();
             break;
 
         case sf::Keyboard::G:

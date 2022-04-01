@@ -41,6 +41,7 @@ public :
     void clamp(sf::Vector2i&);
 
     void loadFromFile();
+    void saveToFile();
 
 private :
     int nb_cells;
