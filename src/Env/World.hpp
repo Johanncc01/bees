@@ -35,12 +35,17 @@ public :
 
     // reloadConfig initialise les caractéristiques principales du mondes à partir du fichier JSON utilisé
     void reloadConfig();
+    //reloadCacheStructure initalise tous les "Vertexes" de la grille et crée la grille utilisée dans drawOn
     void reloadCacheStructure();
+    //updateCache //Johann//
     void updateCache();
+    //reset permet l'initialisation de tous les attributs de World codés jusqu'ici.
+    //Le bool en argument permet de définir si la méthode appelle updateCache ou non (true -> Oui / false -> Non)
     void reset(bool = true);
 
 // step
-
+    // step fait en sorte que chaque graine sur la carte se déplace dans une direction aléatoire de 1 cellule.
+    //
     void step();
     void steps(int, bool = false);
 
