@@ -8,48 +8,50 @@
 #include <cmath> // abs and fmod
 #include <algorithm>
 
-/* TO BE COMPLETED */
 
-Collider::Collider(Vec2d const& cen, double rad)        // Constructeur de base
+// Constructeurs
+
+Collider::Collider(Vec2d const& cen, double rad)
     : center(cen), radius(rad)
 { clamp(); }
 
-Collider::Collider(Collider const& other)               // Constructeur de copie
+Collider::Collider(Collider const& other)
     : center(other.center), radius(other.radius)
 {}                                                      // Aucun appel à clamp() nécessaire car déjà fait dans le Collider copié
 
-const Vec2d& Collider::getPosition() const{             // Getter de la position
+
+// Getters
+
+const Vec2d& Collider::getPosition() const{
     return center;
 }
 
-double Collider::getRadius() const{                     // Getter du rayon
+double Collider::getRadius() const{
     return radius;
 }
 
-Collider& Collider::operator=(Collider const& source){  // Surcharge de l'opérateur de copie
-    center = source.center;
-    radius = source.radius;
-    return *this;                                       // Retourne une référence pour que l'opération ait une valeur
-}
 
 void Collider::clamp(){
-    auto worldSize = getApp().getEnvSize();             // Récupération des dimensions prédéfinies
-    auto width  = worldSize.x();
+    auto worldSize = getApp().getEnvSize();
+    auto width  = worldSize.x();                        // Récupération des dimensions prédéfinies
     auto height = worldSize.y();
 
     double reste_x(fmod(center.x(), width));            // Reste de la division afin de contrôler si toujours dans le monde torique
     double reste_y(fmod(center.y(), height));
 
     if (reste_x < 0){
-        reste_x += width;                               // Recalage du x dans les limites si besoin
+        reste_x += width;                               // Recalage dans les limites si besoin
     }
     if (reste_y < 0){
-        reste_y += height;                              // Recalage du y dans les limites si besoin
+        reste_y += height;
     }
 
     Vec2d newcen(reste_x, reste_y);
-    center = newcen;                                    // Affectation du centre redimensionné à l'objet
+    center = newcen;
 }
+
+
+// Gestion des déplacements
 
 Vec2d Collider::directionTo(Vec2d const& to) const{
     Vec2d from(center);
@@ -73,55 +75,67 @@ Vec2d Collider::directionTo(Vec2d const& to) const{
     return min-from;                                    // Création du vecteur "directionTo" à partir de "from" et du meilleur "to"
 }
 
-Vec2d Collider::directionTo(Collider const& col) const{ // Même travail que version précédente mais avec un "Collider" en argument
+Vec2d Collider::directionTo(Collider const& col) const{
     Vec2d to(col.getPosition());
     return directionTo(to);
 }
 
-double Collider::distanceTo(Vec2d const& to) const{     // Retourne la longueur du vecteur torique calculé par "directionTo"
+double Collider::distanceTo(Vec2d const& to) const{
     return directionTo(to).length();
 }
 
-double Collider::distanceTo(Collider const& col) const{ // Surcharge de la méthode précédente mais avec un "Vec2d" en argument"
+double Collider::distanceTo(Collider const& col) const{
     Vec2d to(col.getPosition());
     return distanceTo(to);
 }
 
-void Collider::move(Vec2d const& dx){                   // ajoute à la position de l'instance courante un "Vec2d"
+void Collider::move(Vec2d const& dx){
     center += dx;
     clamp();
 }
 
-Collider& Collider::operator+=(Vec2d const& dx){        // Surcharge l'opérateur '+=' lui donnant la même fonction que "move"
+
+// Gestion des collisions
+
+bool Collider::isColliderInside(Collider const& other) const{
+    return ((radius >= other.radius) and (distanceTo(other) <= radius - (other.radius)));
+}
+
+bool Collider::isColliding(Collider const& other) const{
+    return ((distanceTo(other)) <= (radius + other.radius));
+}
+
+bool Collider::isPointInside(Vec2d const& point) const{
+    return (distanceTo(point) <= radius);
+}
+
+
+// Surcharge des opérateurs
+
+Collider& Collider::operator=(Collider const& source){
+    center = source.center;
+    radius = source.radius;
+    return *this;                                       // Retourne une référence pour que l'opération ait une valeur
+}
+
+Collider& Collider::operator+=(Vec2d const& dx){
     move(dx);
     return *this;
 }
 
-bool Collider::isColliderInside(Collider const& other) const{   // Cherche si un "Collider" est à l'intérieur d'un autre "Collider"
-    return ((radius >= other.radius) and (distanceTo(other) <= radius - (other.radius)));
-}
-
-bool Collider::isColliding(Collider const& other) const{        // Retourne si un "Collider" est en contact avec un autre "Collider"
-    return ((distanceTo(other)) <= (radius + other.radius));
-}
-
-bool Collider::isPointInside(Vec2d const& point) const{         // Retourne si un point est dans un "Collider"
-    return (distanceTo(point) <= radius);
-}
-
-bool Collider::operator>(Collider const& source) const{         // Surcharge l'opérateur '>' pour la fonction "isColliderInside" si l'argument est un "Collider"
+bool Collider::operator>(Collider const& source) const{
     return isColliderInside(source);
 }
 
-bool Collider::operator>(Vec2d const& source) const{            // Surcharge encore une fois l'opérateur '>' pour la fonction "isPointInside" si l'argument est un "Vec2d"
+bool Collider::operator>(Vec2d const& source) const{
     return isPointInside(source);
 }
 
-bool Collider::operator|(Collider const& source) const{         // Surcharge l'opérateur '|' pour la fonction "isColliding" si l'argument est un "Collider"
+bool Collider::operator|(Collider const& source) const{
     return isColliding(source);
 }
 
-std::ostream& operator<<(std::ostream& out, Collider const& source){    // Surcharge l'opérateur '<<' pour formater la sortie d'une instance de la classe "Collider"
+std::ostream& operator<<(std::ostream& out, Collider const& source){
     Vec2d center(source.getPosition());
     out << "Collider: position = (" << center.x() << "," << center.y() << ") radius = " << source.getRadius() << std::endl;
     return out;
