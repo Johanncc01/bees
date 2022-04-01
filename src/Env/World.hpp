@@ -3,43 +3,57 @@
 #define WORLD_HPP
 #include <vector>
 #include <SFML/Graphics.hpp>
-
+//Contenu des cellules
 enum class Kind : short { herbe, eau, roche };
 
-typedef std::vector<Kind> Grille;
-typedef std::vector<sf::Vertex> Vertexes;
 
+//Modelisation d'une "graine" permettant la génération du terrain
 struct Seed{
     sf::Vector2i coords;
     Kind type;
 };
 
+//typedef des types complexes
+typedef std::vector<Kind> Grille;
+typedef std::vector<sf::Vertex> Vertexes;
 typedef std::vector<Seed> Seeds;
 
 class World
 {
 public :
+
+// getter pour la taille du monde
     float getSize() const;
-
-    void reloadConfig();
-    void drawOn(sf::RenderTarget&);
-
-    void reloadCacheStructure();
-    void updateCache();
-    void reset(bool = true);
-
-    void step();
-    void steps(int, bool = false);
-    void smooth();
-    void smooths(int, bool = false);
-
     int get_id(int, int);
     int get_x(int);
     int get_y(int);
 
-    sf::Vector2i randomN();
+// Fonctions graphiques pour afficher le monde
+
+    // drawOn se contente de dessiner la texture qui lui est fournie en argument
+    void drawOn(sf::RenderTarget&);
+
+    // reloadConfig initialise les caractéristiques principales du mondes à partir du fichier JSON utilisé
+    void reloadConfig();
+    void reloadCacheStructure();
+    void updateCache();
+    void reset(bool = true);
+
+// step
+
+    void step();
+    void steps(int, bool = false);
+
+// smooth
+    //
+    void smooth();
+    void smooths(int, bool = false);
+
+
+     sf::Vector2i randomN();
     void clamp(sf::Vector2i&);
 
+//Flot
     void loadFromFile();
     void saveToFile();
 
