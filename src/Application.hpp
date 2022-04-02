@@ -1,13 +1,14 @@
 /*
- * POOSV 2021-22
+ * POOSV 2022-21
  * Marco Antognini & Jamila Sam
- * STEP : 2
+ * STEP : 3
  */
 
 #ifndef INFOSV_APPLICATION_HPP
 #define INFOSV_APPLICATION_HPP
 // similar to #pragma once
 
+#include <Env/Env.hpp>
 #include <JSON/JSON.hpp>
 #include "Config.hpp"
 #include <Utility/Vec2d.hpp>
@@ -59,13 +60,23 @@ public:
      * @note Don't forget to call init() before run() !
      */
     void run();
-  
+
   /*!
      * @return the title of the graphical window
      *
      */
   std::string virtual getWindowTitle() const;
-
+  
+    /*!
+     * @brief Get access to the execution environment of the application (the env)
+     *
+     * @note This breaks the encapsulation but simplifies everything!
+     *
+     * @return the app's env
+     */
+    Env& getEnv();
+	Env const& getEnv() const;
+	
     /*!
      * @brief Get access to the application's configuration
      *
@@ -74,6 +85,7 @@ public:
     Config& getConfig();
     Config const& getConfig() const;
 
+ 
     /*!
      * @brief Get the app's font
      *
@@ -148,7 +160,6 @@ protected:
 	void initHelpBox();
 	virtual std::string getHelpTextFile() const;
 	
- 
     /*!
      *  @brief Called once before starting the main loop
      *
@@ -265,8 +276,9 @@ protected:
 
   /*!
    * @brief enables bypassing the Env attribute
-     */
+   */
   void setIgnoreEnv(bool ignore);
+
   
     void drawOnHelp(sf::RenderWindow& window) const;
 
@@ -284,8 +296,8 @@ protected:
 				  , size_t ycoord
 				  , size_t font_size
 				  );
-
 	virtual void resetStats();
+	
 private:
 
     // The order is important since some fields need other to be initialised
@@ -299,14 +311,17 @@ private:
     int      mCurrentGraphId;        ///< Current graph ID
 
 
-  sf::View mHelpView;         ///< View for commands help
+    sf::View mHelpView;         ///< View for commands help
 
+    Env* mEnv;                       ///< Simulated environment
 
-  sf::Font mFont;                  ///< A font
+    bool mIgnoreEnv;                     /// if true mEnv is not simulated
 
-  sf::RenderWindow mRenderWindow;  ///< SFML window / render target
-  sf::View mSimulationView;        ///< View for simulation area
-  sf::View mEnvView;        ///< View for simulation area
+    sf::Font mFont;                  ///< A font
+
+    sf::RenderWindow mRenderWindow;  ///< SFML window / render target
+    sf::View mSimulationView;        ///< View for simulation area
+	sf::View mEnvView;        ///< View for simulation area
 
     using TexturePool = std::map<std::string, sf::Texture*>;
     TexturePool mTextures;           ///< Pool of textures
@@ -340,6 +355,24 @@ private:
  * @return a reference to the current instance of Application
  */
 Application& getApp();
+
+/*!
+ * @brief Get the environment (the env) of the current application
+ *
+ * Shorthand for getApp().getEnv()
+ *
+ * @see Application::getEnv() comment about encapsulation
+ *
+ * @return the app's env.
+ */
+Env& getAppEnv();
+
+/*!
+ * @brief Get the animal tracker helper for the current application
+ *
+ * @return the app's animal tracker
+ */
+//AnimalTracker& getAppAnimalTracker();
 
 
 /*!

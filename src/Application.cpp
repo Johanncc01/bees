@@ -1,9 +1,8 @@
 
 /*
- * prjsv 2021-22
+ * prjsv 2020-21
  * 
  * Marco Antognini & Jamila Sam
-* STEP : 2
  */
 
 #include <Application.hpp>
@@ -137,6 +136,8 @@ Application::Application(int argc, char const** argv)
   //, mJSONRead(mAppDirectory + mCfgFile)
 , mConfig(new Config(j::readFromFile(mAppDirectory + mCfgFile)))
 , mCurrentGraphId(-1)
+, mEnv(nullptr)
+, mIgnoreEnv(false)
 , mPaused(false)  
 , mIsResetting(false)
 , mIsDragging(false)
@@ -173,6 +174,7 @@ Application::Application(int argc, char const** argv)
 Application::~Application()
 {
     // Destroy lab and stats, in reverse order
+    delete mEnv;
 	delete mConfig;
 
     // Release textures
@@ -190,6 +192,7 @@ void Application::run()
 {
 
     // Load lab and stats
+    mEnv   = new Env();
 
     // Set up subclasses
     onRun();
@@ -237,7 +240,7 @@ void Application::run()
         float timeFactor = getAppConfig().simulation_time_factor;
         auto elapsedTime = clk.restart() * timeFactor; // Always reset the clock!
 
-        if (!mPaused && !mIsResetting) {
+        if (!mIgnoreEnv && !mPaused && !mIsResetting) {
             // Update simulation with the elapsed time, possibly
             // by calling update(dt) several time to avoid update
             // with high delta time.
@@ -248,8 +251,9 @@ void Application::run()
             while (elapsedTime > sf::Time::Zero) {
                 auto dt = std::min(elapsedTime, maxDt);
                 elapsedTime -= dt;
+				getEnv().update(dt);
                 onUpdate(dt);
-		--nbCycles;
+				--nbCycles;
 
             }
         }
@@ -274,6 +278,15 @@ void Application::run()
     }
 }
 
+Env& Application::getEnv()
+{
+    return *mEnv;
+}
+
+Env const& Application::getEnv() const
+{
+    return *mEnv;
+}
 
 
 Config& Application::getConfig()
@@ -316,8 +329,8 @@ sf::Texture& Application::getTexture(std::string const& name)
 }
 void Application::setConfig(const j::Value& cfg){
   mConfig= new Config(cfg);
+  getEnv().resetControls();
 }
-
 void Application::initHelpBox() {
 	std::ifstream ifs(getHelpTextFile());
 	if (not ifs) {
@@ -341,7 +354,11 @@ std::string Application::getHelpTextFile() const
 {
 	return RES_LOCATION + "help.txt";
 }
-	
+
+std::string Application::getWindowTitle() const {
+ return getAppConfig().window_title;
+}
+
 std::string Application::getResPath() const
 {
     return mAppDirectory + RES_LOCATION;
@@ -350,8 +367,9 @@ std::string Application::getResPath() const
 Vec2d Application::getEnvSize() const
 {
     // Not the same as getSimulationSize!
-
-  double size(getAppConfig().world_size);
+  //double size(getAppConfig().world_size);
+  double size((mIgnoreEnv or mEnv == nullptr) ? getAppConfig().world_size
+	      : mEnv->getSize());
   return { size, size };
 }
 
@@ -404,9 +422,6 @@ Vec2d Application::getCursorPositionInView() const
     return mRenderWindow.mapPixelToCoords(sf::Mouse::getPosition(mRenderWindow), mSimulationView);
 }
 
-std::string Application::getWindowTitle() const {
- return getAppConfig().window_title;
-}
 
 void Application::createWindow(Vec2d const& size)
 {
@@ -488,8 +503,11 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
             break;
 	    
         case sf::Keyboard::C:
+	  if (not mIgnoreEnv){
 	  delete mConfig;
 	  mConfig = new Config(j::readFromFile(mAppDirectory + mCfgFile)); // reconstruct
+	  getEnv().resetControls();
+	  }
             break;
 
         // Toggle pause for simulation
@@ -499,12 +517,15 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 
         // generates a new simulation
         case sf::Keyboard::R:
+	  if (not mIgnoreEnv){
 	    mIsResetting = true;
+	    getEnv().reset();
 	    onSimulationStart();
 	    createViews();
 	    mSimulationBackground= mEnvBackground;
 	    mSimulationView = mEnvView;
 	    chooseBackground();
+	  }
             break;
 
         // Reset the simulation
@@ -527,12 +548,9 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 			break;
 			
         case sf::Keyboard::PageDown: // increase current control
-
-			
-				break;
+	  break;
         case sf::Keyboard::PageUp: // decrease current control
-	 
-				break;
+	  break;
         default:
             onEvent(event, window);
             break;
@@ -575,7 +593,7 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
             mIsDragging = true;
             mLastCursorPosition = { event.mouseButton.x, event.mouseButton.y };
         } else if (event.mouseButton.button == sf::Mouse::Right) {
-	  //Nothing at this stage
+          /* nothing in STEP3 */
         }
 	
         break;
@@ -614,7 +632,10 @@ void Application::render(sf::Drawable const& simulationBackground,
     updateSimulationView();
     mRenderWindow.setView(mSimulationView);
     mRenderWindow.draw(simulationBackground);
-    onDraw(mRenderWindow);
+    if (not mIgnoreEnv) {
+      getEnv().drawOn(mRenderWindow);
+    }
+      	onDraw(mRenderWindow);
 
 	// Render the command help 
 	mRenderWindow.setView(mHelpView);
@@ -629,6 +650,7 @@ void Application::render(sf::Drawable const& simulationBackground,
 	// Render the stats
 	mRenderWindow.setView(mStatsView);
 	mRenderWindow.draw(statsBackground);
+	
     // Finally, publish everything onto the screen
     mRenderWindow.display();
 	
@@ -691,6 +713,9 @@ void Application::switchDebug()
 	chooseBackground();
 }
 
+void Application::setIgnoreEnv(bool ignore){
+  mIgnoreEnv = ignore;
+}
 
 void Application::drawOnHelp(sf::RenderWindow& window) const
 {
@@ -705,6 +730,12 @@ Application& getApp()
 
     return *currentApp;
 }
+
+Env& getAppEnv()
+{
+    return getApp().getEnv();
+}
+
 
  j::Value& getValueConfig()
 {
@@ -767,9 +798,9 @@ void Application::drawOneControl(sf::RenderWindow& target
 	sf::Color color (mCurrentControl == control ? sf::Color::Red : sf::Color::White);
 	std::string text("");
 	switch (control) {
-		default:
-			/* nothing to do */
-			break;
+	default:
+	  /* nothing to do */
+	  break;
 	}
 	
 	
@@ -789,9 +820,6 @@ void Application::setResetting(bool reset){
 
 void Application::resetStats()
 {
-  //Nothing in STEP2
+  //Nothing in STEP3
 }
 
-void Application::setIgnoreEnv(bool /*ignore*/){
-  //Nothing in STEP2
-}

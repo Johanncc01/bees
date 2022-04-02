@@ -1,5 +1,5 @@
 /*
- * POOSV EPFL 2015-2022
+ * POOSV 2022
  * Marco Antognini
  */
 
