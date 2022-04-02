@@ -6,10 +6,26 @@
 #include <fstream>
 
 
+// Getters
+
 float World::getSize() const{
     return nb_cells * cell_size;
 }
 
+int World::get_id(int x, int y){
+    return x + y*nb_cells;
+}
+
+int World::get_x(int id){
+    return id % nb_cells;
+}
+
+int World::get_y(int id){
+    return id / nb_cells;
+}
+
+
+// Fonctions graphiques
 
 void World::reloadConfig(){
     size_t world_size(getAppConfig().world_size);
@@ -30,11 +46,6 @@ void World::reloadCacheStructure(){
         waterVertexes_ = vertexes;
         rockVertexes_ = vertexes;
         renderingCache_.create(nb_cells*cell_size, nb_cells*cell_size);
-}
-
-void World::drawOn(sf::RenderTarget& target){
-    sf::Sprite cache(renderingCache_.getTexture());
-    target.draw(cache);
 }
 
 void World::updateCache(){
@@ -86,6 +97,7 @@ void World::reset(bool regenerate){
         int cells(nb_cells);
         size_t x(uniform(0 , cells-1));
         size_t y(uniform(0 , cells-1));
+        size_t id(get_id(x,y));
         sf::Vector2i temp(x,y);
         seed.coords = temp;
 
@@ -95,8 +107,8 @@ void World::reset(bool regenerate){
         } else {
             seed.type = Kind::herbe;
         }
-        if (cells_[get_id(x,y)] != Kind::eau) {
-            cells_[get_id(x,y)] = seed.type;
+        if (cells_[id] != Kind::eau) {
+            cells_[id] = seed.type;
         }
     }
     if (regenerate){
@@ -106,29 +118,13 @@ void World::reset(bool regenerate){
     updateCache();
 }
 
-void World::loadFromFile(){
-    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
-    std::ifstream entree(path);
-    if (entree.fail()){
-        entree.close();
-        std::string error("impossible de lire le fichier ");
-        throw std::runtime_error(error+path);
-        return;
-    } else {
-        std::cout << "Fichier chargé : " << path << std::endl;
-        entree >> nb_cells >> std::ws >> cell_size >> std::ws;
-        Grille grid(nb_cells*nb_cells);
-        short lu(0);
-        for (size_t i(0); i < grid.size(); ++i){
-            entree >> lu;
-            grid[i] = static_cast<Kind>(lu);
-        }
-        cells_ = grid;
-        entree.close();
-    }
-    reloadCacheStructure();
-    updateCache();
+void World::drawOn(sf::RenderTarget& target){
+    sf::Sprite cache(renderingCache_.getTexture());
+    target.draw(cache);
 }
+
+
+// Génération aléatoire
 
 void World::step(){
     for (auto& seed : seeds_){
@@ -164,43 +160,6 @@ void World::steps(int nb, bool regenerate){
         updateCache();
     }
 }
-
-
-
-sf::Vector2i World::randomN(){
-    int i(uniform(0,3));
-    if (i == 0){
-        sf::Vector2i temp(-1,0);
-        return temp;
-    } else if (i == 1){
-        sf::Vector2i temp(1,0);
-        return temp;
-    } else if (i == 2){
-        sf::Vector2i temp(0,-1);
-        return temp;
-    } else {
-        sf::Vector2i temp(0,1);
-        return temp;
-    }
-}
-
-
-
-void World::clamp(sf::Vector2i& vect){
-    if (vect.x > nb_cells-1){
-        vect.x = nb_cells-1;
-    }
-    if (vect.y > nb_cells-1){
-        vect.y = nb_cells-1;
-    }
-    if (vect.x < 0){
-        vect.x = 0;
-    }
-    if (vect.y < 0){
-        vect.y = 0;
-    }
-}
-
 
 void World::smooth(){
     auto copie_de_cells_ = cells_;
@@ -264,18 +223,31 @@ void World::smooths(int nb, bool regenerate){
 }
 
 
-int World::get_id(int x, int y){
-    return x + y*nb_cells;
-}
+// Sauvegarde
 
-int World::get_x(int id){
-    return id % nb_cells;
+void World::loadFromFile(){
+    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
+    std::ifstream entree(path);
+    if (entree.fail()){
+        entree.close();
+        std::string error("impossible de lire le fichier ");
+        throw std::runtime_error(error+path);
+        return;
+    } else {
+        std::cout << "Fichier chargé : " << path << std::endl;
+        entree >> nb_cells >> std::ws >> cell_size >> std::ws;
+        Grille grid(nb_cells*nb_cells);
+        short lu(0);
+        for (size_t i(0); i < grid.size(); ++i){
+            entree >> lu;
+            grid[i] = static_cast<Kind>(lu);
+        }
+        cells_ = grid;
+        entree.close();
+    }
+    reloadCacheStructure();
+    updateCache();
 }
-
-int World::get_y(int id){
-    return id / nb_cells;
-}
-
 
 void World::saveToFile(){
     std::string path(getApp().getResPath()+getAppConfig().world_init_file);
@@ -298,7 +270,36 @@ void World::saveToFile(){
 }
 
 
+// Fonctions d'implémentation
 
+sf::Vector2i World::randomN(){
+    int i(uniform(0,3));
+    if (i == 0){
+        sf::Vector2i temp(-1,0);
+        return temp;
+    } else if (i == 1){
+        sf::Vector2i temp(1,0);
+        return temp;
+    } else if (i == 2){
+        sf::Vector2i temp(0,-1);
+        return temp;
+    } else {
+        sf::Vector2i temp(0,1);
+        return temp;
+    }
+}
 
-
-
+void World::clamp(sf::Vector2i& vect){
+    if (vect.x > nb_cells-1){
+        vect.x = nb_cells-1;
+    }
+    if (vect.y > nb_cells-1){
+        vect.y = nb_cells-1;
+    }
+    if (vect.x < 0){
+        vect.x = 0;
+    }
+    if (vect.y < 0){
+        vect.y = 0;
+    }
+}
