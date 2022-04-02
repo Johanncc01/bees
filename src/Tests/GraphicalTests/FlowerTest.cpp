@@ -39,7 +39,7 @@ void FlowerTest::onEvent(sf::Event event, sf::RenderWindow&)
 	  // Save the world
         case sf::Keyboard::O:
 	  //UNCOMMENT WHEN CODED
-	  //getEnv().saveWorldToFile();
+      getEnv().saveWorldToFile();
             break;
 	    
 	    // Toggle humidity level visualisation
