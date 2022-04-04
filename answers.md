@@ -72,7 +72,15 @@ Nous avons privilégié le type <tt>vector</tt> au type <tt>array</tt> car nous 
 
 **************************************************************
 ### Q3.1
-Pour le moment, comme notre <tt>Env</tt> ne contient que le terrain, il suffit d'appeler les méthodes correspondantes dans la classe <tt>world</tt>.
+Pour le moment, comme notre <tt>Env</tt> ne contient que le terrain, il suffit d'appeler les méthodes correspondantes dans la classe <tt>world</tt>. C'est à dire respectivement les méthodes <tt> updateCache(), drawOn() et reset()</tt> contenues dans la classe <tt>World</tt>.
 **************************************************************
 ### Q3.2
-Il s'agit d'une méthode qui pour l'attribut terrain de <tt>Env</tt>, appelle sa méthode <tt>loadFromFile()</tt> codée à la partie précédente. Cette fonction met déjà à jour l'affichage du monde **(mais elle doit mettre à jour celui de l'Env dcp ??)** On peut donc remplacer les appels dans le constructeur de <tt>Env</tt>.
+Il s'agit d'une méthode qui pour l'attribut terrain de <tt>Env</tt>, appelle sa méthode <tt>loadFromFile()</tt> codée à la partie précédente. Cette fonction met déjà à jour l'affichage du monde. On peut donc remplacer les appels dans le constructeur de <tt>Env</tt>. <br>
+Le fichier utilisé est déterminé dans la méthode <tt> World::loadFromFile()</tt>, où il est repris depuis le json de configuration choisi. <br>
+L'appel de <tt>Env::reset()</tt> lors de l'appui sur la touche 'r' est réalisé dans <tt> Application.cpp</tt>, plus précisement aux lignes 519 à 529.
+**************************************************************
+### Q3.3
+
+
+
+

@@ -31,3 +31,9 @@ void Env::loadWorldFromFile(){
 void Env::saveWorldToFile(){
     terrain.saveToFile();
 }
+
+
+float Env::getSize() const{
+    return terrain.getSize();
+}
+

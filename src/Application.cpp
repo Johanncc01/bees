@@ -329,7 +329,7 @@ sf::Texture& Application::getTexture(std::string const& name)
 }
 void Application::setConfig(const j::Value& cfg){
   mConfig= new Config(cfg);
-  getEnv().resetControls();
+  //getEnv().resetControls();
 }
 void Application::initHelpBox() {
 	std::ifstream ifs(getHelpTextFile());
@@ -506,7 +506,7 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 	  if (not mIgnoreEnv){
 	  delete mConfig;
 	  mConfig = new Config(j::readFromFile(mAppDirectory + mCfgFile)); // reconstruct
-	  getEnv().resetControls();
+      //getEnv().resetControls();
 	  }
             break;
 

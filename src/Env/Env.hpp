@@ -12,6 +12,8 @@ class Env
 public:
 
     Env();
+    float getSize() const;
+
     void update(sf::Time dt);
     void drawOn(sf::RenderTarget& target);
     void reset();
