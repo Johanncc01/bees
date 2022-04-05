@@ -7,6 +7,7 @@ Env::Env()
     loadWorldFromFile();
     }
     catch (std::runtime_error error){
+        std::cerr << "Error 875.25 file not found : Generating new world... ";
         reset();
     }
 }
@@ -36,4 +37,9 @@ void Env::saveWorldToFile(){
 float Env::getSize() const{
     return terrain.getSize();
 }
+void Env::resetControls()
+{
+
+}
+
 

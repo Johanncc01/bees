@@ -20,6 +20,7 @@ public:
 
     void loadWorldFromFile();
     void saveWorldToFile();
+    void resetControls();
 
 private:
 

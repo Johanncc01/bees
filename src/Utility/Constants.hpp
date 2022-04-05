@@ -18,7 +18,7 @@ double const EPSILON = 1e-8;            ///< a small epsilon value
 std::string const RES_LOCATION = "../res/";
 
 // Define the location of the config file
-std::string const DEFAULT_CFG = "app.json";
+std::string const DEFAULT_CFG = "app3.json";
 
 // Define the location of the font file (could be in the config instead of here)
 std::string const APP_FONT_LOCATION = RES_LOCATION + "sansation.ttf";

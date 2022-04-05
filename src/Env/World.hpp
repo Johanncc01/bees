@@ -18,7 +18,7 @@ struct Seed{
 typedef std::vector<Kind> Grille;
 typedef std::vector<sf::Vertex> Vertexes;
 typedef std::vector<Seed> Seeds;
-
+typedef std::vector<double> Humids;
 class World
 {
 public :
@@ -62,6 +62,8 @@ public :
     // Sauvegarde le monde actuel dans un fichier, selon les conventions de loadFromFile.
     void saveToFile();
 
+//humidity
+    void humidityImpact(size_t);
 private :
     int nb_cells;
     float cell_size;
@@ -70,12 +72,18 @@ private :
     Vertexes grassVertexes_;
     Vertexes waterVertexes_;
     Vertexes rockVertexes_;
+    Vertexes humidityVertexes_;
 
     sf::RenderTexture renderingCache_;
 
     Seeds seeds_;
     size_t nb_wseed;
     size_t nb_gseed;
+
+
+    Humids humidity_lvls;
+    double humidityRange;
+
 
     // Fonctions d'implémentation
     sf::Vector2i randomN();

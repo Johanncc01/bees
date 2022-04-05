@@ -6,6 +6,7 @@
 #include <fstream>
 
 
+
 // Getters
 
 float World::getSize() const{
@@ -31,12 +32,26 @@ void World::reloadConfig(){
     size_t world_size(getAppConfig().world_size);
     nb_cells = getAppConfig().world_cells;
     cell_size = (world_size / nb_cells);
+
     Grille grid((nb_cells*nb_cells), Kind::roche);
     cells_ = grid;
+
     nb_wseed = getAppConfig().world_nb_water_seeds;
     nb_gseed = getAppConfig().world_nb_grass_seeds;
     Seeds seeds_init(nb_wseed + nb_gseed);
     seeds_=seeds_init;
+
+    double humid(0);
+    double cte1(getAppConfig().world_humidity_init_level);
+    double cte2(getAppConfig().world_humidity_decay_rate);
+    double threshold(getAppConfig().world_humidity_threshold);
+
+    while((cte1 * exp(- humid / cte2)) > threshold){
+        ++humid;
+    }
+    humidityRange = humid;
+    Humids new_humidity_lvls(cells_.size(), 0);
+    humidity_lvls = new_humidity_lvls;
 
 }
 
@@ -45,31 +60,37 @@ void World::reloadCacheStructure(){
         grassVertexes_ = vertexes;
         waterVertexes_ = vertexes;
         rockVertexes_ = vertexes;
+        humidityVertexes_ = vertexes;
         renderingCache_.create(nb_cells*cell_size, nb_cells*cell_size);
 }
 
 void World::updateCache(){
     renderingCache_.clear();
+    double maxHum(*max_element(humidity_lvls.begin(),humidity_lvls.end()));
+    double minHum(*min_element(humidity_lvls.begin(),humidity_lvls.end()));
     for (int x(0); x < nb_cells; ++x) {
          for (int y(0); y < nb_cells; ++y) {
              std::vector<size_t> indexes(indexesForCellVertexes(x,y, nb_cells));
+             double niveau_bleu((humidity_lvls[get_id(x,y)] - minHum) /(maxHum - minHum) * 255);
              if (cells_[get_id(x,y)] == Kind::herbe){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 255;
                      waterVertexes_[var].color.a = 0;
                      rockVertexes_[var].color.a = 0;
-                 }
+                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);                 }
              } else if (cells_[get_id(x,y)] == Kind::eau){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 0;
                      waterVertexes_[var].color.a = 255;
                      rockVertexes_[var].color.a = 0;
+                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
                  }
              } else {
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 0;
                      waterVertexes_[var].color.a = 0;
                      rockVertexes_[var].color.a = 255;
+                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
                  }
              }
          }
@@ -104,6 +125,7 @@ void World::reset(bool regenerate){
         if (temp_wseed > 0) {
             --temp_wseed;
             seed.type = Kind::eau;
+            humidityImpact(id);
         } else {
             seed.type = Kind::herbe;
         }
@@ -119,8 +141,12 @@ void World::reset(bool regenerate){
 }
 
 void World::drawOn(sf::RenderTarget& target){
-    sf::Sprite cache(renderingCache_.getTexture());
-    target.draw(cache);
+    if (getAppConfig().showHumidity()) {
+        target.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads);
+    } else {
+        sf::Sprite cache(renderingCache_.getTexture());
+        target.draw(cache);
+    }
 }
 
 
@@ -137,16 +163,22 @@ void World::step(){
                 sf::Vector2i temp(randomN());
                 seed.coords += temp;
                 clamp(seed.coords);
+
             } else {
                 int x(uniform(0 , nb_cells-1));
                 int y(uniform(0 , nb_cells-1));
                 sf::Vector2i temp(x,y);
                 seed.coords = temp;
+
             }
         }
-        size_t i(seed.coords.x+seed.coords.y*nb_cells);
+        size_t i(get_id(seed.coords.x , seed.coords.y));
         if (cells_[i] != Kind::eau) {
             cells_[i] = seed.type;
+            if (seed.type == Kind::eau) {
+                humidityImpact(i);
+
+            }
         }
     }
 }
@@ -188,6 +220,7 @@ void World::smooth(){
            --neighbour_counter;
            if (water_counter/neighbour_counter > seuil_w){
                copie_de_cells_[id] = Kind::eau;
+               humidityImpact(id);
            }
         }
         if (copie_de_cells_[id] == Kind::roche){
@@ -222,6 +255,36 @@ void World::smooths(int nb, bool regenerate){
     }
 }
 
+// Humidity
+
+void World::humidityImpact(size_t id){
+    int x(get_x(id));
+    int y (get_y(id));
+
+    double cte1(getAppConfig().world_humidity_init_level);
+    double cte2(getAppConfig().world_humidity_decay_rate);
+
+    for (int i(x-humidityRange) ; i <= (x + humidityRange + 1) ; i++) {
+        for (int j(y - humidityRange) ; j <= (y + humidityRange + 1) ; j++) {
+
+            sf::Vector2i vec_clamp(i,j);
+            clamp(vec_clamp);
+
+            int a(vec_clamp.x);
+            int b (vec_clamp.y);
+
+
+            int id2(get_id(a,b));
+
+            double dist(std::hypot(x-a,y-b));
+            humidity_lvls[id2] += ( cte1 * exp(- dist / cte2));
+
+        }
+    }
+
+}
+
+
 
 // Sauvegarde
 
@@ -241,8 +304,19 @@ void World::loadFromFile(){
         for (size_t i(0); i < grid.size(); ++i){
             entree >> lu;
             grid[i] = static_cast<Kind>(lu);
-        }
+        }        
         cells_ = grid;
+
+
+        Humids humidity(nb_cells*nb_cells);
+        entree >> std::ws;
+        double lulu(0);
+        for (size_t i(0); i < humidity.size(); ++i){
+            entree >> lulu;
+            humidity[i] = lulu;
+        }
+        humidity_lvls = humidity;
+
         entree.close();
     }
     reloadCacheStructure();
@@ -264,10 +338,15 @@ void World::saveToFile(){
             short lu(static_cast<short>(cells_[i]));
             sortie << lu << " ";
         }
+        sortie << std::endl;
+        for (size_t i(0); i < humidity_lvls.size(); ++i){
+            sortie << humidity_lvls[i] << " ";
+        }
         std::cout << "Opération terminée!" << std::endl;
         sortie.close();
     }
 }
+
 
 
 // Fonctions d'implémentation
