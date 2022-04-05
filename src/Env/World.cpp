@@ -47,7 +47,7 @@ void World::reloadConfig(){
     double threshold(getAppConfig().world_humidity_threshold);
 
     while((cte1 * exp(- humid / cte2)) > threshold){
-        ++humid;
+        humid += 2;
     }
     humidityRange = humid;
     Humids new_humidity_lvls(cells_.size(), 0);
@@ -70,15 +70,17 @@ void World::updateCache(){
     double minHum(*min_element(humidity_lvls.begin(),humidity_lvls.end()));
     for (int x(0); x < nb_cells; ++x) {
          for (int y(0); y < nb_cells; ++y) {
+             size_t id(get_id(x,y));
              std::vector<size_t> indexes(indexesForCellVertexes(x,y, nb_cells));
-             double niveau_bleu((humidity_lvls[get_id(x,y)] - minHum) /(maxHum - minHum) * 255);
-             if (cells_[get_id(x,y)] == Kind::herbe){
+             double niveau_bleu((humidity_lvls[id] - minHum) /(maxHum - minHum) * 255);
+             if (cells_[id] == Kind::herbe){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 255;
                      waterVertexes_[var].color.a = 0;
                      rockVertexes_[var].color.a = 0;
-                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);                 }
-             } else if (cells_[get_id(x,y)] == Kind::eau){
+                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
+                 }
+             } else if (cells_[id] == Kind::eau){
                  for (auto var : indexes){
                      grassVertexes_[var].color.a = 0;
                      waterVertexes_[var].color.a = 255;
@@ -137,11 +139,13 @@ void World::reset(bool regenerate){
         steps(getAppConfig().world_generation_steps);
         smooths(getAppConfig().world_generation_smoothness_level);
     }
+
     updateCache();
 }
 
 void World::drawOn(sf::RenderTarget& target){
     if (getAppConfig().showHumidity()) {
+        target.clear();
         target.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads);
     } else {
         sf::Sprite cache(renderingCache_.getTexture());
@@ -259,29 +263,23 @@ void World::smooths(int nb, bool regenerate){
 
 void World::humidityImpact(size_t id){
     int x(get_x(id));
-    int y (get_y(id));
+    int y(get_y(id));
 
     double cte1(getAppConfig().world_humidity_init_level);
     double cte2(getAppConfig().world_humidity_decay_rate);
 
-    for (int i(x-humidityRange) ; i <= (x + humidityRange + 1) ; i++) {
-        for (int j(y - humidityRange) ; j <= (y + humidityRange + 1) ; j++) {
+    sf::Vector2i range_x(x - humidityRange, x + humidityRange + 1);
+    sf::Vector2i range_y(y - humidityRange, y + humidityRange + 1);
+    clamp(range_x);
+    clamp(range_y);
 
-            sf::Vector2i vec_clamp(i,j);
-            clamp(vec_clamp);
-
-            int a(vec_clamp.x);
-            int b (vec_clamp.y);
-
-
-            int id2(get_id(a,b));
-
-            double dist(std::hypot(x-a,y-b));
-            humidity_lvls[id2] += ( cte1 * exp(- dist / cte2));
-
+    for (int i(range_x.x) ; i <= (range_x.y) ; i++) {
+        for (int j(range_y.x) ; j <= (range_y.y) ; j++) {
+            int id2(get_id(i,j));
+            double dist(std::hypot(x-i,y-j));
+            humidity_lvls[id2] += ( cte1 * exp(-dist / cte2));
         }
-    }
-
+    }    
 }
 
 

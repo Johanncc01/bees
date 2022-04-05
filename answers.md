@@ -85,5 +85,5 @@ Tous les endroits où une graine transmet son type à <tt> cells_</tt>, i.e. dan
 Nous avons créé une nouvelle méthode <tt>World::humidityImpact(int id)</tt>, qui prend en argument l'id de la cellule c1 qui devient une cellule d'eau, et qui met à jour le taux d'humidité des cellules influencées par c1. Elle sera appelée juste après la modification de <tt>cells</tt>.
 **************************************************************
 ### Q3.4
-
+Il suffit d'intégrer à la boucle existante le traitement de l'humidité, i.e. calculer <tt>niveau bleu</tt> pour chaque cellule et l'assigner au <tt> humidityVertexes</tt> pour chaque indice des quads. (au même endroit que l'herbe, l'eau et la pierre)
 

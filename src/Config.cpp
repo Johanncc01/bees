@@ -33,7 +33,7 @@ Config::Config (const j::Value& cfg): mConfig(cfg)
 , world_textures(mConfig["simulation"]["world"]["textures"])
 
 , world_humidity_init_level(mConfig["simulation"]["world"]["generation"]["humidity"]["initial level"].toDouble())
-, world_humidity_decay_rate(mConfig["simulation"]["world"]["generation"]["humidity"]["initial level"].toDouble())
+, world_humidity_decay_rate(mConfig["simulation"]["world"]["generation"]["humidity"]["decay rate"].toDouble())
 , world_humidity_threshold(mConfig["simulation"]["world"]["generation"]["humidity"]["threshold"].toDouble())				   
   ,world_generation_steps(mConfig["simulation"]["world"]["generation"]["steps"].toInt())
   ,world_generation_smoothness_level(mConfig["simulation"]["world"]["generation"]["smoothness"]["level"].toInt())
