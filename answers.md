@@ -80,7 +80,10 @@ Le fichier utilisé est déterminé dans la méthode <tt> World::loadFromFile()<
 L'appel de <tt>Env::reset()</tt> lors de l'appui sur la touche 'r' est réalisé dans <tt> Application.cpp</tt>, plus précisement aux lignes 519 à 529.
 **************************************************************
 ### Q3.3
-
-
+Tous les endroits où une graine transmet son type à <tt> cells_</tt>, i.e. dans : 
+<ul> - l'initialisation des graines dans <tt>World::reset()</tt> <br> - l'avancement des graines dans <tt> World::step()</tt> <br> - le lissage dans <tt>World::smooth()</tt> </ul>
+Nous avons créé une nouvelle méthode <tt>World::humidityImpact(int id)</tt>, qui prend en argument l'id de la cellule c1 qui devient une cellule d'eau, et qui met à jour le taux d'humidité des cellules influencées par c1. Elle sera appelée juste après la modification de <tt>cells</tt>.
+**************************************************************
+### Q3.4
 
 
