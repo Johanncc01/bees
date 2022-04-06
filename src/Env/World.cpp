@@ -1,4 +1,5 @@
 #include "World.hpp"
+#include "Utility/Utility.hpp"
 #include <Application.hpp>
 #include <Utility/Vertex.hpp>
 #include <Random/Random.hpp>
@@ -13,15 +14,15 @@ float World::getSize() const{
     return nb_cells * cell_size;
 }
 
-int World::get_id(int x, int y){
+int World::get_id(int x, int y) const{
     return x + y*nb_cells;
 }
 
-int World::get_x(int id){
+int World::get_x(int id) const{
     return id % nb_cells;
 }
 
-int World::get_y(int id){
+int World::get_y(int id) const{
     return id / nb_cells;
 }
 
@@ -143,10 +144,16 @@ void World::reset(bool regenerate){
     updateCache();
 }
 
-void World::drawOn(sf::RenderTarget& target){
+void World::drawOn(sf::RenderTarget& target) const{
     if (getAppConfig().showHumidity()) {
-        target.clear();
         target.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads);
+        if (isDebugOn()){
+            sf::Vector2i curseur(getApp().getCursorPositionInView());
+            sf::Vector2i position(curseur.x/cell_size,curseur.y/cell_size);
+            sf::Vector2i affichage(curseur.x,curseur.y-30);
+            auto const text = buildText(to_nice_string(humidity_lvls[get_id(position.x,position.y)]), affichage, getAppFont(), 30, sf::Color::Red);
+            target.draw(text);
+        }
     } else {
         sf::Sprite cache(renderingCache_.getTexture());
         target.draw(cache);
@@ -349,7 +356,7 @@ void World::saveToFile(){
 
 // Fonctions d'implémentation
 
-sf::Vector2i World::randomN(){
+sf::Vector2i World::randomN() const{
     int i(uniform(0,3));
     if (i == 0){
         sf::Vector2i temp(-1,0);
@@ -366,7 +373,7 @@ sf::Vector2i World::randomN(){
     }
 }
 
-void World::clamp(sf::Vector2i& vect){
+void World::clamp(sf::Vector2i& vect) const{
     if (vect.x > nb_cells-1){
         vect.x = nb_cells-1;
     }

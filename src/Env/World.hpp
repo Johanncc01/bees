@@ -25,9 +25,9 @@ public :
 
 // Getters pour la taille du monde, ainsi que les id du vector
     float getSize() const;
-    int get_id(int, int);
-    int get_x(int);
-    int get_y(int);
+    int get_id(int, int) const;
+    int get_x(int) const;
+    int get_y(int) const;
 
 // Fonctions graphiques
     // reloadConfig initialise les caractéristiques principales du mondes à partir du fichier JSON utilisé
@@ -41,7 +41,7 @@ public :
     void reset(bool = true);
 
     // drawOn se contente de dessiner la texture qui lui est fournie en argument
-    void drawOn(sf::RenderTarget&);
+    void drawOn(sf::RenderTarget&) const;
 
 // Génération aléatoire
     // step fait avancer d'une cellule chaque graine sur la carte dans une direction aléatoire.
@@ -64,6 +64,7 @@ public :
 
 //humidity
     void humidityImpact(size_t);
+
 private :
     int nb_cells;
     float cell_size;
@@ -86,8 +87,8 @@ private :
 
 
     // Fonctions d'implémentation
-    sf::Vector2i randomN();
-    void clamp(sf::Vector2i&);
+    sf::Vector2i randomN() const;
+    void clamp(sf::Vector2i&) const;
 };
 
 
