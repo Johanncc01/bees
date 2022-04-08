@@ -1,3 +1,4 @@
+#pragma once
 #ifndef FLOWER_HPP
 #define FLOWER_HPP
 #include <SFML/Graphics.hpp>
@@ -6,12 +7,12 @@
 class Flower : public Collider
 {
 public:
-
-
-private :
-
+    Flower(Vec2d const&, double, double);
+    double takePollen(double);
+    void drawOn(sf::RenderTarget&, double);
+private:
     double pollen_quantity;
-
+    sf::Texture texture;
 };
 
 #endif // FLOWER_HPP

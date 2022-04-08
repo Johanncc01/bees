@@ -101,8 +101,10 @@ public:
   const double flower_nectar_min;
   const double flower_nectar_max;
   const double flower_growth_threshold;
-   const double flower_growth_split;
-  
+  const double flower_growth_split;
+  const j::Value flower_textures;
+  const size_t flower_max_number;
+
   // hives
   const int initial_hive_count;
   const int hives_max_failures;

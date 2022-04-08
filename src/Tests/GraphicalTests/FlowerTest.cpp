@@ -56,7 +56,7 @@ void FlowerTest::onEvent(sf::Event event, sf::RenderWindow&)
     } else if (event.type == sf::Event::KeyReleased) {
         switch (event.key.code) {
         default: break;
-	 /*  UNCOMMENT WHEN THE NEEDED MATERIAL IS CODED 
+        //UNCOMMENT WHEN THE NEEDED MATERIAL IS CODED
         // Add flower: try to create a new one and disable visualisation zone
         case sf::Keyboard::F:
             mShowFlowerZone = false;
@@ -66,7 +66,7 @@ void FlowerTest::onEvent(sf::Event event, sf::RenderWindow&)
                 std::cout << "Couldn't create new flower\n";
             }
             break;
-	 */
+
         }
     }
 }
@@ -76,7 +76,7 @@ void FlowerTest::onDraw(sf::RenderTarget& target)
     if (mShowFlowerZone) {
         auto pos = getCursorPositionInView();
 	// UNCOMMENT WHEN THE METHOD IS CODED
-        //getEnv().drawFlowerZone(target, pos);
+        getEnv().drawFlowerZone(target, pos);
     }
 }
 

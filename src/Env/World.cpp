@@ -1,6 +1,6 @@
 #include "World.hpp"
-#include "Utility/Utility.hpp"
 #include <Application.hpp>
+#include "Utility/Utility.hpp"
 #include <Utility/Vertex.hpp>
 #include <Random/Random.hpp>
 #include <iostream>
@@ -386,4 +386,15 @@ void World::clamp(sf::Vector2i& vect) const{
     if (vect.y < 0){
         vect.y = 0;
     }
+}
+
+
+bool World::isGrowable(Vec2d const& pos) const{
+    Vec2d coords(coords_from_pos(pos));
+    return (cells_[get_id(coords.x(), coords.y())] == Kind::herbe);
+}
+
+Vec2d World::coords_from_pos(Vec2d const& pos) const{
+    Vec2d coords(pos.x()/cell_size, pos.y()/cell_size);
+    return coords;
 }

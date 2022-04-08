@@ -64,11 +64,16 @@ public:
     // Surcharge l'opérateur '|' pour la fonction "isColliding" si l'argument est un "Collider"
     bool operator|(Collider const&) const;
 
+
 private:
-    Vec2d center;
-    double radius;
+    //Vec2d center;
+    //double radius;
     // Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
     void clamp();
+
+protected:
+    Vec2d center;
+    double radius;
 };
 
 // Surcharge l'opérateur d'affichage pour formater la sortie d'une instance de la classe "Collider"

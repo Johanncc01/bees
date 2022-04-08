@@ -86,4 +86,53 @@ Nous avons créé une nouvelle méthode <tt>World::humidityImpact(int id)</tt>, 
 **************************************************************
 ### Q3.4
 Il suffit d'intégrer à la boucle existante le traitement de l'humidité, i.e. calculer <tt>niveau bleu</tt> pour chaque cellule et l'assigner au <tt> humidityVertexes</tt> pour chaque indice des quads. (au même endroit que l'herbe, l'eau et la pierre)
+**************************************************************
+### Q3.5
+Il faut faire en sorte que <tt>Flower</tt> hérite de la classe <tt>Collider</tt>, pour que les méthodes déjà définies pour la gestion des collisions soient disponibles pour cette nouvelle classe.
+**************************************************************
+### Q3.6
+Pour que le choix de la texture se fasse uniquement à la création de la fleur, nous pourrions déplacer les traitements nécessaires dans le constructeur de <tt>Flower</tt>. Ainsi, la texture serait déterminée dès le début de vie et ne changerait pas.
+**************************************************************
+### Q3.7
+Pour prévoir les différentes sortes de fleurs, qui peuvent avoir des traitements différents selon leur nature, il faut définir la collection de fleurs de façon à pouvoir utiliser le polymorphisme, i.e. comme une collection de pointeurs sur <tt>Flower</tt>.
+
+**************************************************************
+### Q3.8
+Lors de la destruction d'un <tt>Env</tt>, il faut penser à également détruire tous les éléments qui ne peuvent pas vivre en dehors de lui, ici les fleurs. Ce traitement sera spécifié dans le destructeur de <tt>Env</tt>.
+**************************************************************
+### Q3.9
+De placer ces suppressions dans les instructions liées au destructeur de <tt>Env</tt>, qui prendra donc soin de supprimer à la fois les fleurs et le terrain. **_Supprimer le terrain = ?, puisqu'il y a pas de pointeurs ou d'alloc dynamique ?_**
+**************************************************************
+### Q3.10
+<tt>Env::drawOn</tt> doit maintenant appeler <tt>Flower::drawOn</tt> pour chaque fleur faisant partie de l'environnement, en plus de l'appel existant à <tt>World::drawOn</tt>.
+**************************************************************
+### Q3.11
+
+
+
+**************************************************************
+### Q3.12
+
+
+
+**************************************************************
+### Q3.13
+
+
+
+**************************************************************
+### Q3.14
+
+
+
+
+**************************************************************
+### Q3.15
+
+
+
+
+**************************************************************
+### Q3.16
+
 

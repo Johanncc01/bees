@@ -1,8 +1,10 @@
 #pragma once
 #ifndef WORLD_HPP
 #define WORLD_HPP
-#include <vector>
 #include <SFML/Graphics.hpp>
+#include <Utility/Vec2d.hpp>
+#include <vector>
+
 
 // Contenu des cellules
 enum class Kind : short { herbe, eau, roche };
@@ -28,6 +30,7 @@ public :
     int get_id(int, int) const;
     int get_x(int) const;
     int get_y(int) const;
+    Vec2d coords_from_pos(Vec2d const&) const;
 
 // Fonctions graphiques
     // reloadConfig initialise les caractéristiques principales du mondes à partir du fichier JSON utilisé
@@ -65,10 +68,15 @@ public :
 //humidity
     void humidityImpact(size_t);
 
-private :
+
+    bool isGrowable(Vec2d const&) const;
+
+protected:
     int nb_cells;
     float cell_size;
     Grille cells_;
+
+private:
 
     Vertexes grassVertexes_;
     Vertexes waterVertexes_;
