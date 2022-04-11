@@ -398,3 +398,9 @@ Vec2d World::coords_from_pos(Vec2d const& pos) const{
     Vec2d coords(pos.x()/cell_size, pos.y()/cell_size);
     return coords;
 }
+
+
+double World::get_humidity(Vec2d const& pos) const{
+    Vec2d coords(coords_from_pos(pos));
+    return humidity_lvls[get_id(coords.x(), coords.y())];
+}

@@ -24,9 +24,28 @@ double Flower::takePollen(double asked){
     }
 }
 
-void Flower::drawOn(sf::RenderTarget& target, double world_size){
-    Vec2d pos(center.x()*world_size, center.y()*world_size);
-    auto flowerSprite = buildSprite(pos, radius, texture);
+void Flower::drawOn(sf::RenderTarget& target) const{
+    auto flowerSprite = buildSprite(center, radius, texture);
     target.draw(flowerSprite);
 }
 
+void Flower::update(sf::Time dt){
+    double seuil(getAppConfig().flower_growth_threshold);
+    double humidity(getAppEnv().get_world_humidity(center));
+    pollen_quantity += (dt.asSeconds() * log(humidity/seuil));
+    int i(0);
+    Vec2d new_pos;
+    if (pollen_quantity > getAppConfig().flower_growth_split){
+        pollen_quantity /= 2;
+        do {
+        double d(uniform(1.5*radius, 2.5*radius));
+        new_pos = center+ Vec2d::fromRandomAngle()*d;
+        ++i;
+        } while (!(getAppEnv().addFlowerAt(new_pos)));
+    }
+}
+
+
+bool Flower::hasPollen() const{
+    return (pollen_quantity > 0);
+}

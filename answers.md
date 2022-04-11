@@ -107,17 +107,13 @@ De placer ces suppressions dans les instructions liées au destructeur de <tt>En
 <tt>Env::drawOn</tt> doit maintenant appeler <tt>Flower::drawOn</tt> pour chaque fleur faisant partie de l'environnement, en plus de l'appel existant à <tt>World::drawOn</tt>.
 **************************************************************
 ### Q3.11
-
-
-
+Comme la méthode doit avoir accès au tableau des valeurs d'humidités, il faut la placer dans <tt>World</tt>, puis l'appeler à partir d'une nouvelle méthode de <tt>Env</tt>. (accessible grâce à <tt>getAppEnv()</tt>)
 **************************************************************
 ### Q3.12
-
-
-
+Il faut faire en sorte que la méthode <tt>Env::update(sf::Time dt)</tt> appelle pour chaque fleur de la collection de fleurs sa méthode <tt>Flower::update(sf::Time dt)</tt>. Attention à itérer sur l'ensemble initial et pas sur les fleurs nouvellement ajoutées.
 **************************************************************
 ### Q3.13
-
+Après l'appel de <tt>Flower::update(sf::Time dt)</tt> dans <tt> Env::update(sf::Time dt)</tt>, si la quantité de pollen de la fleur en cours est nulle, il faut alors la supprimer (via delete) et assigner son pointeur dans le tableau à <tt>nullptr</tt>. A la fin de la boucle, l'insctruction donnée dans l'énoncé permet de supprimer tous les <tt>nullptr</tt> présents dans le vector de fleurs de <tt>Env</tt>.
 
 
 **************************************************************

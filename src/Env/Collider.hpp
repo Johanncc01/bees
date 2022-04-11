@@ -66,8 +66,6 @@ public:
 
 
 private:
-    //Vec2d center;
-    //double radius;
     // Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
     void clamp();
 
