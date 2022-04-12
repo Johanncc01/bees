@@ -3,8 +3,10 @@
 #define FLOWER_HPP
 #include <SFML/Graphics.hpp>
 #include "Collider.hpp"
+#include <Interface/Drawable.hpp>
+#include <Interface/Updatable.hpp>
 
-class Flower : public Collider
+class Flower : public Collider , public Drawable , public Updatable
 {
 public:
     Flower(Vec2d const&, double, double);

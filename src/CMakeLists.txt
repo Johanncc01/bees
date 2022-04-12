@@ -125,11 +125,11 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	      ##Graphical tests:
 
 	      ## WorldTest
-	      #add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+             # add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
              #target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	     ## FlowerTest
-	      add_executable(flowerTest ${TEST_DIR}/GraphicalTests/FLowerTest.cpp ${SOURCES_GFX})
+              add_executable(flowerTest ${TEST_DIR}/GraphicalTests/FLowerTest.cpp ${SOURCES_GFX})
               target_link_libraries(flowerTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	   

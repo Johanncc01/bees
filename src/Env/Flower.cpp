@@ -38,10 +38,10 @@ void Flower::update(sf::Time dt){
     if (pollen_quantity > getAppConfig().flower_growth_split){
         pollen_quantity /= 2;
         do {
-        double d(uniform(1.5*radius, 2.5*radius));
+        double d(uniform(1.5*radius, 2.5*radius));  // size min , size_max ?
         new_pos = center+ Vec2d::fromRandomAngle()*d;
         ++i;
-        } while (!(getAppEnv().addFlowerAt(new_pos)));
+        } while (!(getAppEnv().addFlowerAt(new_pos)) and i < 100); // max failures ???
     }
 }
 

@@ -4,17 +4,25 @@
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include "Flower.hpp"
+#include "FlowerGenerator.hpp"
 #include <vector>
-//#include <memory>
+#include <Interface/Drawable.hpp>
+#include <Interface/Updatable.hpp>
 
 
-class Env
+
+typedef std::vector<Flower*> Flowers;
+
+class Env : public Drawable , public Updatable
 
 {
 
 public:
 
     Env();
+    Env(Env const&) = delete;
+    Env operator=(Env const&) = delete;
+
     ~Env();
     float getSize() const;
     double get_world_humidity(Vec2d const&) const;
@@ -33,7 +41,9 @@ public:
 private:
 
     World terrain;
-    std::vector<Flower*> flowers;
+    Flowers flowers;
+
+    FlowerGenerator generator;
 
     void destroyAll();
 

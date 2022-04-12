@@ -27,6 +27,7 @@ void Env::destroyAll(){
 
 void Env::update(sf::Time dt){
     terrain.updateCache();
+    generator.update(dt);
     for (size_t i(0); i < flowers.size(); ++i){
         flowers[i]->update(dt);
         if (!(flowers[i]->hasPollen())){
@@ -49,6 +50,7 @@ void Env::drawOn(sf::RenderTarget& target) const{
 void Env::reset(){
     destroyAll();
     terrain.reset();
+    generator.reset();
 }
 
 void Env::loadWorldFromFile(){
@@ -75,6 +77,9 @@ bool Env::addFlowerAt(Vec2d const& p){
     if ((flowers.size() < getAppConfig().flower_max_number) and (terrain.isGrowable(p))){
         double rad(getAppConfig().flower_manual_size);
         double pollen(uniform(getAppConfig().flower_nectar_min, getAppConfig().flower_nectar_max));
+        if (terrain.get_humidity(p) < getAppConfig().flower_growth_threshold) {
+        return false;
+        }
         flowers.push_back(new Flower(p, rad, pollen));
         return true;
     }
@@ -84,7 +89,7 @@ bool Env::addFlowerAt(Vec2d const& p){
 
 void Env::drawFlowerZone(sf::RenderTarget& target, Vec2d const& pos){
     double size(getAppConfig().flower_manual_size);
-    if (terrain.isGrowable(pos) and (flowers.size() < getAppConfig().flower_max_number)){
+    if (terrain.isGrowable(pos) and (flowers.size() < getAppConfig().flower_max_number) and terrain.get_humidity(pos) >= getAppConfig().flower_growth_threshold){
         auto shape = buildAnnulus(pos, size, sf::Color::Green, 3.0);
         target.draw(shape);
     } else {

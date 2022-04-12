@@ -3,7 +3,10 @@
 #define WORLD_HPP
 #include <SFML/Graphics.hpp>
 #include <Utility/Vec2d.hpp>
+#include <Interface/Drawable.hpp>
 #include <vector>
+
+
 
 
 // Contenu des cellules
@@ -21,9 +24,21 @@ typedef std::vector<Kind> Grille;
 typedef std::vector<sf::Vertex> Vertexes;
 typedef std::vector<Seed> Seeds;
 typedef std::vector<double> Humids;
-class World
+
+
+class World : public Drawable
 {
 public :
+
+//Constructeurs
+    //Constructeur :
+    World();
+
+    //Supprime les copies pour éviter les erreurs
+    World(World const&) = delete;
+    World& operator=(World const&) = delete;
+
+
 
 // Getters pour la taille du monde, ainsi que les id du vector
     float getSize() const;

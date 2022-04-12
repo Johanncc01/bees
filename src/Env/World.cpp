@@ -6,6 +6,12 @@
 #include <iostream>
 #include <fstream>
 
+//Constructeurs
+    World::World()
+    {
+        reset();
+
+    };
 
 
 // Getters
