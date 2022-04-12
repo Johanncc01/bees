@@ -12,7 +12,7 @@
 - Victor a eu une très bonne idée pour la double boucle
 
 *************************************************
-## 22.03 (mardi)
+## 22.03 (mardi - TP)
 
 - fin du codage de la classe <tt> Collider</tt> lors de la première série du projet 
 - commentaires du code de la partie 1
@@ -33,7 +33,7 @@
 - début de la partie 2.2 avec <tt>loadFromFile()</tt>
 
 *************************************************
-## 29.03 (mardi)
+## 29.03 (mardi - TP)
 
 - partie 2.3 sur la génération aléatoire en série :
 	- <tt>step()</tt> terminée
@@ -48,3 +48,37 @@
 	- commentaire du code
 - rédaction du journal_1
 - début de la réflexion sur le codage de la méthode <tt>saveToFile()</tt>
+
+*************************************************
+## 01.04 (vendredi)
+- finalisation de <tt>saveToFile()</tt> par Johann
+- commentaires des fichiers déjà codés par Victor
+- téléchargement partie 3
+
+*************************************************
+## 04.04 (lundi)
+- création de la classe <tt>Env</tt>, définition des premières méthodes reprennant celles de <tt>World</tt>
+
+*************************************************
+## 05.04 (mardi - TP)
+- Partie 3.1 : 
+	- codage de la fonction <tt>World::humidityImpact()</tt>, qui s'occupe de remplir le tableau des valeurs d'humidité
+	- affichage des niveaux d'humidité si <tt>showHumidity</tt> est à true (appui sur w) codé
+- codage du débug de la fin de la partie 3.1
+
+*************************************************
+## 08.04 (vendredi)
+- partie 3.2 : 
+	- création de <tt>Flower.hpp/.cpp</tt>
+	- ébauche de code des méthodes d'affichage (<tt>drawOn</tt>), d'ajout des fleurs (<tt>addFlowerAt</tt>), ...
+- Les tests semblent passer sur <tt>app5.json</tt>, mais le programme est trop lent sur les autres fichiers de configuration... Il faut demander si il y a un problème au prochain TP.
+
+*************************************************
+## 12.04 (mardi - TP)
+- fin de la partie 3.3 :
+	- création et codage de <tt>FlowerGenerator.hpp/.cpp</tt>
+	- introduction de l'héritage multiple avec <tt>Drawable</tt> et <tt>Updatable</tt> pour toutes les classes codées jusqu'à présent
+	- tests fontionnels : la génération est automatique !
+- Reste à faire :
+	- optimiser le programme pour gagner en rapidité, surtout sur les boucles imbriquées (peut-être dans <tt>World::smooth</tt> ?)
+	- commenter toute la partie 3 selon la norme demandée, i.e. avec @brief, @argument, @return.
