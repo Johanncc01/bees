@@ -114,21 +114,16 @@ Il faut faire en sorte que la méthode <tt>Env::update(sf::Time dt)</tt> appelle
 **************************************************************
 ### Q3.13
 Après l'appel de <tt>Flower::update(sf::Time dt)</tt> dans <tt> Env::update(sf::Time dt)</tt>, si la quantité de pollen de la fleur en cours est nulle, il faut alors la supprimer (via delete) et assigner son pointeur dans le tableau à <tt>nullptr</tt>. A la fin de la boucle, l'insctruction donnée dans l'énoncé permet de supprimer tous les <tt>nullptr</tt> présents dans le vector de fleurs de <tt>Env</tt>.
-
-
 **************************************************************
 ### Q3.14
-
-
-
-
+Les classes <tt>Drawable</tt> et <tt> Updatable</tt> possèdent respectivement des méhthodes virtuelles pures <tt> virtual void drawOn(sf::RenderTarget) const = 0</tt> et <tt> virtual void update(sf::Time) const = 0</tt>. <br>
+Il faut donc faire hériter de ces classes toutes nos classes qui ont une méthode <tt>drawOn</tt> ou <tt> update</tt>, i.e. :
+<ul> - <tt>Env</tt> : les deux  <br> - <tt>Flower</tt> : les deux <br> - <tt>World</tt> : juste <tt>Drawable</tt> </ul>
+L'avantage conceptionnel est que nous sommes forcés à redéfinir ces méthodes dans nos sous-classes.
 **************************************************************
 ### Q3.15
-
-
-
-
+Il faut penser à supprimer le constructeur de copie, et l'opérateur d'affectation dans <tt>World</tt> et <tt> Env</tt> avec le mot clé <tt>delete</tt>.
 **************************************************************
 ### Q3.16
-
+Il faut maintenant appeller la méthode <tt>FlowerGenerator::update</tt> dans <tt>Env::reset</tt>.
 
