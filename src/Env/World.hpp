@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WORLD_HPP
-#define WORLD_HPP
 #include <SFML/Graphics.hpp>
 #include <Utility/Vec2d.hpp>
 #include <Interface/Drawable.hpp>
@@ -87,6 +85,8 @@ public :
 
     bool isGrowable(Vec2d const&) const;
 
+    bool isHiveable(const Vec2d&, double) const;
+
 protected:
     int nb_cells;
     float cell_size;
@@ -115,6 +115,3 @@ private:
     void clamp(sf::Vector2i&) const;
 };
 
-
-
-#endif // WORLD_HPP

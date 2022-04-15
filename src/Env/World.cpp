@@ -1,6 +1,6 @@
 #include "World.hpp"
 #include <Application.hpp>
-#include "Utility/Utility.hpp"
+#include <Utility/Utility.hpp>
 #include <Utility/Vertex.hpp>
 #include <Random/Random.hpp>
 #include <iostream>
@@ -392,7 +392,10 @@ void World::clamp(sf::Vector2i& vect) const{
 
 bool World::isGrowable(Vec2d const& pos) const{
     Vec2d coords(coords_from_pos(pos));
-    return (cells_[get_id(coords.x(), coords.y())] == Kind::herbe);
+    bool herbe(cells_[get_id(coords.x(), coords.y())] == Kind::herbe);
+    Collider temp(pos, getAppConfig().flower_manual_size);
+    bool hive(getAppEnv().getCollidingHive(temp) == nullptr);
+    return (herbe and hive);
 }
 
 Vec2d World::coords_from_pos(Vec2d const& pos) const{
@@ -403,4 +406,9 @@ Vec2d World::coords_from_pos(Vec2d const& pos) const{
 double World::get_humidity(Vec2d const& pos) const{
     Vec2d coords(coords_from_pos(pos));
     return humidity_lvls[get_id(coords.x(), coords.y())];
+}
+
+bool World::isHiveable(const Vec2d& pos, double rad) const{
+    //Vec2d coords(coords_from_pos(pos));
+    return true;
 }

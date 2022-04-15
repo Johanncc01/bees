@@ -75,8 +75,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	
       ##Units tests:
       ## Collider
-        add_executable (colliderTest  ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
-	target_link_libraries(colliderTest sfml-graphics sfml-window sfml-system)
+        #add_executable (colliderTest  ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
+        #target_link_libraries(colliderTest sfml-graphics sfml-window sfml-system)
 	#JSON parser
        #add_executable (jsonTest  ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
        #target_link_libraries(jsonTest sfml-graphics sfml-window sfml-system)
@@ -87,16 +87,16 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 
 	# #Graphical tests:
 	## WorldTest
-        add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-       target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
+        #add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+        #target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
 
        ## FlowerTest
         add_executable (flowerTest  ${TEST_DIR}/GraphicalTests/FlowerTest.cpp ${SOURCES_GFX})
         target_link_libraries(flowerTest sfml-graphics sfml-window sfml-system)
 
 	## HiveTest
-        #add_executable (hiveTest  ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
-        #target_link_libraries(hiveTest sfml-graphics sfml-window sfml-system)
+        add_executable (hiveTest  ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
+        target_link_libraries(hiveTest sfml-graphics sfml-window sfml-system)
 
 
        
@@ -116,8 +116,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 
 	    ##Units tests:
 	    ## Collider
-	     add_executable (colliderTest ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
-             target_link_libraries(colliderTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+             #add_executable (colliderTest ${TEST_DIR}/UnitTests/ColliderTest.cpp ${SOURCES} ${CACHE_SOURCES})
+             #target_link_libraries(colliderTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 	     ## JSON parser
 	     #add_executable (jsonTest ${TEST_DIR}/UnitTests/JSONTest.cpp ${SOURCES} ${CACHE_SOURCES})
              #target_link_libraries(jsonTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
@@ -129,16 +129,16 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	      ##Graphical tests:
 
 	      ## WorldTest
-	      add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-             target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+              #add_executable(worldTest ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+              #target_link_libraries(worldTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	     ## FlowerTest
 	      add_executable(flowerTest ${TEST_DIR}/GraphicalTests/FLowerTest.cpp ${SOURCES_GFX})
               target_link_libraries(flowerTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	      ## HiveTest
-	      #add_executable(hiveTest ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
-              #target_link_libraries(hiveTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+              add_executable(hiveTest ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
+              target_link_libraries(hiveTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
         else()
             message(STATUS "SFML NOT FOUND ! ")

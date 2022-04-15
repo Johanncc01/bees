@@ -126,4 +126,36 @@ Il faut penser à supprimer le constructeur de copie, et l'opérateur d'affectat
 **************************************************************
 ### Q3.16
 Il faut maintenant appeller la méthode <tt>FlowerGenerator::update</tt> dans <tt>Env::reset</tt>.
+**************************************************************
+
+
+## Partie 4
+
+**************************************************************
+### Q4.1
+Notre classe <tt>Bee</tt> sera certainement une super-classe dont vont hériter tout les différents types d'abaeilles que nous allons implémenter. Pour utiliser le polymorphisme, nous aurons donc besoin d'utiliser un vecteur de pointeurs sur <tt>Bee</tt> dans les ruches où nous allons les stocker.
+**************************************************************
+### Q4.2
+<tt>Hive</tt> héritera de :
+<ul> - <tt> Collider</tt>, pour avoir directement les tests de collision <br> - <tt>Drawable</tt> car elle contient une méthode <tt>drawOn</tt> <br> - <tt>Updatable</tt> car elle contient une méthode <tt>update</tt> </ul> 
+Elle contiendra évidemment un vector de <tt>Bees</tt> et un double de pollen, pour modéliser les fonctions comme demandé dans l'énoncé.
+**************************************************************
+### Q4.3
+Nous supprimerons le constructeur de copie, et l'opérateur d'affectation dans <tt>Hive</tt> avec le mot clé <tt>delete</tt>, comme à la question 3.15.
+**************************************************************
+### Q4.4
+Dans le destructeur de <tt>Hive</tt>, il ne faut pas oublier de <tt>delete</tt> tous les éléments pointés par le vector <tt>bees</tt> de <tt>Hive</tt>, ainsi que de le vider.
+**************************************************************
+### Q4.5
+Non, elles doivent disparaître dans le destructeur de <tt>Env</tt>
+**************************************************************
+### Q4.6
+Il faut modifier <tt>World::isGrowable</tt> pour qu'elle détecte la présence de ruches, en utilisant <tt>Env::getCollidingHive</tt> via <tt>getAppEnv</tt>.
+**************************************************************
+### Q4.7
+Il faut ajouter une itération sur les pointeurs sur <tt>Hive</tt> pour détruire leur contenu comme fait pour les fleurs précedemment.
+
+
+
+
 

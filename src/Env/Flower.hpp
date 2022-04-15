@@ -1,6 +1,4 @@
 #pragma once
-#ifndef FLOWER_HPP
-#define FLOWER_HPP
 #include <SFML/Graphics.hpp>
 #include "Collider.hpp"
 #include <Interface/Drawable.hpp>
@@ -17,8 +15,6 @@ public:
     bool hasPollen() const;
 
 private:
-    double pollen_quantity;
+    double pollen;
     sf::Texture texture;
 };
-
-#endif // FLOWER_HPP

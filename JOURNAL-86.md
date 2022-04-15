@@ -87,3 +87,5 @@
 ## 15.04 (vendredi)
 - Commentaires partie 3
 - Multiples tests pour améliorer la réactivité du programme comme conseillé en TP par l'assistant
+	- solution trouvée sur piazza (pas d'appel à <tt>World::updateCache()</tt> dans <tt>Env::update()</tt> car le monde n'a pas besoin d'être reaffiché tout le temps)
+- téléchargement et début de la partie 4

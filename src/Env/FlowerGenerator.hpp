@@ -1,6 +1,4 @@
 #pragma once
-#ifndef FLOWERGENERATOR_HPP
-#define FLOWERGENERATOR_HPP
 #include <SFML/Graphics.hpp>
 #include <Interface/Updatable.hpp>
 
@@ -16,4 +14,3 @@ private:
 
 };
 
-#endif // FLOWERGENERATOR_HPP

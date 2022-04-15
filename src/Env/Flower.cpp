@@ -1,10 +1,10 @@
 #include "Flower.hpp"
 #include <Application.hpp>
-#include "Utility/Utility.hpp"
+#include <Utility/Utility.hpp>
 #include <Random/Random.hpp>
 
-Flower::Flower(Vec2d const& cen, double rad, double pollen)
-    : Collider(cen, rad), pollen_quantity(pollen)
+Flower::Flower(Vec2d const& cen, double rad, double pol)
+    : Collider(cen, rad), pollen(pol)
 {
     auto const& textures(getAppConfig().flower_textures);
     int taille(textures.size());
@@ -14,12 +14,12 @@ Flower::Flower(Vec2d const& cen, double rad, double pollen)
 }
 
 double Flower::takePollen(double asked){
-    if (pollen_quantity >= asked){
-        pollen_quantity -= asked;
+    if (pollen >= asked){
+        pollen -= asked;
         return asked;
     } else {
-        double left(pollen_quantity);
-        pollen_quantity = 0;
+        double left(pollen);
+        pollen = 0;
         return left;
     }
 }
@@ -32,11 +32,11 @@ void Flower::drawOn(sf::RenderTarget& target) const{
 void Flower::update(sf::Time dt){
     double seuil(getAppConfig().flower_growth_threshold);
     double humidity(getAppEnv().get_world_humidity(center));
-    pollen_quantity += (dt.asSeconds() * log(humidity/seuil));
+    pollen += (dt.asSeconds() * log(humidity/seuil));
     int i(0);
     Vec2d new_pos;
-    if (pollen_quantity > getAppConfig().flower_growth_split){
-        pollen_quantity /= 2;
+    if (pollen > getAppConfig().flower_growth_split){
+        pollen /= 2;
         do {
         double d(uniform(1.5*radius, 2.5*radius));  // size min , size_max ?
         new_pos = center+ Vec2d::fromRandomAngle()*d;
@@ -47,5 +47,5 @@ void Flower::update(sf::Time dt){
 
 
 bool Flower::hasPollen() const{
-    return (pollen_quantity > 0);
+    return (pollen > 0);
 }
