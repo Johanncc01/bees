@@ -26,7 +26,6 @@ void Env::destroyAll(){
 }
 
 void Env::update(sf::Time dt){
-    terrain.updateCache();
     generator.update(dt);
     for (size_t i(0); i < flowers.size(); ++i){
         flowers[i]->update(dt);
