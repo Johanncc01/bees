@@ -82,3 +82,8 @@
 - Reste à faire :
 	- optimiser le programme pour gagner en rapidité, surtout sur les boucles imbriquées (peut-être dans <tt>World::smooth</tt> ?)
 	- commenter toute la partie 3 selon la norme demandée, i.e. avec @brief, @argument, @return.
+
+*************************************************
+## 15.04 (vendredi)
+- Commentaires partie 3
+- Multiples tests pour améliorer la réactivité du programme comme conseillé en TP par l'assistant
