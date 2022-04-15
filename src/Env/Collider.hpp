@@ -14,65 +14,175 @@ class Collider
 public:
 // Constructeurs
 
-    // Constructeur de base
+    /*!
+     * @brief Constructeur de base.
+     *
+     * @param centre du collider
+     * @param rayon du collider
+     */
     Collider(Vec2d const&, double);
 
-    // Constructeur de copie de collider
+    /*!
+     * @brief Constructeur de copie
+     *
+     * @param Collider à copier
+     */
     Collider(Collider const&);
 
 // Getters
 
-    // Getter de la postion
+    /*!
+     * @brief Getter de la position
+     *
+     * @return le vec2d associé au centre
+     */
     const Vec2d& getPosition() const;
 
-    // Getter du rayon
+    /*!
+     * @brief Getter du rayon
+     *
+     * @return la taille du rayon
+     */
     double getRadius() const;
 
 // Gestion des déplacements
 
-    // Retourne le vecteur en direction du vecteur en argument (depuis l'instance courrante)
+    /*!
+     * @brief Calcule la direction jusqu'à un point dans le monde torique depuis l'instance
+     *
+     * @param Vec2d représentant le point
+     *
+     * @return le Vec2d le plus court jusqu'au point
+     */
     Vec2d directionTo(Vec2d const&) const;
-    // Retourne le vecteur en direction du collider en argument
+
+    /*!
+     * @brief Calcule la direction jusqu'au Collider dans le monde torique depuis l'instance
+     *
+     * @param Collider à atteindre
+     *
+     * @return le Vec2d le plus court jusqu'au Collider
+     */
     Vec2d directionTo(Collider const&) const;
-    // Retourne la longueur du vecteur torique calculé par "directionTo" jusqu'au vecteur en argument
+
+    /*!
+     * @brief Calcule la longueur jusqu'à un point dans le monde torique depuis l'instance (via directionTo)
+     *
+     * @param Vec2d représentant le point
+     *
+     * @return la distance jusqu'au point
+     */
     double distanceTo(Vec2d const&) const;
-    // Retourne la longueur du vecteur torique calculé par "directionTo" jusqu'au collider en argument
+
+    /*!
+     * @brief Calcule la longueur jusqu'à un Collider dans le monde torique depuis l'instance (via directionTo)
+     *
+     * @param Collider à atteindre
+     *
+     * @return la distance jusqu'au Collider
+     */
     double distanceTo(Collider const&) const;
 
-    // Ajoute à la position de l'instance courante un "Vec2d"
+    /*!
+     * @brief Ajoute à la position de l'instance un vecteur
+     *
+     * @param Vec2d à ajouter
+     */
     void move(Vec2d const&);
 
 // Gestion des collisions
 
-    // Retourne si le "Collider" est à l'intérieur d'un autre "Collider" (à l'aide de directionTo)
+    /*!
+     * @brief Vérifie si le Collider donné est à l'intérieur de l'instance (avec distanceTo)
+     *
+     * @param Collider à vériifier
+     *
+     * @return true si le Collider donné est à l'intérieur
+     */
     bool isColliderInside(Collider const&) const;
-    // Retourne si le "Collider" est en contact avec un autre "Collider"
+
+    /*!
+     * @brief Vérifie le contact entre l'instance et un Collider donné
+     *
+     * @param Collider à vérifier
+     *
+     * @return true si les Colliders sont en contact
+     */
     bool isColliding(Collider const&) const;
-    // Retourne si un point est dans le "Collider"
+
+    /*!
+     * @brief Vérifie si un point donné est à l'intérieur de l'instance
+     *
+     * @param Vec2d représentant le point
+     *
+     * @return true si le point est dans le Collider
+     */
     bool isPointInside(Vec2d const&) const;
 
 // Surcharge des opérateurs
 
-    // Surcharge de l'opérateur d'affectation
+    /*!
+     * @brief Surcharge de l'opérateur d'affectation
+     *
+     * @param Collider à affecter à l'instance
+     *
+     * @return une référence à l'instance modifiée
+     */
     Collider& operator=(Collider const&);
-    // Surcharge l'opérateur '+=' lui donnant la même fonction que "move"
+
+    /*!
+     * @brief Surcharge de l'opérateur "+=" avec la méthode "move"
+     *
+     * @param Vec2d à ajouter à l'instanace
+     *
+     * @return une référence à l'instance modifiée
+     */
     Collider& operator+=(Vec2d const&);
-    // Surcharge l'opérateur '>' pour la fonction "isColliderInside" si l'argument est un "Collider"
+
+    /*!
+     * @brief Surcharge de l'opérateur '>' avec la méthode "isColliderInside"
+     *
+     * @param Collider à vériifier
+     *
+     * @return true si le Collider donné est à l'intérieur
+     */
     bool operator>(Collider const&) const;
-    // Surcharge encore une fois l'opérateur '>' pour la fonction "isPointInside" si l'argument est un "Vec2d"
+
+    /*!
+     * @brief Surcharge de l'opérateur '>' avec la méthode "isPointInside"
+     *
+     * @param Vec2d représentant le point
+     *
+     * @return true si le point est dans le Collider
+     */
     bool operator>(Vec2d const&) const;
-    // Surcharge l'opérateur '|' pour la fonction "isColliding" si l'argument est un "Collider"
+
+    /*!
+     * @brief Surcharge de l'opérateur '|' avec la méthode "is"
+     *
+     * @param Collider à vérifier
+     *
+     * @return true si les Colliders sont en contact
+     */
     bool operator|(Collider const&) const;
-
-
-private:
-    // Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
-    void clamp();
 
 protected:
     Vec2d center;
     double radius;
+
+private:
+    /*!
+     * @brief Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
+     */
+    void clamp();
 };
 
-// Surcharge l'opérateur d'affichage pour formater la sortie d'une instance de la classe "Collider"
+/*!
+ * @brief Surcharge de l'opérateur d'affichage pour formater la sortie d'une instance de "Collider"
+ *
+ * @param Flot de sorite
+ * @param Collider à afficher
+ *
+ * @return le flot de sortie formatté
+ */
 std::ostream& operator<<(std::ostream&, Collider const&);
