@@ -147,6 +147,14 @@ void World::reset(bool regenerate){
         smooths(getAppConfig().world_generation_smoothness_level);
     }
 
+    /*
+    for (size_t i(0); i < cells_.size(); ++i){
+        if (cells_[i] == Kind::eau){
+            humidityImpact(i);
+        }
+    }
+    */
+
     updateCache();
 }
 
@@ -220,6 +228,7 @@ void World::smooth(){
         double neighbour_counter(0);
         if (copie_de_cells_[id] != Kind::eau){
             double water_counter(0);
+            double grass_counter(0);
 
            for (int a(-1); a <= 1 ; ++a){
                for (int b(-1); b <= 1 ; ++b){
@@ -230,6 +239,8 @@ void World::smooth(){
                        ++neighbour_counter;
                        if (copie_de_cells_[get_id(x+a, y+b)] == Kind::eau){
                            ++water_counter;
+                       } else if ((copie_de_cells_[get_id(x+a, y+b)] == Kind::herbe) and (copie_de_cells_[id] == Kind::roche)){
+                           ++grass_counter;
                        }
                    }
                }
@@ -238,30 +249,14 @@ void World::smooth(){
            if (water_counter/neighbour_counter > seuil_w){
                copie_de_cells_[id] = Kind::eau;
                humidityImpact(id);
-           }
-        }
-        if (copie_de_cells_[id] == Kind::roche){
-            double grass_counter(0);
-
-           for (int a(-1); a <= 1 ; ++a){
-               for (int b(-1); b <= 1 ; ++b){
-                   sf::Vector2i index(x+a,y+b);
-                   sf::Vector2i copie(index);
-                   clamp(index);
-                   if (index == copie){
-                       if (copie_de_cells_[get_id(x+a, y+b)] == Kind::herbe){
-                           ++grass_counter;
-                       }
-                   }
-               }
-           }
-           if (grass_counter/neighbour_counter > seuil_g){
+           } else if (grass_counter/neighbour_counter > seuil_g){
                copie_de_cells_[id] = Kind::herbe;
            }
         }
     }
     std::swap(cells_, copie_de_cells_); // quand le lissage est fini on copie copie_de_cells_ dans cell_ (le swap est une optimisation).
 }
+
 
 void World::smooths(int nb, bool regenerate){
     for (int i(0); i < nb ; ++i){
@@ -404,7 +399,6 @@ Vec2d World::coords_from_pos(Vec2d const& pos) const{
     Vec2d coords(pos.x()/cell_size, pos.y()/cell_size);
     return coords;
 }
-
 
 double World::get_humidity(Vec2d const& pos) const{
     Vec2d coords(coords_from_pos(pos));
