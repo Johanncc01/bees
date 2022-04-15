@@ -506,7 +506,7 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 	  if (not mIgnoreEnv){
 	  delete mConfig;
 	  mConfig = new Config(j::readFromFile(mAppDirectory + mCfgFile)); // reconstruct
-      getEnv().resetControls();
+	  getEnv().resetControls();
 	  }
             break;
 

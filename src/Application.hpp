@@ -1,7 +1,7 @@
 /*
  * POOSV 2022-21
  * Marco Antognini & Jamila Sam
- * STEP : 3
+ * STEP : 4
  */
 
 #ifndef INFOSV_APPLICATION_HPP

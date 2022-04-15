@@ -1,5 +1,6 @@
 /*
- * POOSV EPFL 2015-2022
+ * prjsv 2015, 2016
+ * 2014, 2016
  * Marco Antognini
  */
 

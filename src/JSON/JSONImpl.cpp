@@ -1,5 +1,6 @@
 /*
- * POOSV 2015-2022
+ * prjsv 2015, 2016
+ * 2014, 2016
  * Marco Antognini
  */
 
@@ -51,8 +52,10 @@ namespace impl
             return "Object";
         else if (isArray())
             return "Array";
-        else
+        else {
             assert(false);
+            return "Not recognized"; // To stop QTCreator from issuing warnings that confuse the students.
+        }
     }
 
     String& AbstractValue::asString()
