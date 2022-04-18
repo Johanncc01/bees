@@ -1,9 +1,10 @@
 #pragma once
-#include <Env/Bee.hpp>
-#include <Env/Collider.hpp>
 #include <SFML/Graphics.hpp>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
+#include <Env/Collider.hpp>
+#include <Env/Bee.hpp>
+
 
 typedef std::vector<Bee*> Bees;
 

@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Env/Hive.hpp"
-#include "World.hpp"
-#include "Flower.hpp"
-#include "FlowerGenerator.hpp"
-#include <vector>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
+#include <Env/World.hpp>
+#include <Env/Flower.hpp>
+#include <Env/FlowerGenerator.hpp>
+#include <Env/Hive.hpp>
+#include <vector>
 
 
 typedef std::vector<Flower*> Flowers;

@@ -3,8 +3,8 @@
  * @authors:
  * Marco Antognini
  */
-#include <Application.hpp>
 #include <Env/Collider.hpp>
+#include <Application.hpp>
 #include <cmath> // abs and fmod
 #include <algorithm>
 

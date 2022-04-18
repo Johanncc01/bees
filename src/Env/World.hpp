@@ -1,10 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <Utility/Vec2d.hpp>
 #include <Interface/Drawable.hpp>
+#include <Utility/Vec2d.hpp>
 #include <vector>
-
-
 
 
 // Contenu des cellules
@@ -85,14 +83,13 @@ public :
 
     bool isGrowable(Vec2d const&) const;
 
-    bool isHiveable(const Vec2d&, double) const;
+    bool isHiveable(const Vec2d&, double) const;   
 
-protected:
+private:
+
     int nb_cells;
     float cell_size;
     Grille cells_;
-
-private:
 
     Vertexes grassVertexes_;
     Vertexes waterVertexes_;

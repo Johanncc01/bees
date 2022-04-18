@@ -7,7 +7,6 @@
 #include <Utility/Vec2d.hpp>
 #include <ostream>
 
-/* TO BE COMPLETED */
 
 class Collider
 {

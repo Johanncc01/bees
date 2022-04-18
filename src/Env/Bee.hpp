@@ -3,6 +3,7 @@
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
 
+
 class Bee : public Drawable , public Updatable
 {
 public:

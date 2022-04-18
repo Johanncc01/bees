@@ -1,4 +1,4 @@
-#include "World.hpp"
+#include <Env/World.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
 #include <Utility/Vertex.hpp>
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 
-//Constructeurs
+// Constructeurs
     World::World()
     {
         reset();
