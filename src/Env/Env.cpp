@@ -103,8 +103,8 @@ void Env::drawFlowerZone(sf::RenderTarget& target, Vec2d const& pos){
 }
 
 
-double Env::get_world_humidity(Vec2d const& pos) const{
-    return terrain.get_humidity(pos);
+double Env::getWorldHumidity(Vec2d const& pos) const{
+    return terrain.getHumidity(pos);
 }
 
 

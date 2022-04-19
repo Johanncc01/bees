@@ -6,13 +6,11 @@
 #include <iostream>
 #include <fstream>
 
-// Constructeurs
-    World::World()
-    {
-        reset();
 
-    };
+// Constructeur
 
+World::World()
+{ reset(); };
 
 // Getters
 
@@ -20,15 +18,20 @@ float World::getSize() const{
     return nb_cells * cell_size;
 }
 
-int World::get_id(int x, int y) const{
+double World::getHumidity(Vec2d const& pos) const{
+    Vec2d coords(coords_from_pos(pos));
+    return humidity_[getId(coords.x(), coords.y())];
+}
+
+int World::getId(int x, int y) const{
     return x + y*nb_cells;
 }
 
-int World::get_x(int id) const{
+int World::getX(int id) const{
     return id % nb_cells;
 }
 
-int World::get_y(int id) const{
+int World::getY(int id) const{
     return id / nb_cells;
 }
 
@@ -36,84 +39,76 @@ int World::get_y(int id) const{
 // Fonctions graphiques
 
 void World::reloadConfig(){
-    size_t world_size(getAppConfig().world_size);
     nb_cells = getAppConfig().world_cells;
-    cell_size = (world_size / nb_cells);
+    cell_size = (getAppConfig().world_size / nb_cells);
 
-    Grille grid((nb_cells*nb_cells), Kind::roche);
-    cells_ = grid;
+    cells_ = Cells((nb_cells*nb_cells), Kind::roche);
+    seeds_ = Seeds(getAppConfig().world_nb_water_seeds + getAppConfig().world_nb_grass_seeds);
+    humidity_ = Humidities((nb_cells*nb_cells), 0);
 
-    nb_wseed = getAppConfig().world_nb_water_seeds;
-    nb_gseed = getAppConfig().world_nb_grass_seeds;
-    Seeds seeds_init(nb_wseed + nb_gseed);
-    seeds_=seeds_init;
-
-    double humid(0);
     double cte1(getAppConfig().world_humidity_init_level);
     double cte2(getAppConfig().world_humidity_decay_rate);
     double threshold(getAppConfig().world_humidity_threshold);
+    humidityRange = 0;
 
-    while((cte1 * exp(- humid / cte2)) > threshold){
-        humid += 2;
+    while ((cte1 * exp(- humidityRange / cte2)) > threshold){
+        humidityRange += 2;
     }
-    humidityRange = humid;
-    Humids new_humidity_lvls(cells_.size(), 0);
-    humidity_lvls = new_humidity_lvls;
-
 }
 
 void World::reloadCacheStructure(){
-        Vertexes vertexes(generateVertexes(getAppConfig().world_textures, nb_cells, cell_size));
-        grassVertexes_ = vertexes;
-        waterVertexes_ = vertexes;
-        rockVertexes_ = vertexes;
-        humidityVertexes_ = vertexes;
-        renderingCache_.create(nb_cells*cell_size, nb_cells*cell_size);
+    Vertexes vertexes(generateVertexes(getAppConfig().world_textures, nb_cells, cell_size));
+    grassVertexes_ = vertexes;
+    waterVertexes_ = vertexes;
+    rockVertexes_ = vertexes;
+    humidityVertexes_ = vertexes;
+    renderingCache_.create(nb_cells*cell_size, nb_cells*cell_size);
 }
 
 void World::updateCache(){
     renderingCache_.clear();
-    double maxHum(*max_element(humidity_lvls.begin(),humidity_lvls.end()));
-    double minHum(*min_element(humidity_lvls.begin(),humidity_lvls.end()));
+    double maxHum(*max_element(humidity_.begin(),humidity_.end()));                     // Itérateur retournant la valeur maximale du tableau humidity_
+    double minHum(*min_element(humidity_.begin(),humidity_.end()));                     // Itérateur retournant la valeur minimale du tableau humidity_
+
     for (int x(0); x < nb_cells; ++x) {
-         for (int y(0); y < nb_cells; ++y) {
-             size_t id(get_id(x,y));
-             std::vector<size_t> indexes(indexesForCellVertexes(x,y, nb_cells));
-             double niveau_bleu((humidity_lvls[id] - minHum) /(maxHum - minHum) * 255);
-             if (cells_[id] == Kind::herbe){
-                 for (auto var : indexes){
-                     grassVertexes_[var].color.a = 255;
-                     waterVertexes_[var].color.a = 0;
-                     rockVertexes_[var].color.a = 0;
-                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
-                 }
-             } else if (cells_[id] == Kind::eau){
-                 for (auto var : indexes){
-                     grassVertexes_[var].color.a = 0;
-                     waterVertexes_[var].color.a = 255;
-                     rockVertexes_[var].color.a = 0;
-                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
-                 }
-             } else {
-                 for (auto var : indexes){
-                     grassVertexes_[var].color.a = 0;
-                     waterVertexes_[var].color.a = 0;
-                     rockVertexes_[var].color.a = 255;
-                     humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
-                 }
-             }
-         }
+        for (int y(0); y < nb_cells; ++y) {
+            size_t id(getId(x,y));
+            std::vector<size_t> indexes(indexesForCellVertexes(x,y, nb_cells));
+            double niveau_bleu((humidity_[id] - minHum) /(maxHum - minHum) * 255);      // Calcule le niveau de bleu relatif à afficher
+            if (cells_[id] == Kind::herbe){
+                for (auto var : indexes){
+                    grassVertexes_[var].color.a = 255;
+                    waterVertexes_[var].color.a = 0;
+                    rockVertexes_[var].color.a = 0;
+                    humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
+                }
+            } else if (cells_[id] == Kind::eau){
+                for (auto var : indexes){
+                    grassVertexes_[var].color.a = 0;
+                    waterVertexes_[var].color.a = 255;
+                    rockVertexes_[var].color.a = 0;
+                    humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
+                }
+            } else {
+                for (auto var : indexes){
+                    grassVertexes_[var].color.a = 0;
+                    waterVertexes_[var].color.a = 0;
+                    rockVertexes_[var].color.a = 255;
+                    humidityVertexes_[var].color = sf::Color(0 , 0, niveau_bleu);
+                }
+            }
+        }
     }
     sf::RenderStates rs_g;
-    rs_g.texture = &getAppTexture(getAppConfig().grass_texture); // texture liée à l'herbe
+    rs_g.texture = &getAppTexture(getAppConfig().grass_texture);                            // texture liée à l'herbe
     renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rs_g);
 
     sf::RenderStates rs_w;
-    rs_w.texture = &getAppTexture(getAppConfig().water_texture); // texture liée à l'eau
+    rs_w.texture = &getAppTexture(getAppConfig().water_texture);                            // texture liée à l'eau
     renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rs_w);
 
     sf::RenderStates rs_r;
-    rs_r.texture = &getAppTexture(getAppConfig().rock_texture); // textugre liée à la roche
+    rs_r.texture = &getAppTexture(getAppConfig().rock_texture);                             // texture liée à la roche
     renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs_r);
 
     renderingCache_.display();
@@ -122,55 +117,42 @@ void World::updateCache(){
 void World::reset(bool regenerate){
     reloadConfig();
     reloadCacheStructure();
-    size_t temp_wseed(nb_wseed);
-    for (auto& seed : seeds_) {
-        int cells(nb_cells);
-        size_t x(uniform(0 , cells-1));
-        size_t y(uniform(0 , cells-1));
-        size_t id(get_id(x,y));
-        sf::Vector2i temp(x,y);
-        seed.coords = temp;
 
-        if (temp_wseed > 0) {
-            --temp_wseed;
-            seed.type = Kind::eau;
-            humidityImpact(id);
+    size_t w_seed(getAppConfig().world_nb_water_seeds);
+    for (size_t i(0); i < seeds_.size(); ++i){
+        seeds_[i].coords = sf::Vector2i(uniform(0, nb_cells-1), uniform(0, nb_cells-1));        // Associe une position aléatoire à la graine
+        size_t id(getId(seeds_[i].coords.x, seeds_[i].coords.y));
+        if (i < w_seed){                                                                        // Génère d'abord des graines d'eau, puis une fois la limite atteinte, passe aux graines d'herbe
+            seeds_[i].type = Kind::eau;
+            humidityImpact(id);                                                                 // Calcule l'impact de la nouvelle cellule d'eau sur les autres
         } else {
-            seed.type = Kind::herbe;
+            seeds_[i].type = Kind::herbe;
         }
-        if (cells_[id] != Kind::eau) {
-            cells_[id] = seed.type;
+        if (cells_[id] != Kind::eau) {                                                          // Modifie la cellule uniquement si ce n'est pas de l'eau
+            cells_[id] = seeds_[i].type;
         }
     }
-    if (regenerate){
+
+    if (regenerate){                                                                            // Si la régénération est activée, appelle steps() et smooths() selon la configuration
         steps(getAppConfig().world_generation_steps);
         smooths(getAppConfig().world_generation_smoothness_level);
     }
-
-    /*
-    for (size_t i(0); i < cells_.size(); ++i){
-        if (cells_[i] == Kind::eau){
-            humidityImpact(i);
-        }
-    }
-    */
-
     updateCache();
 }
 
 void World::drawOn(sf::RenderTarget& target) const{
-    if (getAppConfig().showHumidity()) {
+    if (!getAppConfig().showHumidity()) {                                                       // Affichage normal du monde
+        sf::Sprite cache(renderingCache_.getTexture());
+        target.draw(cache);
+    } else {                                                                                    // Affichage des niveaux d'humidité
         target.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads);
-        if (isDebugOn()){
+        if (isDebugOn()){                                                                       // Affichage du debug des niveaux d'humidité
             sf::Vector2i curseur(getApp().getCursorPositionInView());
             sf::Vector2i position(curseur.x/cell_size,curseur.y/cell_size);
             sf::Vector2i affichage(curseur.x,curseur.y-30);
-            auto const text = buildText(to_nice_string(humidity_lvls[get_id(position.x,position.y)]), affichage, getAppFont(), 30, sf::Color::Red);
+            auto const text = buildText(to_nice_string(humidity_[getId(position.x,position.y)]), affichage, getAppFont(), 30, sf::Color::Red);
             target.draw(text);
         }
-    } else {
-        sf::Sprite cache(renderingCache_.getTexture());
-        target.draw(cache);
     }
 }
 
@@ -180,29 +162,21 @@ void World::drawOn(sf::RenderTarget& target) const{
 void World::step(){
     for (auto& seed : seeds_){
         if (seed.type == Kind::herbe){
-            sf::Vector2i temp(randomN());
-            seed.coords += temp;
+            seed.coords += sf::Vector2i(randomDir());                                           // Evolution dans une direction aléatoire
             clamp(seed.coords);
         } else {
             if (bernoulli(getAppConfig().water_seeds_teleport_proba) == 0){
-                sf::Vector2i temp(randomN());
-                seed.coords += temp;
+                seed.coords += sf::Vector2i(randomDir());                                       // Evolution dans une direction aléatoire
                 clamp(seed.coords);
-
             } else {
-                int x(uniform(0 , nb_cells-1));
-                int y(uniform(0 , nb_cells-1));
-                sf::Vector2i temp(x,y);
-                seed.coords = temp;
-
+                seed.coords = sf::Vector2i(uniform(0, nb_cells-1), uniform(0, nb_cells-1));     // Téléportation de la graine d'eau à une position aléatoire
             }
         }
-        size_t i(get_id(seed.coords.x , seed.coords.y));
-        if (cells_[i] != Kind::eau) {
-            cells_[i] = seed.type;
+        size_t id(getId(seed.coords.x, seed.coords.y));
+        if (cells_[id] != Kind::eau) {
+            cells_[id] = seed.type;                         // Transmission du type de la graine à la cellule
             if (seed.type == Kind::eau) {
-                humidityImpact(i);
-
+                humidityImpact(id);                         // Calcul de l'impact d'humidité si graine d'eau
             }
         }
     }
@@ -223,38 +197,38 @@ void World::smooth(){
     double seuil_w(getAppConfig().smoothness_water_neighbor_ratio);
     double seuil_g(getAppConfig().smoothness_grass_neighbor_ratio);
     for (size_t id(0); id < copie_de_cells_.size(); ++id){
-        int x(get_x(id));
-        int y(get_y(id));
+        int x(getX(id));
+        int y(getY(id));
         double neighbour_counter(0);
         if (copie_de_cells_[id] != Kind::eau){
             double water_counter(0);
             double grass_counter(0);
-
-           for (int a(-1); a <= 1 ; ++a){
-               for (int b(-1); b <= 1 ; ++b){
-                   sf::Vector2i index(x+a,y+b);
-                   sf::Vector2i copie(index);
-                   clamp(index);
-                   if (index == copie){
-                       ++neighbour_counter;
-                       if (copie_de_cells_[get_id(x+a, y+b)] == Kind::eau){
-                           ++water_counter;
-                       } else if ((copie_de_cells_[get_id(x+a, y+b)] == Kind::herbe) and (copie_de_cells_[id] == Kind::roche)){
-                           ++grass_counter;
-                       }
-                   }
-               }
-           }
-           --neighbour_counter;
-           if (water_counter/neighbour_counter > seuil_w){
-               copie_de_cells_[id] = Kind::eau;
-               humidityImpact(id);
-           } else if (grass_counter/neighbour_counter > seuil_g){
-               copie_de_cells_[id] = Kind::herbe;
-           }
+            for (int a(-1); a <= 1 ; ++a){                                  // La double boucle parcourt toutes les cellules autour de celle qu'on veut
+                for (int b(-1); b <= 1 ; ++b){
+                    sf::Vector2i index(x+a,y+b);
+                    sf::Vector2i copie(index);
+                    clamp(index);
+                    if (index == copie){                                    // Si les nouvelles coordonées sont toujours les mêmes après un clamping, alors la cellule voisine existe (++neighbour_counter)
+                        size_t new_id(getId(index.x, index.y));
+                        ++neighbour_counter;
+                        if (copie_de_cells_[new_id] == Kind::eau){
+                            ++water_counter;
+                        } else if ((copie_de_cells_[new_id] == Kind::herbe) and (copie_de_cells_[id] == Kind::roche)){
+                            ++grass_counter;
+                        }
+                    }
+                }
+            }
+            --neighbour_counter;                                            // La cellule elle même n'est pas une voisine, il faut retirer ce cas
+            if (water_counter/neighbour_counter > seuil_w){
+                copie_de_cells_[id] = Kind::eau;
+                humidityImpact(id);
+            } else if (grass_counter/neighbour_counter > seuil_g){
+                copie_de_cells_[id] = Kind::herbe;
+            }
         }
     }
-    std::swap(cells_, copie_de_cells_); // quand le lissage est fini on copie copie_de_cells_ dans cell_ (le swap est une optimisation).
+    std::swap(cells_, copie_de_cells_);                                     // Quand le lissage est fini, on copie copie_de_cells_ dans cell_ (le swap est une optimisation).
 }
 
 
@@ -267,11 +241,71 @@ void World::smooths(int nb, bool regenerate){
     }
 }
 
+
+// Sauvegarde
+
+void World::loadFromFile(){
+    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
+    std::ifstream entree(path);
+    if (entree.fail()){                                                 // Vérification de l'état du flot et lancement d'une erreur le cas échéant
+        entree.close();
+        std::string error("impossible de lire le fichier ");
+        throw std::runtime_error(error+path);
+        return;
+    }
+    std::cout << "Fichier chargé : " << path << std::endl;
+    entree >> nb_cells >> std::ws >> cell_size >> std::ws;
+
+    cells_ = Cells(nb_cells*nb_cells);
+    short lu(0);
+    for (auto& cell : cells_){
+        entree >> lu;
+        cell = static_cast<Kind>(lu);                                   // Transformation de short à Kind
+    }
+
+    humidity_ = Humidities(nb_cells*nb_cells);
+    entree >> std::ws;
+    double lulu(0);
+    for (auto& humidity : humidity_){
+        entree >> lulu;
+        humidity = lulu;
+    }
+
+    entree.close();
+    reloadCacheStructure();
+    updateCache();
+}
+
+void World::saveToFile(){
+    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
+    std::ofstream sortie(path);
+    if (sortie.fail()){                                                 // Vérification de l'état du flot et lancement d'une erreur le cas échéant
+        sortie.close();
+        std::string error("impossible d'écrire le fichier sous ");
+        throw std::runtime_error(error+path);
+        return;
+    } else {
+        std::cout << "Ecriture dans : " << path << std::endl;
+        sortie << nb_cells << std::endl << cell_size << std::endl;
+        for (auto cell : cells_){
+            short lu(static_cast<short>(cell));                         // Transformation de Kind à short
+            sortie << lu << " ";
+        }
+        sortie << std::endl;
+        for (auto humidity : humidity_){
+            sortie << humidity << " ";
+        }
+        std::cout << "Opération terminée!" << std::endl;
+        sortie.close();
+    }
+}
+
+
 // Humidity
 
 void World::humidityImpact(size_t id){
-    int x(get_x(id));
-    int y(get_y(id));
+    int x(getX(id));
+    int y(getY(id));
 
     double cte1(getAppConfig().world_humidity_init_level);
     double cte2(getAppConfig().world_humidity_decay_rate);
@@ -281,97 +315,40 @@ void World::humidityImpact(size_t id){
     clamp(range_x);
     clamp(range_y);
 
-    for (int i(range_x.x) ; i <= (range_x.y) ; i++) {
-        for (int j(range_y.x) ; j <= (range_y.y) ; j++) {
-            int id2(get_id(i,j));
+    for (int i(range_x.x) ; i <= (range_x.y) ; ++i) {
+        for (int j(range_y.x) ; j <= (range_y.y) ; ++j) {
+            int id2(getId(i,j));
             double dist(std::hypot(x-i,y-j));
-            humidity_lvls[id2] += ( cte1 * exp(-dist / cte2));
+            humidity_[id2] += ( cte1 * exp(-dist / cte2));
         }
-    }    
-}
-
-
-
-// Sauvegarde
-
-void World::loadFromFile(){
-    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
-    std::ifstream entree(path);
-    if (entree.fail()){
-        entree.close();
-        std::string error("impossible de lire le fichier ");
-        throw std::runtime_error(error+path);
-        return;
-    } else {
-        std::cout << "Fichier chargé : " << path << std::endl;
-        entree >> nb_cells >> std::ws >> cell_size >> std::ws;
-        Grille grid(nb_cells*nb_cells);
-        short lu(0);
-        for (size_t i(0); i < grid.size(); ++i){
-            entree >> lu;
-            grid[i] = static_cast<Kind>(lu);
-        }        
-        cells_ = grid;
-
-
-        Humids humidity(nb_cells*nb_cells);
-        entree >> std::ws;
-        double lulu(0);
-        for (size_t i(0); i < humidity.size(); ++i){
-            entree >> lulu;
-            humidity[i] = lulu;
-        }
-        humidity_lvls = humidity;
-
-        entree.close();
-    }
-    reloadCacheStructure();
-    updateCache();
-}
-
-void World::saveToFile(){
-    std::string path(getApp().getResPath()+getAppConfig().world_init_file);
-    std::ofstream sortie(path);
-    if (sortie.fail()){
-        sortie.close();
-        std::string error("impossible d'écrire le fichier sous ");
-        throw std::runtime_error(error+path);
-        return;
-    } else {
-        std::cout << "Ecriture dans : " << path << std::endl;
-        sortie << nb_cells << std::endl << cell_size << std::endl;
-        for (size_t i(0); i < cells_.size(); ++i){
-            short lu(static_cast<short>(cells_[i]));
-            sortie << lu << " ";
-        }
-        sortie << std::endl;
-        for (size_t i(0); i < humidity_lvls.size(); ++i){
-            sortie << humidity_lvls[i] << " ";
-        }
-        std::cout << "Opération terminée!" << std::endl;
-        sortie.close();
     }
 }
 
+// Tests
+
+bool World::isGrowable(Vec2d const& pos) const{
+    Vec2d coords(coords_from_pos(pos));
+    bool herbe(cells_[getId(coords.x(), coords.y())] == Kind::herbe);
+    bool hive(getAppEnv().getCollidingHive(Collider(pos, getAppConfig().flower_manual_size)) == nullptr);
+    return (herbe and hive);
+}
+
+bool World::isHiveable(Vec2d const& pos, double rad) const{
+    //Vec2d coords(coords_from_pos(pos));
+    return true;
+}
 
 
 // Fonctions d'implémentation
 
-sf::Vector2i World::randomN() const{
-    int i(uniform(0,3));
-    if (i == 0){
-        sf::Vector2i temp(-1,0);
-        return temp;
-    } else if (i == 1){
-        sf::Vector2i temp(1,0);
-        return temp;
-    } else if (i == 2){
-        sf::Vector2i temp(0,-1);
-        return temp;
-    } else {
-        sf::Vector2i temp(0,1);
-        return temp;
+sf::Vector2i World::randomDir() const{
+    switch (uniform(0,3)) {
+    case 0 : return sf::Vector2i(-1,0);
+    case 1 : return sf::Vector2i(1,0);
+    case 2 : return sf::Vector2i(0,-1);
+    case 3 : return sf::Vector2i(0,1);
     }
+    return sf::Vector2i(0,0);
 }
 
 void World::clamp(sf::Vector2i& vect) const{
@@ -389,26 +366,8 @@ void World::clamp(sf::Vector2i& vect) const{
     }
 }
 
-
-bool World::isGrowable(Vec2d const& pos) const{
-    Vec2d coords(coords_from_pos(pos));
-    bool herbe(cells_[get_id(coords.x(), coords.y())] == Kind::herbe);
-    Collider temp(pos, getAppConfig().flower_manual_size);
-    bool hive(getAppEnv().getCollidingHive(temp) == nullptr);
-    return (herbe and hive);
-}
-
 Vec2d World::coords_from_pos(Vec2d const& pos) const{
-    Vec2d coords(pos.x()/cell_size, pos.y()/cell_size);
-    return coords;
+    return Vec2d(pos.x()/cell_size, pos.y()/cell_size);;
 }
 
-double World::get_humidity(Vec2d const& pos) const{
-    Vec2d coords(coords_from_pos(pos));
-    return humidity_lvls[get_id(coords.x(), coords.y())];
-}
 
-bool World::isHiveable(const Vec2d& pos, double rad) const{
-    //Vec2d coords(coords_from_pos(pos));
-    return true;
-}

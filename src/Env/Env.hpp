@@ -24,7 +24,7 @@ public:
 
     ~Env();
     float getSize() const;
-    double get_world_humidity(Vec2d const&) const;
+    double getWorldHumidity(Vec2d const&) const;
 
     void update(sf::Time dt);
     void drawOn(sf::RenderTarget& target) const;

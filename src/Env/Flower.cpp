@@ -31,7 +31,7 @@ void Flower::drawOn(sf::RenderTarget& target) const{
 
 void Flower::update(sf::Time dt){
     double seuil(getAppConfig().flower_growth_threshold);
-    double humidity(getAppEnv().get_world_humidity(center));
+    double humidity(getAppEnv().getWorldHumidity(center));
     pollen += (dt.asSeconds() * log(humidity/seuil));
     int i(0);
     Vec2d new_pos;

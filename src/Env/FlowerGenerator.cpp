@@ -17,10 +17,8 @@ void FlowerGenerator::update(sf::Time dt){
         int i(0);
         Vec2d pos;
         do {
-        Vec2d rand(uniform(0.0, x), uniform(0.0, y));
-        pos = rand;
-        ++i;
-        } while (!(getAppEnv().addFlowerAt(pos)) and i < 100);
+            ++i;
+        } while (!(getAppEnv().addFlowerAt(Vec2d(uniform(0.0, x), uniform(0.0, y)))) and i < 100);
     }
 
 }
