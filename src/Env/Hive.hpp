@@ -5,27 +5,76 @@
 #include <Env/Collider.hpp>
 #include <Env/Bee.hpp>
 
-
+// typedef des types complexes
 typedef std::vector<Bee*> Bees;
 
 class Hive : public Collider, public Drawable //, public Updatable
 {
 public:
+// Constructeur et destructeur
+
+    /*!
+     * @brief Constructeur de base
+     *
+     * @param centre de la ruche
+     * @param rayon de la ruche
+     */
     Hive(Vec2d const&, double);
-    Hive(Hive const&) = delete;
-    Hive& operator=(Hive const&) = delete;
+
+    /*!
+     * @brief Destructeur de la ruche, qui détruit les abeilles
+     */
     ~Hive();
 
-    void addBee();
-    //void update(sf::Time);
-    void drawOn(sf::RenderTarget&) const;
-    void dropPollen(double);
-    double takeNectar(double);
+    // Interdit les copies et affectations pour éviter les erreurs
+    Hive(Hive const&) = delete;
+    Hive& operator=(Hive const&) = delete;
 
+// Méthodes pures
+
+    /*!
+     * @brief Dessine la ruche selon ses caractéristiques sur une cible donnée
+     *
+     * @param "RenderTarget" sur laquelle la ruche est dessinée
+     */
+    void drawOn(sf::RenderTarget&) const;
+
+    /*!
+     * @brief Actualise la ruche et ses caractéristiques sur un temps donné
+     *
+     * @param temps dt sur lequel il faut actualiser la ruche
+     */
+    //void update(sf::Time);
+
+// Bees
+
+    /*!
+     * @brief Ajoute une abeille dans la ruche
+     */
+    void addBee();
+
+// Pollen
+
+    /*!
+     * @brief Dépose une valeur donnée de pollen dans la ruche
+     *
+     * @param quantité de pollen à déposer
+     */
+    void dropPollen(double);
+
+    /*!
+     * @brief Retire de la ruche la quantité de pollen demandée
+     *
+     * @param quantité demandée
+     *
+     * @return quantité qui a pu être retirée
+     */
+    double takePollen(double);
 
 private:
+
     Bees bees;
-    double nectar;
+    double pollen;
 
 };
 

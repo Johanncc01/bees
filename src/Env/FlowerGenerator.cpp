@@ -2,11 +2,10 @@
 #include <Application.hpp>
 #include <Random/Random.hpp>
 
+
 FlowerGenerator::FlowerGenerator()
     : compteur(sf::Time::Zero)
-{
-
-}
+{ }
 
 void FlowerGenerator::update(sf::Time dt){
     compteur += dt;
@@ -15,7 +14,6 @@ void FlowerGenerator::update(sf::Time dt){
         double x(getApp().getEnvSize().x());
         double y(getApp().getEnvSize().y());
         int i(0);
-        Vec2d pos;
         do {
             ++i;
         } while (!(getAppEnv().addFlowerAt(Vec2d(uniform(0.0, x), uniform(0.0, y)))) and i < 100);

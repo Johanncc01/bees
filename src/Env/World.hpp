@@ -34,7 +34,7 @@ public :
     World();
     //~World();      -> besoin ???
 
-    // Interdit les copies pour éviter les erreurs
+    // Interdit les copies et affectations pour éviter les erreurs
     World(World const&) = delete;
     World& operator=(World const&) = delete;
 
@@ -164,7 +164,7 @@ public :
      */
     void humidityImpact(size_t);
 
-// Tests
+// Tests (fleurs et ruches)
 
     /*!
      * @brief Calcule si une position est libre pour y faire pousser une fleur
