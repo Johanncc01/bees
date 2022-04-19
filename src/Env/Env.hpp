@@ -127,6 +127,14 @@ public:
     bool addHiveAt(Vec2d const&);
 
     /*!
+     * @brief dessine un carré coloré rouge, bleu ou vert en fonction de la disponbilité pour une ruche dans le monde
+     *
+     * @param "RenderTarget" sur laquelle le cercle est dessiné
+     * @param position du curseur à vérifier et où afficher le carré
+     */
+    void drawHiveableZone(sf::RenderTarget&, Vec2d const&) const;
+
+    /*!
      * @brief recherche une ruche de l'environnement en collision avec un collider donné
      *
      * @param un collider dont on veut tester les collisions

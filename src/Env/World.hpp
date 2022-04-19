@@ -224,5 +224,12 @@ private:
      * @param le Vec2d à transposer
      */
     Vec2d coords_from_pos(Vec2d const&) const;
+
+    /*!
+     * @brief Calcule l'ensemble des
+     *
+     * @param le Vec2d à transposer
+     */
+    std::vector<std::size_t> indexesForRect(Vec2d const&, Vec2d const&) const;
 };
 

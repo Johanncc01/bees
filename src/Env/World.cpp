@@ -334,7 +334,18 @@ bool World::isGrowable(Vec2d const& pos) const{
 }
 
 bool World::isHiveable(Vec2d const& pos, double rad) const{
-    //Vec2d coords(coords_from_pos(pos));
+    double factor(getAppConfig().hiveable_factor);
+    double cote(rad*factor);
+    Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
+    Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
+
+    std::vector<std::size_t> field(indexesForRect(topLeft, bottomRight));
+
+    for (auto id : field){
+        if (cells_[id] != Kind::herbe){
+            return false;
+        }
+    }
     return true;
 }
 
@@ -370,4 +381,128 @@ Vec2d World::coords_from_pos(Vec2d const& pos) const{
     return Vec2d(pos.x()/cell_size, pos.y()/cell_size);;
 }
 
+std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bot) const{
+    // Handle toric world coordinates for rectangles:
+    //
+    // case 1) if topLeft and bottomRight are really what they should be,
+    //         then the rectangle is not wrapped around the toric world.
+    // case 2) if topLeft and bottomRight are swapped,
+    //         then bottomRight was actually outside.
+    // case 3) if the left and right sides are swapped,
+    //         then the rectangle is wrapped on the right side of the world.
+    // case 4) if the top and bottom sides are swapped,
+    //         then the rectangle is swapped on the bottom side of the world.
+    //
+    // Graphically, where `*` is topLeft and `%` is bottomRight
+    // and `o` and `x` are the area covered by the rectangle:
+    //
+    //       case 1                case 3
+    //    +---------+           +---------+
+    //    |         |           |         |
+    //    | *--+    |        *--|-+    *--|
+    //    | |xx|    |        |oo|x|    |xx|
+    //    | +--%    |        +--|-%    +--|
+    //    |         |           |         |
+    //    +---------+           +---------+
+    //
+    // *----+
+    // |oo o|case 2                case 4
+    // |  +---------+           +---------+
+    // |oo|x|    |xx|           |   |xx|  |
+    // +--|-%    +--|           |   +--%  |
+    //    |         |           |         |
+    //    |-+    *--|           |   *--+  |
+    //    |x|    |xx|           |   |xx|  |
+    //    +---------+           +---------+
+    //                              |oo|
+    //                              +--%
+    // Remembering the axes:
+    //
+    //   +---> x
+    //   |
+    //   |
+    //   Ë…
+    //   y
+    //
+
+    // Case 1 :
+
+    std::vector<std::size_t> ids;
+    Vec2d topCoords(coords_from_pos(top));
+    Vec2d botCoords(coords_from_pos(bot));
+
+    if ((top.x() < bot.x()) and (top.y() < bot.y())){
+        for (size_t i(topCoords.x()); i <= botCoords.x() ; ++i){
+            for (size_t j(topCoords.y()); j <= botCoords.y() ; ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+        return ids;
+    }
+
+    // Case 2 :
+
+    if ((top.x() > bot.x()) and (top.y() > bot.y())){
+        for (size_t i(0); i <= botCoords.x(); ++i){
+            for (size_t j(0); j <= botCoords.y(); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+
+        for (size_t i(0); i <= botCoords.x(); ++i){
+            for (int j(topCoords.y()); j <= (nb_cells-1); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+
+        for (int i(topCoords.x()); i <= (nb_cells-1); ++i){
+            for (size_t j(0); j <= botCoords.y(); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+
+        for (int i(topCoords.x()); i <= (nb_cells-1) ; ++i){
+            for (int j(topCoords.y()); j <= (nb_cells-1) ; ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+        return ids;
+    }
+
+    // Case 3 :
+
+    if ((top.x() > bot.x()) and (top.y() < bot.y())){
+        for (size_t i(0); i <= botCoords.x(); ++i){
+            for (size_t j(topCoords.y()); j <= botCoords.y(); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+
+        for (int i(topCoords.x()); i <= (nb_cells-1); ++i){
+            for (size_t j(topCoords.y()); j <= botCoords.y(); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+        return ids;
+    }
+
+    // Case 4 :
+
+    if ((top.x() < bot.x()) and (top.y() > bot.y())){
+        for (size_t i(topCoords.x()); i <= botCoords.x(); ++i){
+            for (size_t j(0); j <= botCoords.y(); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+
+        for (size_t i(topCoords.x()); i <= botCoords.y(); ++i){
+            for (int j(topCoords.y()); j <= (nb_cells-1); ++j){
+                ids.push_back(getId(i, j));
+            }
+        }
+        return ids;
+    }
+
+    return ids;
+}
 

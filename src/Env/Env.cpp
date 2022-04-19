@@ -120,11 +120,37 @@ Flower* Env::getCollidingFlower(Collider const& body) const{
 bool Env::addHiveAt(Vec2d const& p){
     double size(getAppConfig().hive_manual_size);
     Collider hive(p, size);
-    if ((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr)){
+    bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
+    if (terrain.isHiveable(p, size) and libre){
         hives.push_back(new Hive(p, size));
         return true;
     }
     return false;
+}
+
+void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
+
+    double factor(getAppConfig().hiveable_factor);
+    double size(getAppConfig().hive_manual_size);
+    double cote(size*factor);
+    Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
+    Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
+
+    Collider hive(pos, size);
+    bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
+    bool herbe(terrain.isHiveable(pos, size));
+
+
+    if (!libre){
+        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Blue, 5.0));
+        target.draw(shape);
+    } else if (libre and !herbe){
+        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Red, 5.0));
+        target.draw(shape);
+    } else {
+        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Green, 5.0));
+        target.draw(shape);
+    }
 }
 
 
