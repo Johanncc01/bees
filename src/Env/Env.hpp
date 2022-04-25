@@ -159,4 +159,9 @@ private:
      */
     void destroyAll();
 
+    /*!
+     * @brief Affiche le carré dans un monde torique
+     */
+    void toricHivable(sf::RenderTarget&, Vec2d const&, Vec2d const&, sf::Color, double) const;
+
 };

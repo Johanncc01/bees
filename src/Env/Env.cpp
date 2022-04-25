@@ -134,42 +134,24 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double size(getAppConfig().hive_manual_size);
     double cote(size*factor);
 
+    if ((pos.x() < 0 - cote/2) or (pos.x() > terrain.getSize() +  cote/2) or (pos.y() < 0 - cote/2) or (pos.y() > terrain.getSize() + cote/2)){
+        return;
+    }
+
     Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
     Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
-
-    Vec2d topLeftClamp(topLeft);
-    Vec2d bottomRightClamp(bottomRight);
-
-    terrain.toricClamp(topLeftClamp);
-    terrain.toricClamp(bottomRightClamp);
-
 
     Collider hive(pos, size);
     bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
     bool herbe(terrain.isHiveable(pos, size));
 
-
-
-    if (topLeftClamp != topLeft ) {
-        sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), sf::Color::Black, 5.0));
-        sf::RectangleShape shape2(buildRectangle(bottomRight,(Vec2d(0, bottomRight.y() - cote) ), sf::Color::Black, 5.0));
-        target.draw(shape);
-        target.draw(shape2);
-    }
-    sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Black, 5.0));
-    target.draw(shape);
-
-   /* if (!libre){
-        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Blue, 5.0));
-        target.draw(shape);
+    if (!libre){
+        toricHivable(target, topLeft, bottomRight, sf::Color::Blue, cote);
     } else if (libre and !herbe){
-        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Red, 5.0));
-        target.draw(shape);
+        toricHivable(target, topLeft, bottomRight, sf::Color::Red, cote);
     } else {
-        sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Green, 5.0));
-        target.draw(shape);
+        toricHivable(target, topLeft, bottomRight, sf::Color::Green, cote);
     }
-*/
 }
 
 
@@ -202,6 +184,67 @@ void Env::destroyAll(){
 }
 
 
+void Env::toricHivable(sf::RenderTarget& target, Vec2d const& topLeft, Vec2d const& bottomRight, sf::Color color, double cote) const{
+    Vec2d topLeftClamp(topLeft);
+    Vec2d bottomRightClamp(bottomRight);
+
+    terrain.toricClamp(topLeftClamp);
+    terrain.toricClamp(bottomRightClamp);
+
+    if (topLeftClamp != topLeft) {
+        if (topLeftClamp.y() < bottomRightClamp.y()) {
+            sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp,(Vec2d(0, bottomRightClamp.y() - cote) ), color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+        }
+        else if (topLeftClamp.x() < bottomRightClamp.x()){
+            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+        }
+        else {
+            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
+            sf::RectangleShape shape3(buildRectangle(Vec2d(0, terrain.getSize()), Vec2d(bottomRightClamp.x(), topLeftClamp.y()), color, 5.0));
+            sf::RectangleShape shape4(buildRectangle(Vec2d(terrain.getSize(),0), Vec2d(topLeftClamp.x(), bottomRightClamp.y()), color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+            target.draw(shape3);
+            target.draw(shape4);
+        }
+    }
+
+    if (bottomRightClamp != bottomRight) {
+        if (topLeftClamp.y() < bottomRightClamp.y()) {
+            sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp,(Vec2d(0, bottomRightClamp.y() - cote) ), color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+
+        }
+        else if (topLeftClamp.x() < bottomRightClamp.x()){
+            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+        }
+        else {
+            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(terrain.getSize(), terrain.getSize()), color, 5.0));
+            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(0,0) , color, 5.0));
+            sf::RectangleShape shape3(buildRectangle(Vec2d(0,terrain.getSize()), Vec2d(bottomRightClamp.x(), topLeftClamp.y()), color, 5.0));
+            sf::RectangleShape shape4(buildRectangle(Vec2d(terrain.getSize(),0), Vec2d(topLeftClamp.x(), bottomRightClamp.y()), color, 5.0));
+            target.draw(shape);
+            target.draw(shape2);
+            target.draw(shape3);
+            target.draw(shape4);
+        }
+    }
+
+    sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, color, 5.0));
+    target.draw(shape);
+}
 
 
 

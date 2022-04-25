@@ -498,7 +498,7 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
             }
         }
 
-        for (size_t i(topCoords.x()); i <= botCoords.y(); ++i){
+        for (size_t i(topCoords.x()); i <= botCoords.x(); ++i){
             for (int j(topCoords.y()); j <= (nb_cells-1); ++j){
                 ids.push_back(getId(i, j));
             }
