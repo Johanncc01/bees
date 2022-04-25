@@ -84,6 +84,8 @@ public :
      */
     int getY(int) const;
 
+    void toricClamp(Vec2d&) const;
+
 
 // Fonctions graphiques
 
@@ -231,5 +233,7 @@ private:
      * @param le Vec2d à transposer
      */
     std::vector<std::size_t> indexesForRect(Vec2d const&, Vec2d const&) const;
+
+
 };
 

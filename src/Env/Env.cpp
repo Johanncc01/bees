@@ -133,8 +133,12 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double factor(getAppConfig().hiveable_factor);
     double size(getAppConfig().hive_manual_size);
     double cote(size*factor);
+
     Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
     Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
+    terrain.toricClamp(topLeft);
+    terrain.toricClamp(bottomRight);
+
 
     Collider hive(pos, size);
     bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));

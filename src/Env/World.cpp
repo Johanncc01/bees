@@ -338,6 +338,9 @@ bool World::isHiveable(Vec2d const& pos, double rad) const{
     double cote(rad*factor);
     Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
     Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
+    toricClamp(topLeft);
+    toricClamp(bottomRight);
+
 
     std::vector<std::size_t> field(indexesForRect(topLeft, bottomRight));
 
@@ -431,7 +434,7 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
     Vec2d topCoords(coords_from_pos(top));
     Vec2d botCoords(coords_from_pos(bot));
 
-    if ((top.x() < bot.x()) and (top.y() < bot.y())){
+    if ((topCoords.x() < botCoords.x()) and (topCoords.y() < botCoords.y())){
         for (size_t i(topCoords.x()); i <= botCoords.x() ; ++i){
             for (size_t j(topCoords.y()); j <= botCoords.y() ; ++j){
                 ids.push_back(getId(i, j));
@@ -442,7 +445,7 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 
     // Case 2 :
 
-    if ((top.x() > bot.x()) and (top.y() > bot.y())){
+    if ((topCoords.x() > botCoords.x()) and (topCoords.y() > botCoords.y())){
         for (size_t i(0); i <= botCoords.x(); ++i){
             for (size_t j(0); j <= botCoords.y(); ++j){
                 ids.push_back(getId(i, j));
@@ -471,7 +474,7 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 
     // Case 3 :
 
-    if ((top.x() > bot.x()) and (top.y() < bot.y())){
+    if ((topCoords.x() > botCoords.x()) and (topCoords.y() < botCoords.y())){
         for (size_t i(0); i <= botCoords.x(); ++i){
             for (size_t j(topCoords.y()); j <= botCoords.y(); ++j){
                 ids.push_back(getId(i, j));
@@ -488,7 +491,7 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 
     // Case 4 :
 
-    if ((top.x() < bot.x()) and (top.y() > bot.y())){
+    if ((topCoords.x() < botCoords.x()) and (topCoords.y() > botCoords.y())){
         for (size_t i(topCoords.x()); i <= botCoords.x(); ++i){
             for (size_t j(0); j <= botCoords.y(); ++j){
                 ids.push_back(getId(i, j));
@@ -504,5 +507,25 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
     }
 
     return ids;
+}
+
+
+void World::toricClamp(Vec2d& vect) const{
+    auto worldSize = getApp().getEnvSize();
+    auto width  = worldSize.x();                        // Récupération des dimensions prédéfinies
+    auto height = worldSize.y();
+
+    double reste_x(fmod(vect.x(), width));            // Reste de la division afin de contrôler si toujours dans le monde torique
+    double reste_y(fmod(vect.y(), height));
+
+    if (reste_x < 0){
+        reste_x += width;                               // Recalage dans les limites si besoin
+    }
+    if (reste_y < 0){
+        reste_y += height;
+    }
+
+
+    vect = Vec2d(reste_x, reste_y);
 }
 

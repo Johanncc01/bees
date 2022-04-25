@@ -96,7 +96,7 @@ void HiveTest::onDraw(sf::RenderTarget& target)
     if (mShowHiveableZone) {
         auto pos = getCursorPositionInView();
 	// TODO: UNCOMMENT IF ENV::DRAWHIVEABLEZONE IS CODED
-        //getEnv().drawHiveableZone(target, pos);
+        getEnv().drawHiveableZone(target, pos);
     }
 }
 
