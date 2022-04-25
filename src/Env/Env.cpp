@@ -136,8 +136,12 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
 
     Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
     Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
-    terrain.toricClamp(topLeft);
-    terrain.toricClamp(bottomRight);
+
+    Vec2d topLeftClamp(topLeft);
+    Vec2d bottomRightClamp(bottomRight);
+
+    terrain.toricClamp(topLeftClamp);
+    terrain.toricClamp(bottomRightClamp);
 
 
     Collider hive(pos, size);
@@ -145,7 +149,17 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     bool herbe(terrain.isHiveable(pos, size));
 
 
-    if (!libre){
+
+    if (topLeftClamp != topLeft ) {
+        sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), sf::Color::Black, 5.0));
+        sf::RectangleShape shape2(buildRectangle(bottomRight,(Vec2d(0, bottomRight.y() - cote) ), sf::Color::Black, 5.0));
+        target.draw(shape);
+        target.draw(shape2);
+    }
+    sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Black, 5.0));
+    target.draw(shape);
+
+   /* if (!libre){
         sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Blue, 5.0));
         target.draw(shape);
     } else if (libre and !herbe){
@@ -155,6 +169,7 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
         sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, sf::Color::Green, 5.0));
         target.draw(shape);
     }
+*/
 }
 
 
