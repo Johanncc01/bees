@@ -148,7 +148,7 @@
     "window" : {
         "antialiasing level" : 4,
         "title" : "INFOSV Simulation",
-        "simulation" : { "size" : 500 },
+        "simulation" : { "size" : 1500 },
         "stats" : { "height" : 100 },
 	"control" : { "width" : 200 }
     }

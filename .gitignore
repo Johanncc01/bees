@@ -50,3 +50,4 @@ src/CMakeCache.txt
 src/Makefile
 __MACOSX/*
 *.json
+*.json
