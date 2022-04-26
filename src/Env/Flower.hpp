@@ -19,6 +19,9 @@ public:
      */
     Flower(Vec2d const&, double, double);
 
+// Destructeur
+    ~Flower();
+
 // Méthodes pures
 
     /*!
