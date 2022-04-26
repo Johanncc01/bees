@@ -19,6 +19,8 @@ Collider::Collider(Collider const& other)
     : center(other.center), radius(other.radius)
 {}                                                      // Aucun appel à clamp() nécessaire car déjà fait dans le Collider copié
 
+Collider::~Collider()
+{}
 
 // Getters
 

@@ -32,7 +32,11 @@ public :
      * @brief Constructeur par défaut, appelant reset() qui recharge la configuration à partir du .json.
      */
     World();
-    //~World();      -> besoin ???
+
+    /*!
+     * @brief Destructeur du terrain
+     */
+    ~World();
 
     // Interdit les copies et affectations pour éviter les erreurs
     World(World const&) = delete;

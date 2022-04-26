@@ -96,6 +96,9 @@ bool Env::addFlowerAt(Vec2d const& p){
 
 void Env::drawFlowerZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double size(getAppConfig().flower_manual_size);
+    if ((pos.x() < 0) or (pos.x() > terrain.getSize()) or (pos.y() < 0) or (pos.y() > terrain.getSize())){
+        return;
+    }
     if (terrain.isGrowable(pos) and (flowers.size() < getAppConfig().flower_max_number)){
         auto shape = buildAnnulus(pos, size, sf::Color::Green, 3.0);
         target.draw(shape);
@@ -119,6 +122,7 @@ Flower* Env::getCollidingFlower(Collider const& body) const{
 
 bool Env::addHiveAt(Vec2d const& p){
     double size(getAppConfig().hive_manual_size);
+    //double size(uniform(getAppConfig().hive_min_size, getAppConfig().hive_max_size));
     Collider hive(p, size);
     bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
     if (terrain.isHiveable(p, size) and libre){
@@ -134,7 +138,7 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double size(getAppConfig().hive_manual_size);
     double cote(size*factor);
 
-    if ((pos.x() < 0 - cote/2) or (pos.x() > terrain.getSize() +  cote/2) or (pos.y() < 0 - cote/2) or (pos.y() > terrain.getSize() + cote/2)){
+    if ((pos.x() < 0-cote/2) or (pos.x() > terrain.getSize() + cote/2) or (pos.y() < 0-cote/2) or (pos.y() > terrain.getSize() + cote/2)){
         return;
     }
 
@@ -146,11 +150,11 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     bool herbe(terrain.isHiveable(pos, size));
 
     if (!libre){
-        toricHivable(target, topLeft, bottomRight, sf::Color::Blue, cote);
+        toricHivable(target, topLeft, bottomRight, sf::Color::Blue);
     } else if (libre and !herbe){
-        toricHivable(target, topLeft, bottomRight, sf::Color::Red, cote);
+        toricHivable(target, topLeft, bottomRight, sf::Color::Red);
     } else {
-        toricHivable(target, topLeft, bottomRight, sf::Color::Green, cote);
+        toricHivable(target, topLeft, bottomRight, sf::Color::Green);
     }
 }
 
@@ -174,81 +178,87 @@ Hive* Env::getCollidingHive(Collider const& body) const{
 void Env::destroyAll(){
     for (auto& flower : flowers){
         delete flower;
+        flower = nullptr;
     }
     flowers.clear();
 
     for (auto& hive : hives){
         delete hive;
+        hive = nullptr;
     }
     hives.clear();
 }
 
 
-void Env::toricHivable(sf::RenderTarget& target, Vec2d const& topLeft, Vec2d const& bottomRight, sf::Color color, double cote) const{
-    Vec2d topLeftClamp(topLeft);
-    Vec2d bottomRightClamp(bottomRight);
 
-    terrain.toricClamp(topLeftClamp);
-    terrain.toricClamp(bottomRightClamp);
+void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& bot, sf::Color color) const{
+    Vec2d topClamp(top);
+    Vec2d botClamp(bot);
 
-    if (topLeftClamp != topLeft) {
-        if (topLeftClamp.y() < bottomRightClamp.y()) {
-            sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp,(Vec2d(0, bottomRightClamp.y() - cote) ), color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
-        }
-        else if (topLeftClamp.x() < bottomRightClamp.x()){
-            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
-        }
-        else {
-            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
-            sf::RectangleShape shape3(buildRectangle(Vec2d(0, terrain.getSize()), Vec2d(bottomRightClamp.x(), topLeftClamp.y()), color, 5.0));
-            sf::RectangleShape shape4(buildRectangle(Vec2d(terrain.getSize(),0), Vec2d(topLeftClamp.x(), bottomRightClamp.y()), color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
-            target.draw(shape3);
-            target.draw(shape4);
-        }
+    terrain.toricClamp(topClamp);
+    terrain.toricClamp(botClamp);
+
+    float size(terrain.getSize());
+
+    //       case 1                case 3
+    //    +---------+           +---------+
+    //    |         |           |         |
+    //    | *--+    |        *--|-+    *--|
+    //    | |xx|    |        |oo|x|    |xx|
+    //    | +--%    |        +--|-%    +--|
+    //    |         |           |         |
+    //    +---------+           +---------+
+    //
+    // *----+
+    // |oo o|case 2                case 4
+    // |  +---------+           +---------+
+    // |oo|x|    |xx|           |   |xx|  |
+    // +--|-%    +--|           |   +--%  |
+    //    |         |           |         |
+    //    |-+    *--|           |   *--+  |
+    //    |x|    |xx|           |   |xx|  |
+    //    +---------+           +---------+
+    //                              |oo|
+    //                              +--%
+
+    // Case 1 :
+
+    if ((topClamp.x() < botClamp.x()) and (topClamp.y() < botClamp.y())){
+        sf::RectangleShape defaultShape(buildRectangle(top, bot, color, 5.0));
+        target.draw(defaultShape);
     }
 
-    if (bottomRightClamp != bottomRight) {
-        if (topLeftClamp.y() < bottomRightClamp.y()) {
-            sf::RectangleShape shape(buildRectangle(topLeftClamp,(Vec2d(terrain.getSize(), topLeftClamp.y() + cote )), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp,(Vec2d(0, bottomRightClamp.y() - cote) ), color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
+    // Case 2 :
 
-        }
-        else if (topLeftClamp.x() < bottomRightClamp.x()){
-            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(topLeftClamp.x() + cote, terrain.getSize()), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(bottomRightClamp.x() - cote , bottomRightClamp.y() - cote) , color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
-        }
-        else {
-            sf::RectangleShape shape(buildRectangle(topLeftClamp, Vec2d(terrain.getSize(), terrain.getSize()), color, 5.0));
-            sf::RectangleShape shape2(buildRectangle(bottomRightClamp, Vec2d(0,0) , color, 5.0));
-            sf::RectangleShape shape3(buildRectangle(Vec2d(0,terrain.getSize()), Vec2d(bottomRightClamp.x(), topLeftClamp.y()), color, 5.0));
-            sf::RectangleShape shape4(buildRectangle(Vec2d(terrain.getSize(),0), Vec2d(topLeftClamp.x(), bottomRightClamp.y()), color, 5.0));
-            target.draw(shape);
-            target.draw(shape2);
-            target.draw(shape3);
-            target.draw(shape4);
-        }
+    if ((topClamp.x() > botClamp.x()) and (topClamp.y() > botClamp.y())){
+        sf::RectangleShape shape(buildRectangle({0, 0}, botClamp, color, 5.0));
+        sf::RectangleShape shape2(buildRectangle({0, topClamp.y()}, {botClamp.x(), size}, color, 5.0));
+        sf::RectangleShape shape3(buildRectangle({topClamp.x(), 0}, {size, botClamp.y()}, color, 5.0));
+        sf::RectangleShape shape4(buildRectangle(topClamp, {size, size}, color, 5.0));
+        target.draw(shape);
+        target.draw(shape2);
+        target.draw(shape3);
+        target.draw(shape4);
     }
 
-    sf::RectangleShape shape(buildRectangle(topLeft, bottomRight, color, 5.0));
-    target.draw(shape);
+    // Case 3 :
+
+    if ((topClamp.x() > botClamp.x()) and (topClamp.y() < botClamp.y())){
+        sf::RectangleShape shape(buildRectangle({0, topClamp.y()}, botClamp, color, 5.0));
+        sf::RectangleShape shape2(buildRectangle(topClamp, {size, botClamp.y()}, color, 5.0));
+        target.draw(shape);
+        target.draw(shape2);
+    }
+
+    // Case 4 :
+
+    if ((topClamp.x() < botClamp.x()) and (topClamp.y() > botClamp.y())){
+        sf::RectangleShape shape(buildRectangle({topClamp.x(), 0}, botClamp, color, 5.0));
+        sf::RectangleShape shape2(buildRectangle(topClamp, {botClamp.x(), size}, color, 5.0));
+        target.draw(shape);
+        target.draw(shape2);
+    }
 }
-
-
-
-
 
 
 

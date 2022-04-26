@@ -15,8 +15,9 @@ Flower::Flower(Vec2d const& cen, double rad, double pol)
     texture = (sf::Texture const&)(getAppTexture(textures[random].toString()));     // Attribution de la texture aléatoire dans le constructeur, pour que la fleur ait toujours la même
 }
 
-Flower::~Flower() {
-};
+Flower::~Flower()
+{}
+
 // Méthodes pures
 
 void Flower::drawOn(sf::RenderTarget& target) const{

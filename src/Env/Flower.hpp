@@ -8,7 +8,7 @@
 class Flower : public Collider , public Drawable , public Updatable
 {
 public:
-// Constructeur
+// Constructeur et destructeur
 
     /*!
      * @brief Constructeur de base
@@ -19,7 +19,9 @@ public:
      */
     Flower(Vec2d const&, double, double);
 
-// Destructeur
+    /*!
+     * @brief Destructeur d'une fleur
+     */
     ~Flower();
 
 // Méthodes pures

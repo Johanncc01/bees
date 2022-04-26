@@ -12,6 +12,9 @@
 World::World()
 { reset(); };
 
+World::~World()
+{}
+
 // Getters
 
 float World::getSize() const{

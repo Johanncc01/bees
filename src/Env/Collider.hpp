@@ -28,6 +28,11 @@ public:
      */
     Collider(Collider const&);
 
+    /*!
+     * @brief Destructeur du Collider
+     */
+    ~Collider();
+
 // Getters
 
     /*!

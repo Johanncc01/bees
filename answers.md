@@ -101,7 +101,7 @@ Pour prévoir les différentes sortes de fleurs, qui peuvent avoir des traitemen
 Lors de la destruction d'un <tt>Env</tt>, il faut penser à également détruire tous les éléments qui ne peuvent pas vivre en dehors de lui, ici les fleurs. Ce traitement sera spécifié dans le destructeur de <tt>Env</tt>.
 **************************************************************
 ### Q3.9
-De placer ces suppressions dans les instructions liées au destructeur de <tt>Env</tt>, qui prendra donc soin de supprimer à la fois les fleurs et le terrain. **_Supprimer le terrain = ?, puisqu'il y a pas de pointeurs ou d'alloc dynamique ?_**
+De placer ces suppressions dans les instructions liées au destructeur de <tt>Env</tt>, qui prendra donc soin de supprimer à la fois les fleurs et le terrain.
 **************************************************************
 ### Q3.10
 <tt>Env::drawOn</tt> doit maintenant appeler <tt>Flower::drawOn</tt> pour chaque fleur faisant partie de l'environnement, en plus de l'appel existant à <tt>World::drawOn</tt>.
