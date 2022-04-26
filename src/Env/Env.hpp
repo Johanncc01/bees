@@ -51,6 +51,15 @@ public:
      */
     double getWorldHumidity(Vec2d const&) const;
 
+    /*!
+     * @brief Getter de isFlyable
+     *
+     * @param position de la cellule
+     *
+     * @return vrai si la cellule n'est pas de la roche
+     */
+    bool isWorldFlyable(Vec2d const&) const;
+
 
 // Méthodes pures
 
@@ -142,6 +151,8 @@ public:
      * @return un pointeur sur la ruche correspondante, ou "nullptr" si aucun résultat
      */
     Hive* getCollidingHive(Collider const&) const;
+
+
 
 
 private:

@@ -32,6 +32,9 @@ double Env::getWorldHumidity(Vec2d const& pos) const{
     return terrain.getHumidity(pos);
 }
 
+bool Env::isWorldFlyable(Vec2d const& pos) const{
+    return terrain.isFlyable(pos);
+}
 
 // Méthodes pures
 
@@ -45,6 +48,10 @@ void Env::update(sf::Time dt){
         }
     }
     flowers.erase(std::remove(flowers.begin(), flowers.end(), nullptr), flowers.end());
+
+    for (auto& hive : hives){
+        hive->update(dt);
+    }
 }
 
 void Env::drawOn(sf::RenderTarget& target) const{

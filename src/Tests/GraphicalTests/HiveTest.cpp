@@ -13,7 +13,7 @@
 
 void FakeHive::addTestBee() {
   // TODO UNCOMMENT WHEN HIVE::ADDBEE IS CODED
-  //addBee();
+  addBee();
 }
 
 std::string HiveTest::getWindowTitle() const {
@@ -57,12 +57,13 @@ void HiveTest::onEvent(sf::Event event, sf::RenderWindow&)
         case sf::Keyboard::O:
             getEnv().saveWorldToFile();
             break;
-        case sf::Keyboard::B:
+       case sf::Keyboard::B:
             if (mLastHive != nullptr) {
 	      mLastHive->addTestBee();
 	      std::cout << "bee added" << std::endl;
             }
             break;
+
 
         case sf::Keyboard::H:
             mShowHiveableZone = true;

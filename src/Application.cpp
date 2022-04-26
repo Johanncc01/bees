@@ -249,8 +249,8 @@ void Application::run()
             // timesteps.
             sf::Time maxDt = getAppConfig().simulation_time_max_dt;
             while (elapsedTime > sf::Time::Zero) {
-                auto dt = std::min(elapsedTime, maxDt);
-                elapsedTime -= dt;
+                auto dt = std::min(elapsedTime, maxDt);               
+                elapsedTime -=  (dt);
 				getEnv().update(dt);
                 onUpdate(dt);
 				--nbCycles;

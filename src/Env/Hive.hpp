@@ -3,12 +3,15 @@
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
 #include <Env/Collider.hpp>
-#include <Env/Bee.hpp>
+
+
+// Prédéclaration de la classe
+class Bee;
 
 // typedef des types complexes
 typedef std::vector<Bee*> Bees;
 
-class Hive : public Collider, public Drawable //, public Updatable
+class Hive : public Collider, public Drawable, public Updatable
 {
 public:
 // Constructeur et destructeur
@@ -44,14 +47,8 @@ public:
      *
      * @param temps dt sur lequel il faut actualiser la ruche
      */
-    //void update(sf::Time);
+    void update(sf::Time);
 
-// Bees
-
-    /*!
-     * @brief Ajoute une abeille dans la ruche
-     */
-    void addBee();
 
 // Pollen
 
@@ -70,6 +67,15 @@ public:
      * @return quantité qui a pu être retirée
      */
     double takePollen(double);
+
+
+protected:
+// Bees
+
+        /*!
+         * @brief Ajoute une abeille dans la ruche
+         */
+        void addBee();
 
 private:
 

@@ -185,10 +185,20 @@ public :
      * @brief Calcule si une position est libre pour y placer une ruche
      *
      * @param position de la cellule à tester
+     * @param rayon du collider associé à la ruche
      *
      * @return vrai si la cellule est libre
      */
     bool isHiveable(Vec2d const&, double) const;
+
+    /*!
+     * @brief Calcule si une position est libre pour voler
+     *
+     * @param position de la cellule à tester
+     *
+     * @return vrai si une abeille est apte à voler sur la cellule
+     */
+    bool isFlyable(Vec2d const&) const;
 
 private:
 

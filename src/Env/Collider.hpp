@@ -174,11 +174,13 @@ protected:
     Vec2d center;
     double radius;
 
-private:
     /*!
      * @brief Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
      */
     void clamp();
+
+private:
+
 };
 
 /*!

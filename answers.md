@@ -154,8 +154,28 @@ Il faut modifier <tt>World::isGrowable</tt> pour qu'elle détecte la présence d
 **************************************************************
 ### Q4.7
 Il faut ajouter une itération sur les pointeurs sur <tt>Hive</tt> pour détruire leur contenu comme fait pour les fleurs précedemment.
+**************************************************************
+### Q4.8
+<tt>Bee</tt> héritera de :
+<ul> - <tt> Collider</tt>, pour avoir directement les tests de collision <br> - <tt>Drawable</tt> car elle contient une méthode <tt>drawOn</tt> <br> - <tt>Updatable</tt> car elle contient une méthode <tt>update</tt> </ul> 
+Elle contiendra donc une référence sur une <tt>Hive</tt>, un vecteur vitesse et un <tt>double</tt> d'énergie. On déclare également les méthodes <tt>Bee::move(sf::Time st)</tt> (déplacement sur un temps donné) et <tt>Bee::isDead()</tt> (teste si l'énergie est nulle ou négative).
+**************************************************************
+### Q4.9
+Il faut penser à la déclarer comme virtuelle, à l'aide du mot-clé <tt>virtual</tt>  en début de déclaration.
+**************************************************************
+### Q4.10
+Si on utilise la méthode polymorphique <tt>Bee::getConfig()</tt>, on obtient un tableau contenant toutes les caractéristiques concernant le type d'abeille avec lequel on travaille actuellement.
+**************************************************************
+### Q4.11
 
+**************************************************************
+### Q4.12
 
+**************************************************************
+### Q4.13
+
+**************************************************************
+### Q4.14
 
 
 

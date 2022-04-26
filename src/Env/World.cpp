@@ -355,6 +355,11 @@ bool World::isHiveable(Vec2d const& pos, double rad) const{
     return true;
 }
 
+bool World::isFlyable(Vec2d const& pos) const{
+    Vec2d coords(coords_from_pos(pos));
+    bool roche(cells_[getId(coords.x(), coords.y())] == Kind::roche);
+    return !roche;
+}
 
 // Fonctions d'implémentation
 

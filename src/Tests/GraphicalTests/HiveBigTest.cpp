@@ -13,7 +13,7 @@
 
 void FakeHive::addTestBee() {
   // TODO UNCOMMENT WHEN HIVE::ADDBEE IS CODED
-  //addBee();
+  addBee();
 }
 
 std::string HiveBigTest::getWindowTitle() const {

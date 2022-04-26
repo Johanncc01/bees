@@ -1,6 +1,7 @@
 #include <Env/Hive.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
+#include <Env/Bee.hpp>
 
 
 // Constructeur et destructeur
@@ -12,6 +13,7 @@ Hive::Hive(Vec2d const& cen, double rad)
 Hive::~Hive(){
     for (auto bee : bees){
         delete bee;
+        bee = nullptr;
     }
     bees.clear();
 }
@@ -28,16 +30,33 @@ void Hive::drawOn(sf::RenderTarget& target) const{
         auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 30, sf::Color::Red);
         target.draw(text);
     }
+
+    for (auto bee : bees){
+        bee->drawOn(target);
+    }
 }
+
+
+void Hive::update(sf::Time dt){
+    for (auto& bee : bees){
+        bee->update(dt);
+        if (bee->isDead()){
+            delete bee;
+            bee = nullptr;
+        }
+    }
+    bees.erase(std::remove(bees.begin(), bees.end(), nullptr), bees.end());
+}
+
 
 
 // Bees
 
-/*
-void Hive::update(sf::Time dt){
-
+void Hive::addBee(){
+    bees.push_back(new Bee(*this, {center.x(), center.y() + 10}, 10.0, 10.0, 10.0));
 }
-*/
+
+
 
 // Pollen
 
