@@ -533,7 +533,6 @@ void World::toricClamp(Vec2d& vect) const{
         reste_y += height;
     }
 
-
     vect = Vec2d(reste_x, reste_y);
 }
 

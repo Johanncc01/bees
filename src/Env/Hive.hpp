@@ -17,7 +17,7 @@ public:
 // Constructeur et destructeur
 
     /*!
-     * @brief Constructeur de base
+     * @brief Constructeur de base d'une ruche
      *
      * @param centre de la ruche
      * @param rayon de la ruche
@@ -49,7 +49,6 @@ public:
      */
     void update(sf::Time);
 
-
 // Pollen
 
     /*!
@@ -67,7 +66,6 @@ public:
      * @return quantité qui a pu être retirée
      */
     double takePollen(double);
-
 
 protected:
 // Bees

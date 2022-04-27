@@ -11,11 +11,11 @@ Esc	: close window
 C	: reload config. file
 Arrows	: move simulation view
 Tab	: switch to next control
-PageUp	  : increase CC
-PageDown  : decrease CC
 R	: regenerate simulation
          (random world built
 	 from json)
+W	  : toggle show humidity
+F         : add Flower at CP
 L	  : load world from file
 O	  : save world to file
 H	  : add hive at CP

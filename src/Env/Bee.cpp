@@ -13,6 +13,12 @@ Bee::Bee(Hive& h, Vec2d const& pos, double rad, double en, double vit)
     vitesse = Vec2d::fromRandomAngle()*vit;
 }
 
+Bee::~Bee()
+{}
+
+
+// Getters
+
 bool Bee::isDead(){
     return (energy <= 0);
 }
@@ -21,6 +27,8 @@ j::Value const& Bee::getConfig() const{
     return getValueConfig()["simulation"]["bees"]["scout"];
 }
 
+
+// Méthodes pures
 
 void Bee::drawOn(sf::RenderTarget& target) const{
     auto const& texture = getAppTexture(getConfig()["texture"].toString());
@@ -34,8 +42,6 @@ void Bee::drawOn(sf::RenderTarget& target) const{
 
     target.draw(beeSprite);
 }
-
-
 
 void Bee::update(sf::Time dt){
 

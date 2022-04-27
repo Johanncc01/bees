@@ -11,7 +11,7 @@
  *
  * This test has the ability to manually create Hive with `H` under
  * the cursor position (after testing whether the position is "hiveable"
- * or not). Additionally, generic bees can be added to the last created
+ * or not). Additionally, generic bees can added to the last created
  * hive, if any, using `B`.
  *
  */
@@ -19,7 +19,7 @@
 class FakeHive : public Hive {
 
 public:
-  void addTestBee(); 
+  void addTestBee();
 };
 
 class HiveTest : public Application
@@ -37,7 +37,7 @@ public:
   virtual std::string getHelpTextFile() const override final;
   std::string virtual getWindowTitle() const override final;
 private:
-  
+  bool mShowFlowerZone   = false; ///< Enable/disable flower zone visualisation
    bool  mShowHiveableZone = false;   ///< Enable/disable hiveable zone visualisation
   FakeHive* mLastHive         = nullptr; ///< Keep track of the last hive that was created
   bool  mHiveCreated = false;

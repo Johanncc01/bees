@@ -10,7 +10,6 @@
 
 #include <cassert>
 
-
 void FakeHive::addTestBee() {
   // TODO UNCOMMENT WHEN HIVE::ADDBEE IS CODED
   addBee();
@@ -53,18 +52,27 @@ void HiveTest::onEvent(sf::Event event, sf::RenderWindow&)
 	  createViews();
 	  break;
 	    
-	  // Save the world   ─=≡ΣΞ(つಠل͜ಠ)つ
-        case sf::Keyboard::O:
-            getEnv().saveWorldToFile();
+	  // Save the world  ─=≡ΣΞ(つಠل͜ಠ)つ
+        case sf::Keyboard::O: 
+	  //UNCOMMENT IF CODED
+        getEnv().saveWorldToFile();
             break;
-       case sf::Keyboard::B:
+        case sf::Keyboard::B:
             if (mLastHive != nullptr) {
-	      mLastHive->addTestBee();
-	      std::cout << "bee added" << std::endl;
+                mLastHive->addTestBee();
+		std::cout << "bee added" << std::endl;
             }
             break;
-
-
+	// Toggle humidity level visualisation
+        case sf::Keyboard::W: {
+	  getAppConfig().switchHumidity();
+            break;
+        }
+	// Add flower: show the area covered by the flower
+        case sf::Keyboard::F:
+            mShowFlowerZone = true;
+            break;
+  
         case sf::Keyboard::H:
             mShowHiveableZone = true;
 	    break;
@@ -72,7 +80,15 @@ void HiveTest::onEvent(sf::Event event, sf::RenderWindow&)
     } else if (event.type == sf::Event::KeyReleased) {
         switch (event.key.code) {
         default: break;
-
+         // Add flower: try to create a new one and disable visualisation zone
+        case sf::Keyboard::F:
+            mShowFlowerZone = false;
+            if (getEnv().addFlowerAt(getCursorPositionInView())) {
+                std::cout << "New flower created\n";
+            } else {
+                std::cout << "Couldn't create new flower\n";
+            }
+            break;
         case sf::Keyboard::H:
         {
 	    mShowHiveableZone = false;
@@ -84,7 +100,6 @@ void HiveTest::onEvent(sf::Event event, sf::RenderWindow&)
 	    else { 
 	      std::cout << "Couldn't create new hive\n";
             }
-	    
 	}
             break;
 	}
@@ -98,6 +113,11 @@ void HiveTest::onDraw(sf::RenderTarget& target)
         auto pos = getCursorPositionInView();
 	// TODO: UNCOMMENT IF ENV::DRAWHIVEABLEZONE IS CODED
         getEnv().drawHiveableZone(target, pos);
+    }
+     if (mShowFlowerZone) {
+        auto pos = getCursorPositionInView();
+	// TODO: UNCOMMENT IF ENV::DRAWFLOWERZONE IS CODED
+        getEnv().drawFlowerZone(target, pos);
     }
 }
 

@@ -88,9 +88,6 @@ public :
      */
     int getY(int) const;
 
-    void toricClamp(Vec2d&) const;
-
-
 // Fonctions graphiques
 
     /*!
@@ -121,6 +118,13 @@ public :
      * @param "RenderTarget" sur laquelle le monde est dessiné
      */
     void drawOn(sf::RenderTarget&) const;
+
+    /*!
+     * @brief Transpose les coordonnées données dans le monde torique
+     *
+     * @param Vec2d à traiter
+     */
+    void toricClamp(Vec2d&) const;
 
 // Génération aléatoire
 
@@ -247,7 +251,6 @@ private:
      * @param le Vec2d à transposer
      */
     std::vector<std::size_t> indexesForRect(Vec2d const&, Vec2d const&) const;
-
 
 };
 

@@ -8,7 +8,7 @@
 
 Hive::Hive(Vec2d const& cen, double rad)
     : Collider(cen, rad), pollen(getAppConfig().hive_initial_nectar)
-{ }
+{}
 
 Hive::~Hive(){
     for (auto bee : bees){

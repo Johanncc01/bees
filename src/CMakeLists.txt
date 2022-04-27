@@ -97,11 +97,6 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	## HiveTest
         add_executable (hiveTest  ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
         target_link_libraries(hiveTest sfml-graphics sfml-window sfml-system)
-
-        ## HiveBigTest
-        add_executable (hiveBigTest  ${TEST_DIR}/GraphicalTests/HiveBigTest.cpp ${SOURCES_GFX})
-        target_link_libraries(hiveBigTest sfml-graphics sfml-window sfml-system)
-
        
     else()
         set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
@@ -142,10 +137,6 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	      ## HiveTest
               add_executable(hiveTest ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
               target_link_libraries(hiveTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-
-              ## HiveBigTest
-              add_executable (hiveBigTest  ${TEST_DIR}/GraphicalTests/HiveBigTest.cpp ${SOURCES_GFX})
-              target_link_libraries(hiveBigTest sfml-graphics sfml-window sfml-system)
 
         else()
             message(STATUS "SFML NOT FOUND ! ")

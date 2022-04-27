@@ -5,7 +5,7 @@
 
 FlowerGenerator::FlowerGenerator()
     : compteur(sf::Time::Zero)
-{ }
+{}
 
 void FlowerGenerator::update(sf::Time dt){
     compteur += dt;
