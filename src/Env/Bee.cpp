@@ -5,6 +5,8 @@
 #include <Random/Random.hpp>
 
 
+// Constructeur et destructeur
+
 Bee::Bee(Hive& h, Vec2d const& pos, double rad, double en, double vit)
     : Collider(pos, rad), hive(h), energy(en)
 {
@@ -21,7 +23,7 @@ j::Value const& Bee::getConfig() const{
 
 
 void Bee::drawOn(sf::RenderTarget& target) const{
-    auto const& texture = getAppTexture(getValueConfig()["simulation"]["bees"]["scout"]["texture"].toString());
+    auto const& texture = getAppTexture(getConfig()["texture"].toString());
     auto beeSprite = buildSprite(center, radius, texture);
 
     float alpha(vitesse.Vec2d::angle());
@@ -36,16 +38,9 @@ void Bee::drawOn(sf::RenderTarget& target) const{
 
 
 void Bee::update(sf::Time dt){
-    j::Value arrayRotaProba(getConfig());
-    if (arrayRotaProba.isArray()){
-        std::cout << "ratio";
 
-    }
-    //double rotaProba(((((getConfig()[1])[0])[1]).toDouble()));
-    //double rotaMaxAngle(((((getConfig()[1])[0])[1]).toDouble()));
-
-    double rotaProba(getValueConfig()["simulation"]["bees"]["scout"]["moving behaviour"]["random"]["rotation probability"].toDouble());
-    double rotaMaxAngle(getValueConfig()["simulation"]["bees"]["scout"]["moving behaviour"]["random"]["rotation angle max"].toDouble());
+    double rotaProba(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble());
+    double rotaMaxAngle(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble());
 
     if (bernoulli(rotaProba)){
         double alpha(uniform(-rotaMaxAngle, rotaMaxAngle));
@@ -64,9 +59,9 @@ void Bee::update(sf::Time dt){
             beta = -PI/4;
         }
         vitesse.rotate(beta);
-
     }
-clamp();
+
+    clamp();
 
     energy -= 0.1*dt.asSeconds();
     if (energy < 0){

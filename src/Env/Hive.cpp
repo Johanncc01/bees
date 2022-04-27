@@ -53,7 +53,7 @@ void Hive::update(sf::Time dt){
 // Bees
 
 void Hive::addBee(){
-    bees.push_back(new Bee(*this, {center.x(), center.y() + 10}, 10.0, 10.0, 10.0));
+    bees.push_back(new Bee(*this, {center.x(), center.y() + 15}, 10.0, 10.0, 10.0));
 }
 
 

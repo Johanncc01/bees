@@ -9,6 +9,16 @@
 class Bee : public Collider, public Drawable , public Updatable
 {
 public:
+// Constructeur et destructeur
+
+    /*!
+     * @brief Constructeur de base
+     *
+     * @param position de l'abeille
+     * @param rayon de l'abeille
+     * @param énergie initiale de l'abeille
+     * @param amplitude initiale de la vitesse de l'abeille
+     */
     Bee(Hive&, Vec2d const&, double, double, double);
 
     bool isDead();

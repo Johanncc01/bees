@@ -147,7 +147,7 @@ Nous supprimerons le constructeur de copie, et l'opérateur d'affectation dans <
 Dans le destructeur de <tt>Hive</tt>, il ne faut pas oublier de <tt>delete</tt> tous les éléments pointés par le vector <tt>bees</tt> de <tt>Hive</tt>, ainsi que de le vider.
 **************************************************************
 ### Q4.5
-Non, elles doivent disparaître dans le destructeur de <tt>Env</tt>
+Non, elles doivent disparaître dans le destructeur de <tt>Env</tt>.
 **************************************************************
 ### Q4.6
 Il faut modifier <tt>World::isGrowable</tt> pour qu'elle détecte la présence de ruches, en utilisant <tt>Env::getCollidingHive</tt> via <tt>getAppEnv</tt>.
@@ -161,19 +161,20 @@ Il faut ajouter une itération sur les pointeurs sur <tt>Hive</tt> pour détruir
 Elle contiendra donc une référence sur une <tt>Hive</tt>, un vecteur vitesse et un <tt>double</tt> d'énergie. On déclare également les méthodes <tt>Bee::move(sf::Time st)</tt> (déplacement sur un temps donné) et <tt>Bee::isDead()</tt> (teste si l'énergie est nulle ou négative).
 **************************************************************
 ### Q4.9
-Il faut penser à la déclarer comme virtuelle, à l'aide du mot-clé <tt>virtual</tt>  en début de déclaration.
+Il faut penser à la déclarer comme virtuelle, à l'aide du mot-clé <tt>virtual</tt>  en début de ligne dans le hpp.
 **************************************************************
 ### Q4.10
-Si on utilise la méthode polymorphique <tt>Bee::getConfig()</tt>, on obtient un tableau contenant toutes les caractéristiques concernant le type d'abeille avec lequel on travaille actuellement.
+Si on utilise la méthode polymorphique <tt>Bee::getConfig()</tt>, on obtient un tableau contenant toutes les caractéristiques concernant le type d'abeille avec lequel on travaille actuellement. On peut retrouver 
 **************************************************************
 ### Q4.11
-
+Il faut utiliser cette tournure, plutôt que les raccourcis d'écriture, car ces derniers ne pourront pas être redéfinis dans les sous-classes de manière polymorphique. Avec la méthode <tt>Bee::getConfig()</tt>, on peut choisir de quel type d'abeille on veut retrouver la configuration.
 **************************************************************
 ### Q4.12
-
+Adaptons déjà les méthodes <tt>Hive::drawOn(sf::RenderTarget& target)</tt> et <tt>Hive::update(sf::Time dt)</tt>, respectivement pour qu'elles affichent toutes les abeilles du vector du pointeur de <tt>Bees</tt>, et qu'elles les actualisent. Rajoutons également l'actualisation des ruches dans <tt>Env::update(sf::Time dt)</tt>, qui appellera l'actualisation des abeilles.
+Le dessin des ruches (et donc de leurs abeilles) était déjà implémenté dans <tt>Env</tt>.
 **************************************************************
 ### Q4.13
-
+Le test de disparition des abeilles se fera dans <tt>Hive::update(sf::Time dt)</tt>, à l'aide de <tt>Bee::isDead()</tt>. Si elle n'a plus d'énergie, nous la supprimerons du vector de pointeur sur <tt>Bee</tt>. Ce n'est donc pas dans <tt>Env</tt> que ce traitement aura lieu, car il ne contient pas le vector. 
 **************************************************************
 ### Q4.14
 

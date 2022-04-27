@@ -88,4 +88,28 @@
 - Commentaires partie 3
 - Multiples tests pour améliorer la réactivité du programme comme conseillé en TP par l'assistant
 	- solution trouvée sur piazza (pas d'appel à <tt>World::updateCache()</tt> dans <tt>Env::update()</tt> car le monde n'a pas besoin d'être reaffiché tout le temps)
-- téléchargement et début de la partie 4
+- téléchargement et début de la partie 4.1 (jusqu'au test 15)
+
+*************************************************
+## 18.04 - 24.04 (pendant les vacances)
+- Ajustement de toutes les inclusions : ordre, dépendances circulaires,...
+- Commentaires terminés dans les classes
+
+*************************************************
+## 25.04 (lundi)
+- Codage en commun du bonus de la partie 4.1
+	- <tt>World::indexesForRect()</tt> très compliqué à réaliser (+ visualiser les traitements dans le monde torique)
+	- mais la fonction est opérationnelle
+
+*************************************************
+## 26.04 (mardi - TP)
+- fin de la partie 4.2
+	- reste à commenter <tt>Bee.hpp/.cpp</tt>
+	- compréhension des fonctions avec .json difficile
+- problème connu : crash intempestif lors de l'exécution, au bout d'un long moment
+	- la cause est difficile à détecter avec le débugger, mais peut être un problème de destruction des objets (Flower, Hive, Bee) -> à investiguer
+
+*************************************************
+## 27.04 (mercredi)
+- commentaires <tt>Bee.hpp/.cpp</tt>
+- rendu intermédiaire
