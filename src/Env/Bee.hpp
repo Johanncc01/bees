@@ -8,7 +8,6 @@
 
 enum class Mode : short { repos, random, target};
 
-
 class Bee : public Collider, public Drawable , public Updatable, public CFSM
 {
 public:
@@ -66,15 +65,25 @@ public:
 // Déplacement
 
     /*!
-     * @brief Déplace d'abeille aléatoirement sur un temps donné
+     * @brief Déplace l'abeille sur un temps donné en fonction du mode actuel (attribut)
+     *
+     * @param temps dt sur lequel le déplacement est calculé
+     */
+     void move(sf::Time);
+
+    /*!
+     * @brief Déplace l'abeille aléatoirement sur un temps donné
      *
      * @param temps dt sur lequel le déplacement est calculé
      */
     void randomMove(sf::Time);
 
+    /*!
+     * @brief Déplace l'abeille vers le but (attribut) sur un temps donné
+     *
+     * @param temps dt sur lequel le déplacement est calculé
+     */
     void targetMove(sf::Time);
-
-    void move(sf::Time);
 
 
 protected:

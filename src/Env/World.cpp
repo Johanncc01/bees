@@ -123,8 +123,8 @@ void World::reset(bool regenerate){
 
     size_t w_seed(getAppConfig().world_nb_water_seeds);
     for (size_t i(0); i < seeds_.size(); ++i){
-        seeds_[i].coords = sf::Vector2i(uniform(0, nb_cells-1), uniform(0, nb_cells-1));        // Associe une position aléatoire à la graine
-        size_t id(getId(seeds_[i].coords.x, seeds_[i].coords.y));
+        seeds_[i].coords = Vec2d(uniform(0, nb_cells-1), uniform(0, nb_cells-1));        // Associe une position aléatoire à la graine
+        size_t id(getId(seeds_[i].coords.x(), seeds_[i].coords.y()));
         if (i < w_seed){                                                                        // Génère d'abord des graines d'eau, puis une fois la limite atteinte, passe aux graines d'herbe
             seeds_[i].type = Kind::eau;
             humidityImpact(id);                                                                 // Calcule l'impact de la nouvelle cellule d'eau sur les autres
@@ -150,10 +150,10 @@ void World::drawOn(sf::RenderTarget& target) const{
     } else {                                                                                    // Affichage des niveaux d'humidité
         target.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads);
         if (isDebugOn()){                                                                       // Affichage du debug des niveaux d'humidité
-            sf::Vector2i curseur(getApp().getCursorPositionInView());
-            sf::Vector2i position(curseur.x/cell_size,curseur.y/cell_size);
-            sf::Vector2i affichage(curseur.x,curseur.y-30);
-            auto const text = buildText(to_nice_string(humidity_[getId(position.x,position.y)]), affichage, getAppFont(), 30, sf::Color::Red);
+            Vec2d curseur(getApp().getCursorPositionInView());
+            Vec2d position(curseur.x()/cell_size, curseur.y()/cell_size);
+            Vec2d affichage(curseur.x(), curseur.y()-30);
+            auto const text = buildText(to_nice_string(humidity_[getId(position.x(),position.y())]), affichage, getAppFont(), 30, sf::Color::Red);
             target.draw(text);
         }
     }
@@ -165,17 +165,15 @@ void World::drawOn(sf::RenderTarget& target) const{
 void World::step(){
     for (auto& seed : seeds_){
         if (seed.type == Kind::herbe){
-            seed.coords += sf::Vector2i(randomDir());                                           // Evolution dans une direction aléatoire
-            clamp(seed.coords);
+            seed.coords += Vec2d(normalClamp(randomDir()));                                           // Evolution dans une direction aléatoire
         } else {
             if (bernoulli(getAppConfig().water_seeds_teleport_proba) == 0){
-                seed.coords += sf::Vector2i(randomDir());                                       // Evolution dans une direction aléatoire
-                clamp(seed.coords);
+                seed.coords += Vec2d(normalClamp(randomDir()));                                       // Evolution dans une direction aléatoire
             } else {
-                seed.coords = sf::Vector2i(uniform(0, nb_cells-1), uniform(0, nb_cells-1));     // Téléportation de la graine d'eau à une position aléatoire
+                seed.coords = Vec2d(uniform(0, nb_cells-1), uniform(0, nb_cells-1));     // Téléportation de la graine d'eau à une position aléatoire
             }
         }
-        size_t id(getId(seed.coords.x, seed.coords.y));
+        size_t id(getId(seed.coords.x(), seed.coords.y()));
         if (cells_[id] != Kind::eau) {
             cells_[id] = seed.type;                         // Transmission du type de la graine à la cellule
             if (seed.type == Kind::eau) {
@@ -208,11 +206,10 @@ void World::smooth(){
             double grass_counter(0);
             for (int a(-1); a <= 1 ; ++a){                                  // La double boucle parcourt toutes les cellules autour de celle qu'on veut
                 for (int b(-1); b <= 1 ; ++b){
-                    sf::Vector2i index(x+a,y+b);
-                    sf::Vector2i copie(index);
-                    clamp(index);
-                    if (index == copie){                                    // Si les nouvelles coordonées sont toujours les mêmes après un clamping, alors la cellule voisine existe (++neighbour_counter)
-                        size_t new_id(getId(index.x, index.y));
+                    Vec2d index(x+a,y+b);
+                    Vec2d clamp(normalClamp(index));
+                    if (index == clamp){                                    // Si les nouvelles coordonées sont toujours les mêmes après un clamping, alors la cellule voisine existe (++neighbour_counter)
+                        size_t new_id(getId(index.x(), index.y()));
                         ++neighbour_counter;
                         if (copie_de_cells_[new_id] == Kind::eau){
                             ++water_counter;
@@ -313,13 +310,11 @@ void World::humidityImpact(size_t id){
     double cte1(getAppConfig().world_humidity_init_level);
     double cte2(getAppConfig().world_humidity_decay_rate);
 
-    sf::Vector2i range_x(x - humidityRange, x + humidityRange + 1);
-    sf::Vector2i range_y(y - humidityRange, y + humidityRange + 1);
-    clamp(range_x);
-    clamp(range_y);
+    Vec2d range_x(normalClamp({x - humidityRange, x + humidityRange + 1}));
+    Vec2d range_y(normalClamp({y - humidityRange, y + humidityRange + 1}));
 
-    for (int i(range_x.x) ; i <= (range_x.y) ; ++i) {
-        for (int j(range_y.x) ; j <= (range_y.y) ; ++j) {
+    for (int i(range_x.x()) ; i <= (range_x.y()) ; ++i) {
+        for (int j(range_y.x()) ; j <= (range_y.y()) ; ++j) {
             int id2(getId(i,j));
             double dist(std::hypot(x-i,y-j));
             humidity_[id2] += ( cte1 * exp(-dist / cte2));
@@ -339,11 +334,8 @@ bool World::isGrowable(Vec2d const& pos) const{
 bool World::isHiveable(Vec2d const& pos, double rad) const{
     double factor(getAppConfig().hiveable_factor);
     double cote(rad*factor);
-    Vec2d topLeft(pos - Vec2d(cote/2, cote/2));
-    Vec2d bottomRight(pos + Vec2d(cote/2, cote/2));
-    toricClamp(topLeft);
-    toricClamp(bottomRight);
-
+    Vec2d topLeft(toricClamp(pos - Vec2d(cote/2, cote/2)));
+    Vec2d bottomRight(toricClamp(pos + Vec2d(cote/2, cote/2)));
 
     std::vector<std::size_t> field(indexesForRect(topLeft, bottomRight));
 
@@ -363,29 +355,34 @@ bool World::isFlyable(Vec2d const& pos) const{
 
 // Fonctions d'implémentation
 
-sf::Vector2i World::randomDir() const{
+Vec2d World::randomDir() const{
     switch (uniform(0,3)) {
-    case 0 : return sf::Vector2i(-1,0);
-    case 1 : return sf::Vector2i(1,0);
-    case 2 : return sf::Vector2i(0,-1);
-    case 3 : return sf::Vector2i(0,1);
+    case 0 : return Vec2d(-1,0);
+    case 1 : return Vec2d(1,0);
+    case 2 : return Vec2d(0,-1);
+    case 3 : return Vec2d(0,1);
     }
-    return sf::Vector2i(0,0);
+    return Vec2d(0,0);
 }
 
-void World::clamp(sf::Vector2i& vect) const{
-    if (vect.x > nb_cells-1){
-        vect.x = nb_cells-1;
+Vec2d World::normalClamp(Vec2d const& vect) const{
+    double x(vect.x());
+    double y(vect.y());
+
+    if (x > nb_cells-1){
+        x = nb_cells-1;
     }
-    if (vect.y > nb_cells-1){
-        vect.y = nb_cells-1;
+    if (y > nb_cells-1){
+        y = nb_cells-1;
     }
-    if (vect.x < 0){
-        vect.x = 0;
+    if (x < 0){
+        x = 0;
     }
-    if (vect.y < 0){
-        vect.y = 0;
+    if (y < 0){
+        y = 0;
     }
+
+    return Vec2d(x,y);
 }
 
 Vec2d World::coordsFromPos(Vec2d const& pos) const{
@@ -520,14 +517,16 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 
 Vec2d World::toricClamp(Vec2d const& vect) const{
 
-    double reste_x(fmod(vect.x(), nb_cells*cell_size));            // Reste de la division afin de contrôler si toujours dans le monde torique
-    double reste_y(fmod(vect.y(), nb_cells*cell_size));
+    double size(nb_cells*cell_size);
+
+    double reste_x(fmod(vect.x(), size));            // Reste de la division afin de contrôler si toujours dans le monde torique
+    double reste_y(fmod(vect.y(), size));
 
     if (reste_x < 0){
-        reste_x += nb_cells*cell_size;                               // Recalage dans les limites si besoin
+        reste_x += size;                               // Recalage dans les limites si besoin
     }
     if (reste_y < 0){
-        reste_y += nb_cells*cell_size;
+        reste_y += size;
     }
 
     return Vec2d(reste_x, reste_y);

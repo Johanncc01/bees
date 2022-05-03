@@ -72,6 +72,8 @@ void Bee::update(sf::Time dt){
     }
 }
 
+// Déplacement
+
 void Bee::move(sf::Time dt){
     switch (static_cast<short>(mode)){
     case 0 : return;
@@ -81,8 +83,6 @@ void Bee::move(sf::Time dt){
              return;
     }
 }
-
-
 
 void Bee::targetMove(sf::Time dt){
     if (avoidanceClock_ < sf::Time::Zero){
@@ -105,8 +105,6 @@ void Bee::targetMove(sf::Time dt){
         vitesse.rotate(beta);
     }
 }
-
-
 
 void Bee::randomMove(sf::Time dt){
 

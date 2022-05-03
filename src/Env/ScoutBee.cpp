@@ -67,7 +67,7 @@ void ScoutBee::drawOn(sf::RenderTarget& target) const {
     Bee::drawOn(target);
 
     if (isDebugOn()){
-        auto const text = buildText("Scout: energy "+ to_nice_string(energy), {center.x(), center.y() + 15}, getAppFont(), 10, sf::Color::Black);
+        auto const text = buildText("Scout : energy "+ to_nice_string(energy), {center.x(), center.y() + 15}, getAppFont(), 10, sf::Color::Black);
         target.draw(text);
         if (getState() == LF_FLOWER){
             auto const text = buildText("seeking_flower", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);

@@ -29,7 +29,7 @@ void Hive::drawOn(sf::RenderTarget& target) const{
     auto hiveSprite = buildSprite(center, 2.5*radius, texture);
     target.draw(hiveSprite);
     if (isDebugOn()){
-        sf::Vector2i affichage(center.x(),center.y()-30);
+        Vec2d affichage(center.x(),center.y()-30);
         auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 15, sf::Color::Red);
         target.draw(text);
     }
