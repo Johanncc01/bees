@@ -7,8 +7,8 @@
 
 // Constructeur et destructeur
 
-Bee::Bee(Hive& h, Vec2d const& pos, double rad, double en, double vit)
-    : Collider(pos, rad), hive(h), energy(en)
+Bee::Bee(Hive& h, Vec2d const& pos, States s, double rad, double en, double vit)
+    : Collider(pos, rad), CFSM(s), hive(h), energy(en), memory(nullptr), target(nullptr), mode(Mode::repos)
 {
     vitesse = Vec2d::fromRandomAngle()*vit;
 }
@@ -24,7 +24,7 @@ bool Bee::isDead(){
 }
 
 j::Value const& Bee::getConfig() const{
-    return getValueConfig()["simulation"]["bees"]["scout"];
+    return getValueConfig();
 }
 
 
@@ -41,9 +41,74 @@ void Bee::drawOn(sf::RenderTarget& target) const{
     beeSprite.rotate(alpha/DEG_TO_RAD);
 
     target.draw(beeSprite);
+
+    if (isDebugOn()){
+        if (mode == Mode::random){
+            auto shape = buildAnnulus(center, radius, sf::Color::Black, 5.0);
+            target.draw(shape);
+        } else if (mode == Mode::target){
+            auto shape = buildAnnulus(center, radius, sf::Color::Blue, 3.0);
+            target.draw(shape);
+        }
+    }
 }
 
 void Bee::update(sf::Time dt){
+
+    action(dt);
+    move(dt);
+    clampCenter();
+
+    switch (static_cast<short>(mode)){
+    case 0 : energy -= double(getConfig()["energy"]["consumption rates"]["idle"].toDouble())*dt.asSeconds();
+             break;
+    case 1 :
+    case 2 : energy -= double(getConfig()["energy"]["consumption rates"]["moving"].toDouble())*dt.asSeconds();
+             break;
+    }
+
+    if (energy < 0){
+        energy = 0;
+    }
+}
+
+void Bee::move(sf::Time dt){
+    switch (static_cast<short>(mode)){
+    case 0 : return;
+    case 1 : randomMove(dt);
+             return;
+    case 2 : targetMove(dt);
+             return;
+    }
+}
+
+
+
+void Bee::targetMove(sf::Time dt){
+    if (avoidanceClock_ < sf::Time::Zero){
+        Vec2d normalised(directionTo(*target)/distanceTo(*target));
+        vitesse = normalised * vitesse.length();
+    } else {
+        avoidanceClock_ -= dt;
+    }
+
+    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
+        center += vitesse*dt.asSeconds();
+    } else {
+        avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
+        double beta;
+        if (bernoulli(0.5)){
+            beta = PI/4;
+        } else {
+            beta = -PI/4;
+        }
+        vitesse.rotate(beta);
+    }
+}
+
+
+
+void Bee::randomMove(sf::Time dt){
 
     double rotaProba(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble());
     double rotaMaxAngle(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble());
@@ -53,10 +118,8 @@ void Bee::update(sf::Time dt){
         vitesse.rotate(alpha);
     }
 
-    Vec2d posCandidate(center + vitesse*dt.asSeconds());
-
-    if (getAppEnv().isWorldFlyable(posCandidate)){
-        center = posCandidate;
+    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
+        center += vitesse*dt.asSeconds();
     } else {
         double beta;
         if (bernoulli(0.5)){
@@ -66,16 +129,7 @@ void Bee::update(sf::Time dt){
         }
         vitesse.rotate(beta);
     }
-
-    clamp();
-
-    energy -= 0.1*dt.asSeconds();
-    if (energy < 0){
-        energy = 0;
-    }
 }
-
-
 
 
 

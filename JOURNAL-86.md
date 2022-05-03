@@ -113,3 +113,16 @@
 ## 27.04 (mercredi)
 - commentaires <tt>Bee.hpp/.cpp</tt>
 - rendu intermédiaire
+	- Toutes les parties codées jusqu'ici fonctionnent.
+
+*************************************************
+## 03.05 (mardi - TP)
+- téléchargement de la partie 5
+- partie 5.1 terminée en TP
+	- création des classes <tt>ScoutBee</tt>, <tt>WorkingBee</tt>, <tt>CFSM</tt>
+	- adaptation de la classe <tt>Bee</tt> pour la rendre virtuelle
+- partie 5.2 terminée l'après-midi
+	- codage spécifique des <tt>ScoutBee</tt>, au travers des méthodes 
+		- <tt>ScoutBee::onState()</tt> et <tt>ScoutBee::onEnterState()</tt> qui héritent de <tt>CFSM</tt> (redéfinition) pour les comportements liés aux états
+		- <tt>ScoutBee::drawOn()</tt>, qui héritent de <tt>Bee</tt> (redéfintion) pour le dessin du mode debug
+- reste à commenter le code ajouté

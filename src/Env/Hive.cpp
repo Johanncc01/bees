@@ -1,7 +1,10 @@
 #include <Env/Hive.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
+#include <Random/Random.hpp>
 #include <Env/Bee.hpp>
+#include <Env/ScoutBee.hpp>
+#include <Env/WorkerBee.hpp>
 
 
 // Constructeur et destructeur
@@ -27,7 +30,7 @@ void Hive::drawOn(sf::RenderTarget& target) const{
     target.draw(hiveSprite);
     if (isDebugOn()){
         sf::Vector2i affichage(center.x(),center.y()-30);
-        auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 30, sf::Color::Red);
+        auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 15, sf::Color::Red);
         target.draw(text);
     }
 
@@ -52,25 +55,33 @@ void Hive::update(sf::Time dt){
 
 // Bees
 
-void Hive::addBee(){
-    bees.push_back(new Bee(*this, {center.x(), center.y() + 15}, 10.0, 10.0, 10.0));
+Bee* Hive::addBee(double scoutProb){
+    Vec2d pos(center + Vec2d::fromRandomAngle()*uniform(0.1, radius-0.1));
+    if (bernoulli(scoutProb)){
+        Bee* newBee(new ScoutBee(*this, pos));
+        bees.push_back(newBee);
+        return newBee;
+    }
+    Bee* newBee(new WorkerBee(*this, pos));
+    bees.push_back(newBee);
+    return newBee;
 }
 
 
 
 // Pollen
 
-void Hive::dropPollen(double qte){
+void Hive::dropPollen(float qte){
     pollen += qte;
 }
 
 
-double Hive::takePollen(double qte){
+float Hive::takePollen(float qte){
     if (pollen >= qte){
         pollen -= qte;
         return qte;
     } else {
-        double left(pollen);
+        float left(pollen);
         pollen = 0;
         return left;
     }

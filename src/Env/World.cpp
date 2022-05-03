@@ -356,7 +356,7 @@ bool World::isHiveable(Vec2d const& pos, double rad) const{
 }
 
 bool World::isFlyable(Vec2d const& pos) const{
-    Vec2d coords(coordsFromPos(pos));
+    Vec2d coords(coordsFromPos(toricClamp(pos)));
     bool roche(cells_[getId(coords.x(), coords.y())] == Kind::roche);
     return !roche;
 }
@@ -518,21 +518,18 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 }
 
 
-void World::toricClamp(Vec2d& vect) const{
-    auto worldSize = getApp().getEnvSize();
-    auto width  = worldSize.x();                        // Récupération des dimensions prédéfinies
-    auto height = worldSize.y();
+Vec2d World::toricClamp(Vec2d const& vect) const{
 
-    double reste_x(fmod(vect.x(), width));            // Reste de la division afin de contrôler si toujours dans le monde torique
-    double reste_y(fmod(vect.y(), height));
+    double reste_x(fmod(vect.x(), nb_cells*cell_size));            // Reste de la division afin de contrôler si toujours dans le monde torique
+    double reste_y(fmod(vect.y(), nb_cells*cell_size));
 
     if (reste_x < 0){
-        reste_x += width;                               // Recalage dans les limites si besoin
+        reste_x += nb_cells*cell_size;                               // Recalage dans les limites si besoin
     }
     if (reste_y < 0){
-        reste_y += height;
+        reste_y += nb_cells*cell_size;
     }
 
-    vect = Vec2d(reste_x, reste_y);
+    return Vec2d(reste_x, reste_y);
 }
 

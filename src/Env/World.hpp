@@ -124,7 +124,7 @@ public :
      *
      * @param Vec2d à traiter
      */
-    void toricClamp(Vec2d&) const;
+     Vec2d toricClamp(Vec2d const&) const;
 
 // Génération aléatoire
 

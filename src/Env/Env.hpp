@@ -60,7 +60,6 @@ public:
      */
     bool isWorldFlyable(Vec2d const&) const;
 
-
 // Méthodes pures
 
     /*!
@@ -123,6 +122,8 @@ public:
      * @return un pointeur sur la fleur correspondante, ou "nullptr" si aucun résultat
      */
     Flower* getCollidingFlower(Collider const&) const;
+
+    Vec2d const* getCollidingFlowerPosition(Collider const&) const;
 
 // Hive
 

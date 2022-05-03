@@ -13,7 +13,7 @@
 
 Collider::Collider(Vec2d const& cen, double rad)
     : center(cen), radius(rad)
-{ clamp(); }
+{ clampCenter(); }
 
 Collider::Collider(Collider const& other)
     : center(other.center), radius(other.radius)
@@ -73,9 +73,8 @@ double Collider::distanceTo(Collider const& col) const{
 
 void Collider::move(Vec2d const& dx){
     center += dx;
-    clamp();
+    clampCenter();
 }
-
 
 // Gestion des collisions
 
@@ -126,7 +125,7 @@ std::ostream& operator<<(std::ostream& out, Collider const& col){
 
 // Implémentation
 
-void Collider::clamp(){
+void Collider::clampCenter(){
     auto worldSize = getApp().getEnvSize();
     auto width  = worldSize.x();                        // Récupération des dimensions prédéfinies
     auto height = worldSize.y();
@@ -141,6 +140,5 @@ void Collider::clamp(){
         reste_y += height;
     }
 
-    Vec2d newcen(reste_x, reste_y);
-    center = newcen;
+    center = Vec2d(reste_x, reste_y);
 }

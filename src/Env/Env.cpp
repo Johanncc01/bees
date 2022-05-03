@@ -124,6 +124,16 @@ Flower* Env::getCollidingFlower(Collider const& body) const{
     return nullptr;
 }
 
+Vec2d const* Env::getCollidingFlowerPosition(Collider const& body) const{
+    Flower* found(getCollidingFlower(body));
+
+    if (found != nullptr){
+        return new Vec2d(found->getPosition());
+    }
+    return nullptr;
+}
+
+
 
 // Hive
 
@@ -266,18 +276,6 @@ void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& 
         target.draw(shape2);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

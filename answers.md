@@ -177,6 +177,36 @@ Le dessin des ruches (et donc de leurs abeilles) était déjà implémenté dans
 Le test de disparition des abeilles se fera dans <tt>Hive::update(sf::Time dt)</tt>, à l'aide de <tt>Bee::isDead()</tt>. Si elle n'a plus d'énergie, nous la supprimerons du vector de pointeur sur <tt>Bee</tt>. Ce n'est donc pas dans <tt>Env</tt> que ce traitement aura lieu, car il ne contient pas le vector. 
 **************************************************************
 ### Q4.14
+Car la méthode <tt>Hive::addBee()</tt> est <tt>protected</tt> et non publique, et on ne pourrait pas l'appeler depuis l'extérieur de la classe. C'est pourquoi on créé une sous-classe qui se chargera de l'appeler.
+
+## Partie 5
+
+**************************************************************
+### Q5.1
+- Il faut les redéfinir dans les sous-classes <tt>ScoutBee</tt> et <tt>WorkerBee</tt>, avec le mot clé <tt>override</tt>, de sorte à ce qu'elles renvoient un tableau contenant les configurations des éclaireuses et des butineuses respectivement.
+- Pour empêcher l'instanciation d'une abeille générique, la méthode <tt>Bee::getConfig()</tt> doit être déclarée virutelle pure, ce qui oblige la redéfinition dans les sous-classes.
+- Pour drawOn, les méthodes n'ont pas besoin d'être redéfinies, car l'appel à <tt>getConfig()</tt> existe déjà et sera adapté en fonction de la sous-classe qui les appelle.
+
+**************************************************************
+### Q5.2
+Car lors de la construction de la sous-classe, la méthode <tt>getConfig()</tt> n'est pas encore redéfinie, et c'est celle de la super-classe Bee qui sera appelée. Or, ce n'est pas le résultat souhaité à travers le polymorphisme. Il est donc plus simple d'utiliser un appel unique à <tt>getAppConfig()</tt> pour le constructeur.
+
+**************************************************************
+### Q5.3
+Les constructeurs de <tt>ScoutBee</tt> et <tt>WorkerBee</tt> doivent donc être modifiés pour fournir un vector contenant l'état <tt>IN_HIVE</tt> (pour l'instant), car le constructeur de <tt>Bee</tt> a été adapté après l'héritage de <tt>CFSM</tt>.
+
+**************************************************************
+### Q5.4
+Comme une abeille peut oublier une position, un pointeur sur un Vec2d paraît judicieux. En effet, lorsque l'attribut mémoire sera à <tt>nullptr</tt>, c'est que l'abeille n'aura rien en mémoire (≠ vecteur nul, qui la ramènerait à l'origine). Comme la mémoire est commune à toutes les abeilles, on peut l'implémenter dans la super-classe <tt>Bee</tt>, et son constructeur devra l'initialiser à <tt>nullptr</tt>.
+
+**************************************************************
+### Q5.5
 
 
+**************************************************************
+### Q5.6
+On crée un type énuméré pour les modes de déplacement possible, et on ajoute un attribut qui représente l'état actuel. Il faut l'initialiser dans le constructeur au repos. La cible sera modélisée comme un pointeur sur un Vec2d, car on peut ne pas avoir de cible (nullptr).
 
+**************************************************************
+### Q5.7
+Car on fait appel au polymorphisme via la méthode virtuelle <tt>getConfig()</tt>, qui redéfinit les valeurs dans les sous-classes.

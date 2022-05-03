@@ -162,7 +162,7 @@ public:
     bool operator>(Vec2d const&) const;
 
     /*!
-     * @brief Surcharge de l'opérateur '|' avec la méthode "is"
+     * @brief Surcharge de l'opérateur '|' avec la méthode "isColliding"
      *
      * @param Collider à vérifier
      *
@@ -177,7 +177,7 @@ protected:
     /*!
      * @brief Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
      */
-    void clamp();
+    void clampCenter();
 
 private:
 

@@ -3,10 +3,13 @@
 #include <Env/Collider.hpp>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
+#include <Env/CFSM.hpp>
 #include <Env/Hive.hpp>
 
+enum class Mode : short { repos, random, target};
 
-class Bee : public Collider, public Drawable , public Updatable
+
+class Bee : public Collider, public Drawable , public Updatable, public CFSM
 {
 public:
 // Constructeur et destructeur
@@ -16,11 +19,12 @@ public:
      *
      * @param référence à une ruche
      * @param position de l'abeille
+     * @param tableau des états possibles pour l'abeille
      * @param rayon de l'abeille
      * @param énergie initiale de l'abeille
      * @param amplitude initiale de la vitesse de l'abeille
      */
-    Bee(Hive&, Vec2d const&, double, double, double);
+    Bee(Hive&, Vec2d const&, States, double, double, double);
 
     /*!
      * @brief Destructeur de l'abeille
@@ -41,7 +45,7 @@ public:
      *
      * @return un tableau contenant les valeurs coresspondantes au bon type dans le .json
      */
-    virtual j::Value const& getConfig() const;
+    virtual j::Value const& getConfig() const = 0;
 
 // Méthodes pures
 
@@ -50,20 +54,42 @@ public:
      *
      * @param "RenderTarget" sur laquelle la ruche est dessinée
      */
-    void drawOn(sf::RenderTarget&) const;
+    virtual void drawOn(sf::RenderTarget&) const;
 
     /*!
      * @brief Actualise l'abeille et ses caractéristiques sur un temps donné
      *
-     * @param temps dt sur lequel il faut actualiser la ruche
+     * @param temps dt sur lequel il faut actualiser l'abeille
      */
     void update(sf::Time);
 
-private:
+// Déplacement
+
+    /*!
+     * @brief Déplace d'abeille aléatoirement sur un temps donné
+     *
+     * @param temps dt sur lequel le déplacement est calculé
+     */
+    void randomMove(sf::Time);
+
+    void targetMove(sf::Time);
+
+    void move(sf::Time);
+
+
+protected:
 
     Hive& hive;
     Vec2d vitesse;
     double energy;
 
+    Vec2d const* memory;
+    Vec2d* target;
+
+    Mode mode;
+
+private:
+
+    sf::Time avoidanceClock_;
 };
 
