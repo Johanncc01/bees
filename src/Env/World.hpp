@@ -243,7 +243,7 @@ private:
      *
      * @param le Vec2d à transposer
      */
-    Vec2d coords_from_pos(Vec2d const&) const;
+    Vec2d coordsFromPos(Vec2d const&) const;
 
     /*!
      * @brief Calcule l'ensemble des

@@ -22,7 +22,7 @@ float World::getSize() const{
 }
 
 double World::getHumidity(Vec2d const& pos) const{
-    Vec2d coords(coords_from_pos(pos));
+    Vec2d coords(coordsFromPos(pos));
     return humidity_[getId(coords.x(), coords.y())];
 }
 
@@ -330,7 +330,7 @@ void World::humidityImpact(size_t id){
 // Tests
 
 bool World::isGrowable(Vec2d const& pos) const{
-    Vec2d coords(coords_from_pos(pos));
+    Vec2d coords(coordsFromPos(pos));
     bool herbe(cells_[getId(coords.x(), coords.y())] == Kind::herbe);
     bool hive(getAppEnv().getCollidingHive(Collider(pos, getAppConfig().flower_manual_size)) == nullptr);
     return (herbe and hive);
@@ -356,7 +356,7 @@ bool World::isHiveable(Vec2d const& pos, double rad) const{
 }
 
 bool World::isFlyable(Vec2d const& pos) const{
-    Vec2d coords(coords_from_pos(pos));
+    Vec2d coords(coordsFromPos(pos));
     bool roche(cells_[getId(coords.x(), coords.y())] == Kind::roche);
     return !roche;
 }
@@ -388,7 +388,7 @@ void World::clamp(sf::Vector2i& vect) const{
     }
 }
 
-Vec2d World::coords_from_pos(Vec2d const& pos) const{
+Vec2d World::coordsFromPos(Vec2d const& pos) const{
     return Vec2d(pos.x()/cell_size, pos.y()/cell_size);;
 }
 
@@ -439,8 +439,8 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
     // Case 1 :
 
     std::vector<std::size_t> ids;
-    Vec2d topCoords(coords_from_pos(top));
-    Vec2d botCoords(coords_from_pos(bot));
+    Vec2d topCoords(coordsFromPos(top));
+    Vec2d botCoords(coordsFromPos(bot));
 
     if ((topCoords.x() < botCoords.x()) and (topCoords.y() < botCoords.y())){
         for (size_t i(topCoords.x()); i <= botCoords.x() ; ++i){

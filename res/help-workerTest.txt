@@ -8,7 +8,7 @@ Space	: toggle pause
 D	: toggle debug mode
 MW	: Zoom
 Esc	: close window
-C	: reload config. file
+C	: reload configuration
 Arrows	: move simulation view
 Tab	: switch to next control
 PageUp	  : increase CC
@@ -17,9 +17,9 @@ R	: regenerate simulation
          (random world built
 	 from json)
 L	  : load world from file
-O	  : save (output) world to file
+O	  : save world to file
 W	  : toggle humidity display
 F	  : add flower at CP
 H	  : add hive at CP
+	  with a WorkerBee inside
 RM	  : track/untrack bee
-

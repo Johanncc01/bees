@@ -17,9 +17,10 @@ R	: regenerate simulation
          (random world built
 	 from json)
 L	  : load world from file
-O	  : save (output) world to file
+O	  : save world to file
 W	  : toggle humidity display
 F	  : add flower at CP
 H	  : add hive at CP
+	  with a ScoutBee inside
 RM	  : track/untrack bee
 
