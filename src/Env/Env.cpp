@@ -40,11 +40,12 @@ bool Env::isWorldFlyable(Vec2d const& pos) const{
 
 void Env::update(sf::Time dt){
     generator.update(dt);
-    for (auto& flower : flowers){
-        flower->update(dt);
-        if (!(flower->hasPollen())){                    // Suppression des fleurs sans pollen
-            delete flower;
-            flower = nullptr;
+    size_t taille(flowers.size());
+    for (size_t i(0); i < taille; ++i){
+        flowers[i]->update(dt);
+        if (!(flowers[i]->hasPollen())){                    // Suppression des fleurs sans pollen
+            delete flowers[i];
+            flowers[i] = nullptr;
         }
     }
     flowers.erase(std::remove(flowers.begin(), flowers.end(), nullptr), flowers.end());
