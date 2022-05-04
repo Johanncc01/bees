@@ -56,7 +56,7 @@ public:
      *
      * @param quantité de pollen à déposer
      */
-    void dropPollen(float);
+    double dropPollen(double);
 
     /*!
      * @brief Retire de la ruche la quantité de pollen demandée
@@ -65,7 +65,7 @@ public:
      *
      * @return quantité qui a pu être retirée
      */
-    float takePollen(float);
+    double takePollen(double);
 
 protected:
 // Bees

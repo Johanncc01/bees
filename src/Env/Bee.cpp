@@ -133,5 +133,11 @@ void Bee::randomMove(sf::Time dt){
 
 
 
+void Bee::learnFlowerLocation(Vec2d const& flowerPosition){
+    memory = new Vec2d(flowerPosition);
+}
+
+
+
 
 

@@ -7,7 +7,7 @@ State const ScoutBee::LF_FLOWER(createUid());
 State const ScoutBee::BACK_TO_HIVE(createUid());
 
 ScoutBee::ScoutBee(Hive& h, Vec2d const& pos)
-    : Bee(h, pos, {IN_HIVE, LF_FLOWER, BACK_TO_HIVE},  getAppConfig().scout_size, getAppConfig().scout_initial_energy, getAppConfig().scout_speed)
+    : Bee(h, pos, {IN_HIVE, LF_FLOWER, BACK_TO_HIVE},  getAppConfig().scout_size, getAppConfig().scout_initial_energy, getAppConfig().scout_speed), isEating(false)
 {
 
 }

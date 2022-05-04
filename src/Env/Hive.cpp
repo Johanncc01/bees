@@ -71,17 +71,18 @@ Bee* Hive::addBee(double scoutProb){
 
 // Pollen
 
-void Hive::dropPollen(float qte){
+double Hive::dropPollen(double qte){
     pollen += qte;
+    return qte;
 }
 
 
-float Hive::takePollen(float qte){
+double Hive::takePollen(double qte){
     if (pollen >= qte){
         pollen -= qte;
         return qte;
     } else {
-        float left(pollen);
+        double left(pollen);
         pollen = 0;
         return left;
     }

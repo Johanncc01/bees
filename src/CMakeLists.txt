@@ -100,8 +100,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
         target_link_libraries(hiveTest sfml-graphics sfml-window sfml-system)
 
 	##WorkerTest
-         #add_executable (workerTest  ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
-        #target_link_libraries(workerTest sfml-graphics sfml-window sfml-system)
+         add_executable (workerTest  ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
+         target_link_libraries(workerTest sfml-graphics sfml-window sfml-system)
        
        ##ScoutTest
          add_executable (scoutTest  ${TEST_DIR}/GraphicalTests/ScoutTest.cpp ${SOURCES_GFX})
@@ -153,8 +153,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
               target_link_libraries(hiveTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	      ## WorkerTest
-	      #add_executable(workerTest ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
-              #target_link_libraries(workerTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+              add_executable(workerTest ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
+              target_link_libraries(workerTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	       ## ScoutTest
               add_executable(scoutTest ${TEST_DIR}/GraphicalTests/ScoutTest.cpp ${SOURCES_GFX})

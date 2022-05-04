@@ -77,6 +77,9 @@ public:
     void move(sf::Time);
 
 
+    void learnFlowerLocation(Vec2d const&);
+
+
 protected:
 
     Hive& hive;
@@ -84,9 +87,10 @@ protected:
     double energy;
 
     Vec2d const* memory;
-    Vec2d* target;
+    Vec2d const* target;
 
     Mode mode;
+    bool isEating;
 
 private:
 

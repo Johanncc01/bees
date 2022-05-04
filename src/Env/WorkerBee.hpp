@@ -16,11 +16,20 @@ public:
      */
     j::Value const& getConfig() const override;
 
+    void onState(State, sf::Time) override;
+
+    void onEnterState(State) override;
+
+    void drawOn(sf::RenderTarget&) const override;
 
 private:
 
     static State const IN_HIVE;
+    static State const TO_FLOWER;
+    static State const COLLECT_POLLEN;
+    static State const BACK_TO_HIVE;
 
+    double pollenQty;
 
 
 };
