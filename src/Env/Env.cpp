@@ -40,12 +40,11 @@ bool Env::isWorldFlyable(Vec2d const& pos) const{
 
 void Env::update(sf::Time dt){
     generator.update(dt);
-    size_t taille(flowers.size());                          // Le passage via cette variable et via l'indice assure de ne pas actualiser les fleurs nouvellement ajoutées
-    for (size_t i(0); i < taille; ++i){
-        flowers[i]->update(dt);
-        if (!(flowers[i]->hasPollen())){                    // Suppression des fleurs sans pollen
-            delete flowers[i];
-            flowers[i] = nullptr;
+    for (auto& flower : flowers){
+        flower->update(dt);
+        if (!(flower->hasPollen())){                    // Suppression des fleurs sans pollen
+            delete flower;
+            flower = nullptr;
         }
     }
     flowers.erase(std::remove(flowers.begin(), flowers.end(), nullptr), flowers.end());
@@ -210,8 +209,11 @@ void Env::destroyAll(){
 
 
 void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& bot, sf::Color color) const{
-    Vec2d topClamp(terrain.toricClamp(top));
-    Vec2d botClamp(terrain.toricClamp(bot));
+    Vec2d topClamp(top);
+    Vec2d botClamp(bot);
+
+    terrain.toricClamp(topClamp);
+    terrain.toricClamp(botClamp);
 
     float size(terrain.getSize());
 
