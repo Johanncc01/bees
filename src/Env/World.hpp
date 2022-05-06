@@ -11,7 +11,7 @@ enum class Kind : short { herbe, eau, roche };
 
 // Modélisation d'une "graine" permettant la génération du terrain
 struct Seed{
-    sf::Vector2i coords;
+    Vec2d coords;
     Kind type;
 };
 
@@ -123,6 +123,8 @@ public :
      * @brief Transpose les coordonnées données dans le monde torique
      *
      * @param Vec2d à traiter
+     *
+     * @return Vec2d à l'intérieur du monde torique
      */
      Vec2d toricClamp(Vec2d const&) const;
 
@@ -227,28 +229,35 @@ private:
     /*!
      * @brief Génère un vecteur unitaire dans une direction aléatoire
      *
-     * @return le Vector2i généré
+     * @return le Vec2d généré
      */
-    sf::Vector2i randomDir() const;
+    Vec2d randomDir() const;
 
     /*!
      * @brief Modifie le vecteur donné pour qu'il soit toujours à l'intérieur du monde
      *
-     * @param le Vector2i à modifier
+     * @param le Vec2d à modifier
+     *
+     * @return le Vec2d à l'intérieur du monde
      */
-    void clamp(sf::Vector2i&) const;
+    Vec2d regularClamp(Vec2d const&) const;
 
     /*!
      * @brief Transpose un vecteur de position (SFML) donné en coordonnées utilisables dans les tableaux de World
      *
      * @param le Vec2d à transposer
+     *
+     * @return le Vec2d associé aux coordonées du monde
      */
     Vec2d coordsFromPos(Vec2d const&) const;
 
     /*!
-     * @brief Calcule l'ensemble des
+     * @brief Calcule l'ensemble des indices à l'intérieur d'une zone du monde torique
      *
-     * @param le Vec2d à transposer
+     * @param position du topLeft
+     * @param position du bottomRight
+     *
+     * @return l'ensemble des indices à l'intérieur d'un rectangle dans le monde torique
      */
     std::vector<std::size_t> indexesForRect(Vec2d const&, Vec2d const&) const;
 

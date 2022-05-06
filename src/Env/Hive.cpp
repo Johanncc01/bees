@@ -29,7 +29,7 @@ void Hive::drawOn(sf::RenderTarget& target) const{
     auto hiveSprite = buildSprite(center, 2.5*radius, texture);
     target.draw(hiveSprite);
     if (isDebugOn()){
-        sf::Vector2i affichage(center.x(),center.y()-30);
+        Vec2d affichage(center.x(),center.y()-30);
         auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 15, sf::Color::Red);
         target.draw(text);
     }
@@ -49,6 +49,44 @@ void Hive::update(sf::Time dt){
         }
     }
     bees.erase(std::remove(bees.begin(), bees.end(), nullptr), bees.end());
+
+
+    // Interaction systématique : fonctionne
+
+    for (auto& bee1 : bees){
+        for (auto& bee2 : bees){
+            if (bee1 != bee2){
+                bee1->interact(bee2);
+            }
+        }
+    }
+
+    // Test de si dans la ruche : ne fonctionne pas encore :(((
+    /*
+    Bees inside;
+
+    for (auto& bee : bees){
+        if (*this>*bee){
+            inside.push_back(bee);
+        }
+    }
+
+    for (auto& bee1 : inside){
+        for (auto& bee2 : inside){
+            if (bee1 != bee2){
+                bee1->interact(bee2);
+            }
+        }
+    }
+    */
+
+    double reproduction(getAppConfig().hive_reproduction_nectar_threshold);
+    double maxBees(getAppConfig().hive_reproduction_max_bees);
+
+    if ((pollen >= reproduction) and bees.size() < maxBees){
+        addBee(getAppConfig().hive_reproduction_scout_proba);
+    }
+
 }
 
 

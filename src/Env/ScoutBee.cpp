@@ -1,13 +1,17 @@
 #include <Env/ScoutBee.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
+#include <Env/WorkerBee.hpp>
+// inclusion pour réparer la prédéclaration de la classe dans la superclasse Bee.hpp)
+
 
 State const ScoutBee::IN_HIVE(createUid());
 State const ScoutBee::LF_FLOWER(createUid());
 State const ScoutBee::BACK_TO_HIVE(createUid());
 
 ScoutBee::ScoutBee(Hive& h, Vec2d const& pos)
-    : Bee(h, pos, {IN_HIVE, LF_FLOWER, BACK_TO_HIVE},  getAppConfig().scout_size, getAppConfig().scout_initial_energy, getAppConfig().scout_speed), isEating(false)
+    : Bee(h, pos, {IN_HIVE, LF_FLOWER, BACK_TO_HIVE},  getAppConfig().scout_size, getAppConfig().scout_initial_energy, getAppConfig().scout_speed)
+      , shareCounter(0)
 {
 
 }
@@ -15,7 +19,6 @@ ScoutBee::ScoutBee(Hive& h, Vec2d const& pos)
 j::Value const& ScoutBee::getConfig() const{
     return getValueConfig()["simulation"]["bees"]["scout"];
 }
-
 
 void ScoutBee::onState(State state, sf::Time dt){
 
@@ -90,10 +93,22 @@ void ScoutBee::drawOn(sf::RenderTarget& target) const {
 }
 
 
+// Polymorphisme
 
+void ScoutBee::interact(Bee* other){
+    other->interactWith(this);
+}
 
+void ScoutBee::interactWith(ScoutBee*){
+    return;
+}
 
-
+void ScoutBee::interactWith(WorkerBee* worker){
+    if ((memory != nullptr) and (shareCounter < getAppConfig().scout_max_sharing)){
+        ++shareCounter;
+        worker->learnFlowerLocation(*memory);
+    }
+}
 
 
 

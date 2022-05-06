@@ -22,6 +22,12 @@ public:
 
     void drawOn(sf::RenderTarget&) const override;
 
+// Polymorphisme
+    void interact(Bee*) override;
+
+    void interactWith(ScoutBee*) override;
+
+    void interactWith(WorkerBee*) override;
 
 
 private:
@@ -31,6 +37,6 @@ private:
     static State const BACK_TO_HIVE;
 
 
-    bool isEating;
+    int shareCounter;
 };
 

@@ -8,7 +8,7 @@
 // Constructeur et destructeur
 
 Bee::Bee(Hive& h, Vec2d const& pos, States s, double rad, double en, double vit)
-    : Collider(pos, rad), CFSM(s), hive(h), energy(en), memory(nullptr), target(nullptr), mode(Mode::repos)
+    : Collider(pos, rad), CFSM(s), hive(h), energy(en), memory(nullptr), target(nullptr), mode(Mode::repos), isEating(false)
 {
     vitesse = Vec2d::fromRandomAngle()*vit;
 }
@@ -72,6 +72,8 @@ void Bee::update(sf::Time dt){
     }
 }
 
+// Déplacement
+
 void Bee::move(sf::Time dt){
     switch (static_cast<short>(mode)){
     case 0 : return;
@@ -81,32 +83,6 @@ void Bee::move(sf::Time dt){
              return;
     }
 }
-
-
-
-void Bee::targetMove(sf::Time dt){
-    if (avoidanceClock_ < sf::Time::Zero){
-        Vec2d normalised(directionTo(*target)/distanceTo(*target));
-        vitesse = normalised * vitesse.length();
-    } else {
-        avoidanceClock_ -= dt;
-    }
-
-    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
-        center += vitesse*dt.asSeconds();
-    } else {
-        avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
-        double beta;
-        if (bernoulli(0.5)){
-            beta = PI/4;
-        } else {
-            beta = -PI/4;
-        }
-        vitesse.rotate(beta);
-    }
-}
-
-
 
 void Bee::randomMove(sf::Time dt){
 
@@ -131,6 +107,27 @@ void Bee::randomMove(sf::Time dt){
     }
 }
 
+void Bee::targetMove(sf::Time dt){
+    if (avoidanceClock_ < sf::Time::Zero){
+        Vec2d normalised(directionTo(*target)/distanceTo(*target));
+        vitesse = normalised * vitesse.length();
+    } else {
+        avoidanceClock_ -= dt;
+    }
+
+    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
+        center += vitesse*dt.asSeconds();
+    } else {
+        avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
+        double beta;
+        if (bernoulli(0.5)){
+            beta = PI/4;
+        } else {
+            beta = -PI/4;
+        }
+        vitesse.rotate(beta);
+    }
+}
 
 
 void Bee::learnFlowerLocation(Vec2d const& flowerPosition){

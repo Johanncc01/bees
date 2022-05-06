@@ -210,11 +210,8 @@ void Env::destroyAll(){
 
 
 void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& bot, sf::Color color) const{
-    Vec2d topClamp(top);
-    Vec2d botClamp(bot);
-
-    terrain.toricClamp(topClamp);
-    terrain.toricClamp(botClamp);
+    Vec2d topClamp(terrain.toricClamp(top));
+    Vec2d botClamp(terrain.toricClamp(bot));
 
     float size(terrain.getSize());
 

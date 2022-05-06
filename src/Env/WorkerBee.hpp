@@ -22,6 +22,16 @@ public:
 
     void drawOn(sf::RenderTarget&) const override;
 
+
+// Polymorphisme
+    void interact(Bee*) override;
+
+    void interactWith(ScoutBee*) override;
+
+    void interactWith(WorkerBee*) override;
+
+
+
 private:
 
     static State const IN_HIVE;
@@ -30,7 +40,6 @@ private:
     static State const BACK_TO_HIVE;
 
     double pollenQty;
-
 
 };
 

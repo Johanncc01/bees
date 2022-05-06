@@ -6,6 +6,11 @@
 #include <Env/CFSM.hpp>
 #include <Env/Hive.hpp>
 
+
+class ScoutBee;
+class WorkerBee;
+
+
 enum class Mode : short { repos, random, target};
 
 
@@ -66,18 +71,35 @@ public:
 // Déplacement
 
     /*!
-     * @brief Déplace d'abeille aléatoirement sur un temps donné
+    * @brief Déplace l'abeille sur un temps donné en fonction du mode actuel (attribut)
+    *
+    * @param temps dt sur lequel le déplacement est calculé
+    */
+    void move(sf::Time);
+
+    /*!
+     * @brief Déplace l'abeille aléatoirement sur un temps donné
      *
      * @param temps dt sur lequel le déplacement est calculé
      */
     void randomMove(sf::Time);
 
+    /*!
+     * @brief Déplace l'abeille vers le but (attribut) sur un temps donné
+     *
+     * @param temps dt sur lequel le déplacement est calculé
+     */
     void targetMove(sf::Time);
 
-    void move(sf::Time);
 
 
     void learnFlowerLocation(Vec2d const&);
+
+// Interaction
+
+    virtual void interact(Bee* other) = 0;
+    virtual void interactWith(ScoutBee*) = 0;
+    virtual void interactWith(WorkerBee*) = 0;
 
 
 protected:
@@ -91,6 +113,8 @@ protected:
 
     Mode mode;
     bool isEating;
+
+
 
 private:
 

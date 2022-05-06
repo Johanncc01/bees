@@ -1,6 +1,7 @@
 #include <Env/WorkerBee.hpp>
 #include <Application.hpp>
 
+
 State const WorkerBee::IN_HIVE(createUid());
 State const WorkerBee::TO_FLOWER(createUid());
 State const WorkerBee::COLLECT_POLLEN(createUid());
@@ -131,4 +132,20 @@ void WorkerBee::drawOn(sf::RenderTarget& target) const {
             target.draw(text);
         }
     }
+}
+
+
+
+// Polymorphisme
+
+void WorkerBee::interact(Bee* other){
+    other->interactWith(this);
+}
+
+void WorkerBee::interactWith(ScoutBee*){
+    return;
+}
+
+void WorkerBee::interactWith(WorkerBee*){
+    return;
 }
