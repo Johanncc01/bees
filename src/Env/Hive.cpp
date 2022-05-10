@@ -51,22 +51,11 @@ void Hive::update(sf::Time dt){
     bees.erase(std::remove(bees.begin(), bees.end(), nullptr), bees.end());
 
 
-    // Interaction systématique : fonctionne
 
-    for (auto& bee1 : bees){
-        for (auto& bee2 : bees){
-            if (bee1 != bee2){
-                bee1->interact(bee2);
-            }
-        }
-    }
-
-    // Test de si dans la ruche : ne fonctionne pas encore :(((
-    /*
     Bees inside;
 
     for (auto& bee : bees){
-        if (*this>*bee){
+        if (*bee|*this){
             inside.push_back(bee);
         }
     }
@@ -78,7 +67,6 @@ void Hive::update(sf::Time dt){
             }
         }
     }
-    */
 
     double reproduction(getAppConfig().hive_reproduction_nectar_threshold);
     double maxBees(getAppConfig().hive_reproduction_max_bees);

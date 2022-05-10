@@ -37,9 +37,11 @@ void WorkerBee::onState(State state, sf::Time dt){
             if (energy < getAppConfig().worker_energy_to_leave_hive){
                 isEating = true;
                 energy += hive.takePollen(dt.asSeconds()*getAppConfig().worker_eating_rate);
-            } else if (memory != nullptr){
+            } else {
                 isEating = false;
-                nextState();
+                if (memory != nullptr){
+                    nextState();
+                }
             }
         }
 
@@ -86,12 +88,12 @@ void WorkerBee::onEnterState(State state){
         mode = Mode::repos;
         delete target;
         target = nullptr;
+        delete memory;
+        memory = nullptr;
 
     } else if (state == TO_FLOWER){
         mode = Mode::target;
         target = new Vec2d(*memory);
-        delete memory;
-        memory = nullptr;
 
     } else if (state == COLLECT_POLLEN){
         mode = Mode::repos;
@@ -127,8 +129,19 @@ void WorkerBee::drawOn(sf::RenderTarget& target) const {
             auto const text = buildText("back_to_hive", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         }
+        else if (pollenQty > 0){
+            auto const text = buildText("in_hive_pollen", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
+            target.draw(text);
+        }
         else if (isEating){
             auto const text = buildText("in_hive_eating", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
+            target.draw(text);
+        }
+        else if (memory == nullptr){
+            auto const text = buildText("in_hive_no_flower", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
+            target.draw(text);
+        } else {
+            auto const text = buildText("in_hive_???", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         }
     }

@@ -26,9 +26,11 @@ void ScoutBee::onState(State state, sf::Time dt){
         if (energy < getAppConfig().scout_energy_to_leave_hive){
             isEating = true;
             energy += hive.takePollen(dt.asSeconds()*getAppConfig().scout_eating_rate);
-        } else if (memory == nullptr){ // test à faire : hasShared
+        } else {
             isEating = false;
-            nextState();
+            if ((memory == nullptr) or (shareCounter >= 1)){
+                nextState();
+            }
         }
 
     } else if (state == LF_FLOWER){
@@ -57,6 +59,7 @@ void ScoutBee::onEnterState(State state){
         mode = Mode::random;
         delete memory;
         memory = nullptr;
+        shareCounter = 0;
 
     } else if (state == BACK_TO_HIVE){
         mode = Mode::target;
@@ -81,11 +84,11 @@ void ScoutBee::drawOn(sf::RenderTarget& target) const {
         } else if (isEating){
             auto const text = buildText("in_hive_eating", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
-        } else if (memory == nullptr){ // test à faire : hasShared
+        } else if ((memory == nullptr) or shareCounter == getAppConfig().scout_max_sharing){
             auto const text = buildText("in_hive_leaving", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
-        } else {
-            auto const text = buildText("in_hive_sharing", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
+        } else if (shareCounter < getAppConfig().scout_max_sharing){
+            auto const text = buildText("in_hive_sharing ["+ to_nice_string(shareCounter) + "]", {center.x(), center.y() + 25}, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         }
     }

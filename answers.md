@@ -201,7 +201,10 @@ Comme une abeille peut oublier une position, un pointeur sur un Vec2d paraît ju
 
 **************************************************************
 ### Q5.5
-
+Les méthodes qui doivent être redéfinies dans les sous-classes pour qu'elles soient instanciables sont celles qui sont virtuelles pures dans les super-classes, i.e. : <br>
+- <tt>virtual void onState(State, sf::Time) = 0;</tt> , héritée de CFSM <br>
+- <tt>virtual void onEnterState(State) = 0;</tt> , héritée de CFSM <br>
+- <tt>virtual j::Value const& getConfig() const = 0;</tt> , héritée de Bee
 
 **************************************************************
 ### Q5.6
@@ -210,3 +213,11 @@ On crée un type énuméré pour les modes de déplacement possible, et on ajout
 **************************************************************
 ### Q5.7
 Car on fait appel au polymorphisme via la méthode virtuelle <tt>getConfig()</tt>, qui redéfinit les valeurs dans les sous-classes.
+
+**************************************************************
+### Q5.8
+Il faut créer les 3 variables statiques de classe pour <tt>ScoutBee</tt> représentant les différents états. Ceci sera fait par des déclarations au début de <tt>ScoutBee.cpp</tt>, puis en transmettant au constructeur de <tt>ScoutBee</tt> un vector contenant ces états, qui sera transféré au constructeur de <tt>CFSM</tt>.
+
+**************************************************************
+### Q5.9
+1. Lors du passage 

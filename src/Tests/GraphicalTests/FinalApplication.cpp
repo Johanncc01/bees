@@ -34,7 +34,7 @@ void FinalApplication::onEvent(sf::Event event, sf::RenderWindow&)
         case sf::Keyboard::L:
 	  setResetting(true);
 	  getEnv().loadWorldFromFile();
-	  getStats().reset();           
+      //getStats().reset();
 	  onSimulationStart();
 	  createViews();
 	  break;
@@ -91,13 +91,13 @@ void FinalApplication::onDraw(sf::RenderTarget& target)
     if (mShowFlowerZone) {
         auto pos = getCursorPositionInView();
 	// UNCOMMENT IF CODED
-        //getEnv().drawFlowerZone(target, pos);
+        getEnv().drawFlowerZone(target, pos);
     }
 
     if (mShowHiveableZone) {
         auto pos = getCursorPositionInView();
 	// UNCOMMENT IF CODED
-        //getEnv().drawHiveableZone(target, pos);
+        getEnv().drawHiveableZone(target, pos);
     }
 }
 

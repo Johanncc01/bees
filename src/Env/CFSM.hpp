@@ -13,9 +13,8 @@ public:
     State getState() const;
     void nextState();
 
-    virtual void onEnterState(State);
-
-    virtual void onState(State, sf::Time);
+    virtual void onState(State, sf::Time) = 0;
+    virtual void onEnterState(State) = 0;
     void action(sf::Time);
 
 
