@@ -220,4 +220,32 @@ Il faut créer les 3 variables statiques de classe pour <tt>ScoutBee</tt> repré
 
 **************************************************************
 ### Q5.9
-1. Lors du passage 
+1. De inHive à lookingForFlower ; elle doit avoir oublié la fleur qu'elle vient de transmettre.
+2. De lookingForFlower à backToHive, car le début du déplacement ciblé demande une cible à viser.
+
+**************************************************************
+### Q5.10
+Les traitements peuvent se faire dans la fonction <tt>onState()</tt> de ScoutBee, en appellant la méthode codée <tt>Env::getCollidingFlowerPosition(Collider)</tt>.
+Au travers du mot réservé const, on ne pourra pas modifier la variable à travers ce pointeur, ce qui semble logique car la mémoire n'est pas sensé changer jusqu'à sa destruction.
+
+**************************************************************
+### Q5.11
+1. De toFlower à collectPollen, elle n'a plus besoin de cibler la fleur si elle y est
+2. De inHive à toFlower, pour le bon fonctionnement du déplacment ciblé
+3. De collectPollen à backToHive, car le début du déplacement ciblé demande une cible à viser.
+4. Le déplacement aléatoire ne sera pas utilisé pour les <tt>WorkerBee</tt>, mais le déplacement ciblé interviendra au début de toFlower et de backToHive
+
+**************************************************************
+### Q. ICC
+Si la vérification de la possibilité d'interaction se fait dans l'appel de <tt>interact()</tt>, on sait déjà que l'on itère sur des combinaisons d'abeilles valables, i.e. on a pas de risque de tomber sur une des deux abeilles à l'extérieur de la ruche et on économise des appels de fonctions qui pourraient ralentir l'exécution.
+Cela permet de réduire la complexité en moyenne.
+
+**************************************************************
+### Q5.12
+Les tests de type sont mauvais, car ils sont difficiles à implémenter de manière générique, il faut les définir à l'infini, et ils nuisent à l'abstraction visée par la programmation orientée objet.
+
+**************************************************************
+### Q5.13
+Dans la méthode <tt>Hive::update(sf::Time dt)</tt>, pour pouvoir d'une partie ajouter des abeilles, mais aussi pour avoir accès à la taille du vector de bees.
+
+
