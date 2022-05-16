@@ -14,7 +14,10 @@ Bee::Bee(Hive& h, Vec2d const& pos, States s, double rad, double en, double vit)
 }
 
 Bee::~Bee()
-{}
+{
+    delete memory;
+    delete target;
+}
 
 
 // Getters

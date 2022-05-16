@@ -1,8 +1,9 @@
 
 /*
- * prjsv 2020-21
+ * prjsv 2021-22
  * 
  * Marco Antognini & Jamila Sam
+ * Final (Stats)
  */
 
 #include <Application.hpp>
@@ -14,6 +15,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cassert>
+#include <Stats/Stats.hpp>
 #include "Config.hpp"
 namespace // anonymous
 {
@@ -135,6 +137,7 @@ Application::Application(int argc, char const** argv)
 , mCfgFile(configFileRelativePath(argc, argv))
   //, mJSONRead(mAppDirectory + mCfgFile)
 , mConfig(new Config(j::readFromFile(mAppDirectory + mCfgFile)))
+, mStats(nullptr)
 , mCurrentGraphId(-1)
 , mEnv(nullptr)
 , mIgnoreEnv(false)
@@ -176,6 +179,7 @@ Application::~Application()
     // Destroy lab and stats, in reverse order
     delete mEnv;
 	delete mConfig;
+	delete mStats;
 
     // Release textures
     for (auto& kv : mTextures) {
@@ -193,6 +197,7 @@ void Application::run()
 
     // Load lab and stats
     mEnv   = new Env();
+    mStats = new Stats;
 
     // Set up subclasses
     onRun();
@@ -252,6 +257,7 @@ void Application::run()
                 auto dt = std::min(elapsedTime, maxDt);
                 elapsedTime -= dt;
 				getEnv().update(dt);
+				getStats().update(dt);
                 onUpdate(dt);
 				--nbCycles;
 
@@ -354,11 +360,7 @@ std::string Application::getHelpTextFile() const
 {
 	return RES_LOCATION + "help.txt";
 }
-
-std::string Application::getWindowTitle() const {
- return getAppConfig().window_title;
-}
-
+	
 std::string Application::getResPath() const
 {
     return mAppDirectory + RES_LOCATION;
@@ -422,6 +424,9 @@ Vec2d Application::getCursorPositionInView() const
     return mRenderWindow.mapPixelToCoords(sf::Mouse::getPosition(mRenderWindow), mSimulationView);
 }
 
+std::string Application::getWindowTitle() const {
+ return getAppConfig().window_title;
+}
 
 void Application::createWindow(Vec2d const& size)
 {
@@ -520,6 +525,7 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 	  if (not mIgnoreEnv){
 	    mIsResetting = true;
 	    getEnv().reset();
+	    resetStats();
 	    onSimulationStart();
 	    createViews();
 	    mSimulationBackground= mEnvBackground;
@@ -548,9 +554,30 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
 			break;
 			
         case sf::Keyboard::PageDown: // increase current control
-	  break;
+
+				switch(mCurrentControl){
+				  //case TEMPERATURE :
+				  //		mEnv->decreaseTemperature();
+				  //break;
+					case STATS:
+						mStats->previous(); 
+						break;
+					default:
+						break;
+				}
+				break;
         case sf::Keyboard::PageUp: // decrease current control
-	  break;
+	  switch(mCurrentControl){
+	    //				case TEMPERATURE :
+	    //					mEnv->increaseTemperature();
+	    //					break;
+					case STATS:
+						mStats->next();
+						break;
+					default:
+						break;
+				}
+				break;
         default:
             onEvent(event, window);
             break;
@@ -593,7 +620,17 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
             mIsDragging = true;
             mLastCursorPosition = { event.mouseButton.x, event.mouseButton.y };
         } else if (event.mouseButton.button == sf::Mouse::Right) {
-          /* nothing in STEP3 */
+            auto pos  = getCursorPositionInView();
+            auto* bee = getEnv().getBeeAt(pos);
+	    /*
+            if (bee == nullptr) {
+                // Stop tracking bee
+                getBeeTracker().stopTrackingBee();
+            } else {
+                // Track the bee
+                getBeeTracker().startTrackingBee(bee);
+            }
+	    */
         }
 	
         break;
@@ -650,6 +687,8 @@ void Application::render(sf::Drawable const& simulationBackground,
 	// Render the stats
 	mRenderWindow.setView(mStatsView);
 	mRenderWindow.draw(statsBackground);
+	if (isStatsOn)
+		getStats().drawOn(mRenderWindow);
 	
     // Finally, publish everything onto the screen
     mRenderWindow.display();
@@ -798,9 +837,18 @@ void Application::drawOneControl(sf::RenderWindow& target
 	sf::Color color (mCurrentControl == control ? sf::Color::Red : sf::Color::White);
 	std::string text("");
 	switch (control) {
-	default:
-	  /* nothing to do */
-	  break;
+	  //	case TEMPERATURE :
+	  //		text = "Temperature : ";
+	  //		text += to_nice_string(mEnv->getTemperature());
+	  //		break;
+		case STATS :
+			text = "Current stat : ";
+			text += (isStatsOn ? mStats->getCurrentTitle() : "disabled");
+			// text += mStats->getCurrentTitle();
+			break;
+		default:
+			/* nothing to do */
+			break;
 	}
 	
 	
@@ -818,8 +866,48 @@ void Application::setResetting(bool reset){
   mIsResetting = reset;
 }
 
-void Application::resetStats()
+void Application::addGraph(std::string const& title, std::vector<std::string> const& series, double min, double max)
 {
-  //Nothing in STEP3
+    if (series.size() > 0){
+		++mCurrentGraphId;
+    getStats().addGraph(mCurrentGraphId, title, series, min, max, getStatsSize() );
+	}
 }
 
+
+Stats& Application::getStats()
+{
+    return *mStats;
+}
+
+void Application::setActiveGraph(int id)
+{
+	getStats().setActive(id);
+}
+
+void Application::resetStats()
+{
+	delete mStats;
+	mStats = new Stats;
+	mCurrentGraphId = -1;
+}
+
+/*
+BeeTracker& Application::getBeeTracker()
+{
+    return mBeeTracker;
+}
+*/
+
+/*
+BeeTracker const& Application::getBeeTracker() const
+{
+    return mBeeTracker;
+}
+*/
+/*
+BeeTracker& getAppBeeTracker()
+{
+    return getApp().getBeeTracker();
+}
+*/

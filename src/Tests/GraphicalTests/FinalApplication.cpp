@@ -34,7 +34,7 @@ void FinalApplication::onEvent(sf::Event event, sf::RenderWindow&)
         case sf::Keyboard::L:
 	  setResetting(true);
 	  getEnv().loadWorldFromFile();
-      //getStats().reset();
+	  resetStats();           
 	  onSimulationStart();
 	  createViews();
 	  break;

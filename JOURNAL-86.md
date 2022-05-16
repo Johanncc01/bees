@@ -114,6 +114,7 @@
 - commentaires <tt>Bee.hpp/.cpp</tt>
 - rendu intermédiaire
 	- Toutes les parties codées jusqu'ici fonctionnent.
+- mise à jour du journal
 
 *************************************************
 ## 03.05 (mardi - TP)
@@ -122,7 +123,46 @@
 	- création des classes <tt>ScoutBee</tt>, <tt>WorkingBee</tt>, <tt>CFSM</tt>
 	- adaptation de la classe <tt>Bee</tt> pour la rendre virtuelle
 - partie 5.2 terminée l'après-midi
-	- codage spécifique des <tt>ScoutBee</tt>, au travers des méthodes 
+	- codage spécifique des <tt>ScoutBee.hpp/cpp</tt>, au travers des méthodes 
 		- <tt>ScoutBee::onState()</tt> et <tt>ScoutBee::onEnterState()</tt> qui héritent de <tt>CFSM</tt> (redéfinition) pour les comportements liés aux états
 		- <tt>ScoutBee::drawOn()</tt>, qui héritent de <tt>Bee</tt> (redéfintion) pour le dessin du mode debug
 - reste à commenter le code ajouté
+
+*************************************************
+## 04.05 (mercredi)
+- résolution du bug des crashs intempestifs :
+	- l'appel de Env::update() se faisait sur les fleurs nouvellement crées par division, ce qui causait des crashs du programme
+	- la solution est d'itérer seulement sur les fleurs existantes, à l'aide d'un indice fixé au début de la méthode
+- partie 5.3 terminée ensemble :
+	- codage de <tt>WorkerBee.hpp/cp</tt>, et des comportements à travers les méthodes <tt>WorkerBee::onState()</tt> et <tt>WorkerBee::onEnterState()</tt>
+
+*************************************************
+## 06.05 (vendredi)
+- partie 5.4
+	- collaborationTest commencé
+	- le test d'interaction dans la ruche avec <tt>isColliderInside</tt> ne fonctionne pas toujours
+	- il faut encore commenter le code
+
+*************************************************
+## 10.05 (mardi - TP)
+- partie 5.4 : terminée
+	- final application fonctionnel
+	- réponse au différentes questions de la partie 5
+
+*************************************************
+## 13.05 (vendredi)
+- rendu intermédiaire :
+	- lecture des commentaires du coach (merci!!!)
+	- adaptation du code en conséquence 
+		- destructeur de Flower et de Bee en virtuel, pour le redéfinir dans les sous-classes
+		- rempalcement des structures if-condition par return-condition
+- mise à jour du journal
+
+*************************************************
+## 17.05 (mardi - TP)
+- partie 6
+	- téléchargement
+	- codage de la classe <tt>Stats</tt>, affichant des statistiques sur la fenêtre de simulation
+- commentaires restants des parties précédentes
+
+		

@@ -22,7 +22,7 @@ public:
     /*!
      * @brief Destructeur d'une fleur
      */
-    ~Flower();
+    virtual ~Flower();
 
 // Méthodes pures
 

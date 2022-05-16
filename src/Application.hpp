@@ -1,7 +1,7 @@
 /*
- * POOSV 2022-21
+ * POOSV 2021-22
  * Marco Antognini & Jamila Sam
- * STEP : 5
+ * STEP : FINAL (Stats)
  */
 
 #ifndef INFOSV_APPLICATION_HPP
@@ -12,6 +12,7 @@
 #include <JSON/JSON.hpp>
 #include "Config.hpp"
 #include <Utility/Vec2d.hpp>
+//#include <Env/BeeTracker.hpp>
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
@@ -20,7 +21,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
+#include <Stats/Stats.hpp>
 /*!
  * @class Application
  *
@@ -60,13 +61,12 @@ public:
      * @note Don't forget to call init() before run() !
      */
     void run();
-
+  
   /*!
-     * @return the title of the graphical window
-     *
+     * @return the name of the graphical window
      */
   std::string virtual getWindowTitle() const;
-  
+
     /*!
      * @brief Get access to the execution environment of the application (the env)
      *
@@ -85,7 +85,13 @@ public:
     Config& getConfig();
     Config const& getConfig() const;
 
- 
+  /*! TODO : move to final application
+     * @brief Get the bee tracker helper
+     *
+     * @return the app's bee tracker
+     */
+  //BeeTracker& getBeeTracker();
+  //BeeTracker const& getBeeTracker() const;
     /*!
      * @brief Get the app's font
      *
@@ -160,6 +166,15 @@ protected:
 	void initHelpBox();
 	virtual std::string getHelpTextFile() const;
 	
+	/**
+     *  @brief Add a graph to the stats manager and update GUI
+     *
+     *  @param title  graph's title
+     *  @param series series' title
+     *  @param min    y-axis: min value expected
+     *  @param max    y-axis: max value expected
+     */
+    void addGraph(std::string const& title, std::vector<std::string> const& series, double min, double max);
     /*!
      *  @brief Called once before starting the main loop
      *
@@ -239,6 +254,14 @@ protected:
 				sf::Drawable const& helpBackground
 				);
 
+	/**
+     *  @brief Get access to the stats manager
+     *
+     *  @return the application statistic manager
+     */
+    Stats& getStats();
+
+	void setActiveGraph(int id);
 
     /*!
      * @brief Toggle pause
@@ -296,6 +319,7 @@ protected:
 				  , size_t ycoord
 				  , size_t font_size
 				  );
+
 	virtual void resetStats();
 	
 private:
@@ -306,6 +330,7 @@ private:
   //   j::Value          mJSONRead;       ///< Application configuration
     Config*          mConfig;       ///< Application configuration
 	
+	Stats*   mStats;                 ///< Statistic manager
     sf::View mStatsView;             ///< View for the stats area
 	sf::View mControlView;             ///< View for the control area
     int      mCurrentGraphId;        ///< Current graph ID
@@ -335,6 +360,7 @@ private:
                                      ///  rebuilding the world.
     bool         mIsDragging;        ///< Tells whether or not the user is dragging the view
     sf::Vector2i mLastCursorPosition;///< For handling dragging logic
+  //BeeTracker   mBeeTracker;        ///< Helper to keep track of a bee (optional)
 	sf::RectangleShape mSimulationBackground;
 	sf::RectangleShape mEnvBackground;
 
@@ -413,6 +439,13 @@ sf::Font const& getAppFont();
  * @see Application::getTexture
  */
 sf::Texture& getAppTexture(std::string const& name);
+
+/*!
+ * @brief Get the bee tracker helper for the current application
+ *
+ * @return the app's bee tracker
+ */
+//BeeTracker& getAppBeeTracker();
 
 
 /*!

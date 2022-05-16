@@ -32,9 +32,9 @@ public:
     Bee(Hive&, Vec2d const&, States, double, double, double);
 
     /*!
-     * @brief Destructeur de l'abeille
+     * @brief Destructeur de l'abeille, qui désalloue l'espace pour la mémoire et la cible
      */
-    ~Bee();
+    virtual ~Bee();
 
 // Getters
 

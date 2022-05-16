@@ -36,7 +36,6 @@ private:
     static State const LF_FLOWER;
     static State const BACK_TO_HIVE;
 
-
     int shareCounter;
 };
 
