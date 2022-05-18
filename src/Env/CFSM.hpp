@@ -8,7 +8,10 @@ typedef std::vector<State> States;
 class CFSM
 {
 public:
+
     CFSM(States);
+
+    virtual ~CFSM() = default;
 
     State getState() const;
     void nextState();

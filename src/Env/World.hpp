@@ -36,7 +36,7 @@ public :
     /*!
      * @brief Destructeur du terrain
      */
-    ~World();
+    ~World() = default;
 
     // Interdit les copies et affectations pour éviter les erreurs
     World(World const&) = delete;

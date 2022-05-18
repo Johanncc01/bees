@@ -29,9 +29,9 @@ public:
     Collider(Collider const&);
 
     /*!
-     * @brief Destructeur du Collider
+     * @brief Destructeur du Collider (par défaut)
      */
-    ~Collider();
+    virtual ~Collider() = default;
 
 // Getters
 

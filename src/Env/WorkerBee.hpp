@@ -8,6 +8,11 @@ public:
 
     WorkerBee(Hive&, Vec2d const&);
 
+    /*!
+     * @brief Destructeur d'une butineuse (par défaut)
+     */
+    ~WorkerBee() = default;
+
 
     /*!
      * @brief Getter de la configuration en fonction de la sous-classe d'abeille

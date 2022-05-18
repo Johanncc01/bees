@@ -621,7 +621,7 @@ void Application::handleEvent(sf::Event event, sf::RenderWindow& window)
             mLastCursorPosition = { event.mouseButton.x, event.mouseButton.y };
         } else if (event.mouseButton.button == sf::Mouse::Right) {
             auto pos  = getCursorPositionInView();
-            auto* bee = getEnv().getBeeAt(pos);
+            //auto* bee = getEnv().getBeeAt(pos);
 	    /*
             if (bee == nullptr) {
                 // Stop tracking bee

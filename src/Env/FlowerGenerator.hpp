@@ -13,6 +13,11 @@ public:
     FlowerGenerator();
 
     /*!
+     * @brief Destructeur d'une fleur (par défaut)
+     */
+    virtual ~FlowerGenerator() = default;
+
+    /*!
      * @brief Place une fleur aléatoirement si le dt donné est supérieur à un seuil (dans la config)
      *
      * @param temps d'actualisation

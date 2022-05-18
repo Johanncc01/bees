@@ -12,9 +12,6 @@
 World::World()
 { reset(); };
 
-World::~World()
-{}
-
 // Getters
 
 float World::getSize() const{
@@ -70,8 +67,8 @@ void World::reloadCacheStructure(){
 
 void World::updateCache(){
     renderingCache_.clear();
-    double maxHum(*max_element(humidity_.begin(),humidity_.end()));                     // Itérateur retournant la valeur maximale du tableau humidity_
-    double minHum(*min_element(humidity_.begin(),humidity_.end()));                     // Itérateur retournant la valeur minimale du tableau humidity_
+    double maxHum(*max_element(humidity_.begin(),humidity_.end()));                     // Itérateur (max_element) pointant vers la valeur maximale du tableau humidity_
+    double minHum(*min_element(humidity_.begin(),humidity_.end()));                     // Itérateur (min_element) pointant vers la valeur minimale du tableau humidity_
 
     for (int x(0); x < nb_cells; ++x) {
         for (int y(0); y < nb_cells; ++y) {

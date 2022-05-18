@@ -12,9 +12,7 @@ State const ScoutBee::BACK_TO_HIVE(createUid());
 ScoutBee::ScoutBee(Hive& h, Vec2d const& pos)
     : Bee(h, pos, {IN_HIVE, LF_FLOWER, BACK_TO_HIVE},  getAppConfig().scout_size, getAppConfig().scout_initial_energy, getAppConfig().scout_speed)
       , shareCounter(0)
-{
-
-}
+{}
 
 j::Value const& ScoutBee::getConfig() const{
     return getValueConfig()["simulation"]["bees"]["scout"];
@@ -35,7 +33,7 @@ void ScoutBee::onState(State state, sf::Time dt){
 
     } else if (state == LF_FLOWER){
 
-        memory = getAppEnv().getCollidingFlowerPosition(Collider(center, getConfig()["visibility range"].toDouble()));
+        memory = getAppEnv().getCollidingFlowerPosition(Collider(center, radius + getConfig()["visibility range"].toDouble()));
         bool seenFlowers(memory != nullptr);
 
         if (seenFlowers or (energy < getAppConfig().scout_energy_seek_flowers)){

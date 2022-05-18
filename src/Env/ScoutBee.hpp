@@ -7,7 +7,10 @@ class ScoutBee : public Bee
 public:
     ScoutBee(Hive&, Vec2d const&);
 
-
+    /*!
+     * @brief Destructeur d'une éclaireuse (par défaut)
+     */
+    ~ScoutBee() = default;
 
     /*!
      * @brief Getter de la configuration en fonction de la sous-classe d'abeille

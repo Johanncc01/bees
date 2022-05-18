@@ -249,3 +249,13 @@ Les tests de type sont mauvais, car ils sont difficiles à implémenter de mani�
 Dans la méthode <tt>Hive::update(sf::Time dt)</tt>, pour pouvoir d'une partie ajouter des abeilles, mais aussi pour avoir accès à la taille du vector de bees.
 
 
+## Partie 6
+
+**************************************************************
+### Q6.1
+On utilise, comme à l'accoutumée, un vector correspondant aux différents types, i.e. <br>
+- ```std::vector<unique_ptr<Graph>> ```, appelé Graphs via un typedef <br>
+- ```std::vector<std::string> ```, appelé Strings via un typedef
+
+**************************************************************
+### Q6.2

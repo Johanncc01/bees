@@ -20,9 +20,9 @@ public:
     Flower(Vec2d const&, double, double);
 
     /*!
-     * @brief Destructeur d'une fleur
+     * @brief Destructeur d'une fleur (par défaut)
      */
-    virtual ~Flower();
+    virtual ~Flower() = default;
 
 // Méthodes pures
 

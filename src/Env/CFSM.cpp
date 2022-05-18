@@ -1,10 +1,8 @@
 #include <Env/CFSM.hpp>
 
 CFSM::CFSM(States s)
-    : states(s)
-{
-    current = 0;
-}
+    : states(s), current(0)
+{}
 
 
 State CFSM::getState() const{

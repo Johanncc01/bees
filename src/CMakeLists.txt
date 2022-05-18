@@ -108,8 +108,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
          #target_link_libraries(scoutTest sfml-graphics sfml-window sfml-system)
 
 	 ##CollaborationTest
-         #add_executable (collaborationTest  ${TEST_DIR}/GraphicalTests/CollaborationTest.cpp ${SOURCES_GFX})
-        #target_link_libraries(collaborationTest sfml-graphics sfml-window sfml-system)	 
+          add_executable (collaborationTest  ${TEST_DIR}/GraphicalTests/CollaborationTest.cpp ${SOURCES_GFX})
+          target_link_libraries(collaborationTest sfml-graphics sfml-window sfml-system)
        
     else()
         set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
@@ -160,8 +160,8 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 	      #add_executable(scoutTest ${TEST_DIR}/GraphicalTests/ScoutTest.cpp ${SOURCES_GFX})
               #target_link_libraries(scoutTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 	       ## CollaborationTest
-	      #add_executable(collaborationTest ${TEST_DIR}/GraphicalTests/CollaborationTest.cpp ${SOURCES_GFX})
-              #target_link_libraries(collaborationTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+              add_executable(collaborationTest ${TEST_DIR}/GraphicalTests/CollaborationTest.cpp ${SOURCES_GFX})
+              target_link_libraries(collaborationTest ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 	   
         else()
