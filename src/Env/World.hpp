@@ -1,7 +1,7 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <Interface/Drawable.hpp>
 #include <Utility/Vec2d.hpp>
+
 #include <vector>
 
 
@@ -34,7 +34,7 @@ public :
     World();
 
     /*!
-     * @brief Destructeur du terrain
+     * @brief Destructeur du terrain (par défaut)
      */
     ~World() = default;
 

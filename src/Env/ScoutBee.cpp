@@ -1,8 +1,8 @@
 #include <Env/ScoutBee.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
+// Inclusion à cause de la prédéclaration dans la superclasse Bee.hpp
 #include <Env/WorkerBee.hpp>
-// inclusion pour réparer la prédéclaration de la classe dans la superclasse Bee.hpp)
 
 
 State const ScoutBee::IN_HIVE(createUid());

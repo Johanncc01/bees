@@ -1,8 +1,7 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <Env/Collider.hpp>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
-#include <Env/Collider.hpp>
 
 
 class Flower : public Collider , public Drawable , public Updatable

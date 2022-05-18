@@ -1,7 +1,6 @@
 #include <Stats/Stats.hpp>
 #include <Application.hpp>
-#include <algorithm>
-#include <Utility/Utility.hpp>
+
 
 Stats::Stats()
     : current(0)
@@ -20,6 +19,12 @@ std::string Stats::getCurrentTitle() const{
 void Stats::next(){
     ++current;
     current = current % graphs.size();
+
+    /*
+    if (current >= graphs.size()){
+        current = 0;
+    }
+    */
 }
 
 void Stats::previous(){
@@ -44,10 +49,8 @@ void Stats::reset() const{
 }
 
 void Stats::addGraph(int id, std::string const& title, std::vector<std::string> const& series, double min, double max, Vec2d const& size){
-
     graphs[id].reset(new Graph(series, size, min, max));
     strings[id] = title;
     current = id;
-
 }
 

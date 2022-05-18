@@ -11,9 +11,11 @@ State CFSM::getState() const{
 
 void CFSM::nextState(){
     ++current;
-    if (current == states.size()){
+    if (current >= states.size()){
         current = 0;
     }
+
+    //current = current % states.size();
 
     onEnterState(states[current]);
 }

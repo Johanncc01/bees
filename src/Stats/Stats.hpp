@@ -1,10 +1,12 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
 #include <Stats/Graph.hpp>
+
+#include <map>
 #include <memory>
 #include <vector>
+
 
 
 typedef std::map<int, std::unique_ptr<Graph>> Graphs;
@@ -27,14 +29,14 @@ public:
     /*!
      * @brief Dessine les statsistiques (ensemble de graphs) sur une cible donnée
      *
-     * @param "RenderTarget" sur laquelle l'environnement est dessinée
+     * @param "RenderTarget" sur laquelle les graphes sont dessinés
      */
     void drawOn(sf::RenderTarget& target) const;
 
     /*!
      * @brief Actualise les statistiques
      *
-     * @param temps dt sur lequel il faut actualiser l'environnement
+     * @param temps dt sur lequel il faut actualiser les statistiques
      */
     void update(sf::Time dt);
 

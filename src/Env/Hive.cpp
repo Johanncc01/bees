@@ -2,6 +2,7 @@
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
 #include <Random/Random.hpp>
+// Inclusions à cause de la prédéclaration
 #include <Env/Bee.hpp>
 #include <Env/ScoutBee.hpp>
 #include <Env/WorkerBee.hpp>

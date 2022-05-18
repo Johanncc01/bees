@@ -1,11 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <Env/Collider.hpp>
+#include <Env/CFSM.hpp>
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
-#include <Env/CFSM.hpp>
 #include <Env/Hive.hpp>
-
 
 class ScoutBee;
 class WorkerBee;
@@ -14,7 +12,7 @@ class WorkerBee;
 enum class Mode : short { repos, random, target};
 
 
-class Bee : public Collider, public Drawable , public Updatable, public CFSM
+class Bee : public Collider, public CFSM, public Drawable , public Updatable
 {
 public:
 // Constructeur et destructeur
@@ -113,8 +111,6 @@ protected:
 
     Mode mode;
     bool isEating;
-
-
 
 private:
 

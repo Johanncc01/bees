@@ -1,7 +1,6 @@
 #include <Env/Bee.hpp>
 #include <Application.hpp>
 #include <Utility/Utility.hpp>
-#include <Utility/Vec2d.hpp>
 #include <Random/Random.hpp>
 
 

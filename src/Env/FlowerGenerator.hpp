@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <Interface/Updatable.hpp>
 
 
@@ -13,7 +12,7 @@ public:
     FlowerGenerator();
 
     /*!
-     * @brief Destructeur d'une fleur (par défaut)
+     * @brief Destructeur d'un générateur de fleur (par défaut)
      */
     virtual ~FlowerGenerator() = default;
 
