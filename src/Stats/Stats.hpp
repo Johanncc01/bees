@@ -7,8 +7,8 @@
 #include <vector>
 
 
-typedef std::map<std::string, std::unique_ptr<Graph>> Graphs;
-typedef std::vector<std::string> Strings;
+typedef std::map<int, std::unique_ptr<Graph>> Graphs;
+typedef std::map<int, std::string> Strings;
 
 class Stats : public Drawable, public Updatable
 {
@@ -41,7 +41,7 @@ public:
 
     void reset() const;
 
-    void addGraph(int, std::string const&, Strings const&, double min, double max, Vec2d const&);
+    void addGraph(int, std::string const&, std::vector<std::string> const&, double min, double max, Vec2d const&);
 
 
 private:

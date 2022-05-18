@@ -14,7 +14,7 @@ void Stats::setActive(int id){
 }
 
 std::string Stats::getCurrentTitle() const{
-    return strings[current];
+    return strings.at(current);
 }
 
 void Stats::next(){
@@ -30,7 +30,7 @@ void Stats::previous(){
 }
 
 void Stats::drawOn(sf::RenderTarget& target) const{
-    // dessine uniquement le graph current
+    graphs.at(current)->drawOn(target);
 }
 
 void Stats::update(sf::Time dt){
@@ -43,25 +43,11 @@ void Stats::reset() const{
     }
 }
 
-void Stats::addGraph(int id, std::string const& title, Strings const& series, double min, double max, Vec2d const& size){
+void Stats::addGraph(int id, std::string const& title, std::vector<std::string> const& series, double min, double max, Vec2d const& size){
 
-    bool exists(false);
-    while (!exists){
-        try{
-            strings.at(id) = title;
-            exists = true;
-        }
-        catch (std::out_of_range){
-            strings.push_back("");
-        }
-    }
-
-    graphs[strings[id]].reset(new Graph(series, size, min, max));
-
-
+    graphs[id].reset(new Graph(series, size, min, max));
+    strings[id] = title;
     current = id;
-
-
 
 }
 

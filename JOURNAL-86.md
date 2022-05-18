@@ -163,6 +163,11 @@
 - partie 6
 	- téléchargement
 	- codage de la classe <tt>Stats</tt>, affichant des statistiques sur la fenêtre de simulation
+	- problème : le test ne fonctionne pas (il faut peut être utiliser une map indexée par des strings pour Graphs, à tester)
 - commentaires restants des parties précédentes
 
+*************************************************
+## 18.05 (mercredi)
+- partie 6
+	- résolution de l'incompréhension : il fallait utiliser des maps indexées avec les ids (entiers) pour Graphs et Strings.
 		

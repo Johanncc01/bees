@@ -253,9 +253,10 @@ Dans la méthode <tt>Hive::update(sf::Time dt)</tt>, pour pouvoir d'une partie a
 
 **************************************************************
 ### Q6.1
-On utilise, comme à l'accoutumée, un vector correspondant aux différents types, i.e. <br>
-- ```std::vector<unique_ptr<Graph>> ```, appelé Graphs via un typedef <br>
-- ```std::vector<std::string> ```, appelé Strings via un typedef
+Comme nos éléments sont associés à un identifiant entier, on utilise des maps avec comme type de clé <tt>int</tt>, i.e. <br>
+- ```std::map<int, unique_ptr<Graph>> ```, appelé Graphs via un typedef <br>
+- ```std::map<int, std::string> ```, appelé Strings via un typedef <br>
+L'avantage de cette solution est que chaque élément pourra être retrouvé directement, et que l'ordre des ids n'a pas à être linéaire.
 
 **************************************************************
 ### Q6.2
