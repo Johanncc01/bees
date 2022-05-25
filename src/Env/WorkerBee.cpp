@@ -36,7 +36,7 @@ void WorkerBee::drawOn(sf::RenderTarget& target) const {
 
     Bee::drawOn(target);
 
-    Vec2d renderPos1(center.x(), center.y() + getAppConfig().worker_size*1.2);          // Pour afficher le type de l'abeille et son énergie
+    Vec2d renderPos1(getPosition().x(), getPosition().y() + getAppConfig().worker_size*1.2);          // Pour afficher le type de l'abeille et son énergie
     Vec2d renderPos2(renderPos1.x(), renderPos1.y() + 10);                          // Pour afficher l'état actuel de la butineuse
     Vec2d renderPos3(renderPos1.x(), renderPos1.y() + 20);                          // Pour afficher la quantité de pollen de la butineuse
 

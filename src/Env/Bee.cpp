@@ -41,7 +41,7 @@ Hive& Bee::getHive() const{
 
 void Bee::drawOn(sf::RenderTarget& target) const{
     auto const& texture = getAppTexture(getConfig()["texture"].toString());
-    auto beeSprite = buildSprite(center, radius, texture);
+    auto beeSprite = buildSprite(getPosition(), getRadius(), texture);
 
     float alpha(vitesse.Vec2d::angle());
     if ((alpha >= PI/2) or (alpha <= -PI/2)){
@@ -53,10 +53,10 @@ void Bee::drawOn(sf::RenderTarget& target) const{
 
     if (isDebugOn()){
         if (mode == Mode::random){
-            auto shape = buildAnnulus(center, radius, sf::Color::Black, 3.0);
+            auto shape = buildAnnulus(getPosition(), getRadius(), sf::Color::Black, 3.0);
             target.draw(shape);
         } else if (mode == Mode::target){
-            auto shape = buildAnnulus(center, radius, sf::Color::Blue, 3.0);
+            auto shape = buildAnnulus(getPosition(), getRadius(), sf::Color::Blue, 3.0);
             target.draw(shape);
         }
 
@@ -105,7 +105,7 @@ void Bee::randomMove(sf::Time dt){
         vitesse.rotate(alpha);
     }
 
-    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
+    if (getAppEnv().isWorldFlyable(getPosition() + vitesse*dt.asSeconds())){
         *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamping
     } else {
         double beta;
@@ -126,7 +126,7 @@ void Bee::targetMove(sf::Time dt){
         avoidanceClock_ -= dt;
     }
 
-    if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
+    if (getAppEnv().isWorldFlyable(getPosition() + vitesse*dt.asSeconds())){
         *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamp
     } else {
         avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
@@ -151,7 +151,7 @@ void Bee::learnFlowerLocation(Vec2d const& flowerPosition){
 // Fonctions d'implémentation
 
 void Bee::advancedDebugText(sf::RenderTarget& target) const{
-    Vec2d renderPos1(center.x(), center.y() - getAppConfig().scout_size*2);             // Pour afficher l'état de la mémoire
+    Vec2d renderPos1(getPosition().x(), getPosition().y() - getAppConfig().scout_size*2);             // Pour afficher l'état de la mémoire
     Vec2d renderPos2(renderPos1.x(), renderPos1.y() - 10);                              // Pour afficher l'état de la cible
 
     if (memory == nullptr){

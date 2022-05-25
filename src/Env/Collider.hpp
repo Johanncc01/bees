@@ -176,7 +176,8 @@ public:
     bool operator|(Collider const&) const;
 
 
-protected:
+private:
+
     Vec2d center;
     double radius;
 
@@ -184,8 +185,6 @@ protected:
      * @brief Transpose les coordonnées dans le monde torique (fonction d'implémentation privée)
      */
     void clampCenter();
-
-private:
 
 };
 

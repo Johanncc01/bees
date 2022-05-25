@@ -46,10 +46,10 @@ size_t Hive::getWorkerNumber() const{
 
 void Hive::drawOn(sf::RenderTarget& target) const{
     auto const& texture = getAppTexture(getAppConfig().hive_texture);
-    auto hiveSprite = buildSprite(center, 2.5*radius, texture);
+    auto hiveSprite = buildSprite(getPosition(), 2.5*getRadius(), texture);
     target.draw(hiveSprite);
     if (isDebugOn()){
-        Vec2d affichage(center.x(),center.y()-30);
+        Vec2d affichage(getPosition().x(),getPosition().y()-30);
         auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 15, sf::Color::Red);
         target.draw(text);
     }
@@ -102,7 +102,7 @@ void Hive::update(sf::Time dt){
 // Bees
 
 Bee* Hive::addBee(double scoutProb){
-    Vec2d pos(center + Vec2d::fromRandomAngle()*uniform(0.1, radius-0.1));
+    Vec2d pos(getPosition() + Vec2d::fromRandomAngle()*uniform(0.1, getRadius()-0.1));
     if (bernoulli(scoutProb)){
         Bee* newBee(new ScoutBee(*this, pos));
         bees.push_back(newBee);

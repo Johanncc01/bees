@@ -19,21 +19,29 @@ Flower::Flower(Vec2d const& cen, double rad, double pol)
 // Méthodes pures
 
 void Flower::drawOn(sf::RenderTarget& target) const{
-    auto flowerSprite = buildSprite(center, radius, texture);
+    auto flowerSprite = buildSprite(getPosition(), getRadius(), texture);
     target.draw(flowerSprite);
+
+    /*
+    if (isDebugOn()){
+        Vec2d affichage(getPosition().x(),getPosition().y()-10);
+        auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 8, sf::Color::Black);
+        target.draw(text);
+    }
+    */
 }
 
 void Flower::update(sf::Time dt){
     double seuil(getAppConfig().flower_growth_threshold);
-    double humidity(getAppEnv().getWorldHumidity(center));          // Utilisation du getter de l'humidité (la fleur n'a pas accès aux attributs privés de World)
+    double humidity(getAppEnv().getWorldHumidity(getPosition()));          // Utilisation du getter de l'humidité (la fleur n'a pas accès aux attributs privés de World)
     pollen += (dt.asSeconds() * log(humidity/seuil));
     int i(0);
     Vec2d new_pos;
     if (pollen > getAppConfig().flower_growth_split){
         pollen /= 2;
         do {
-            double d(uniform(1.5*radius, 2.5*radius));
-            new_pos = center + Vec2d::fromRandomAngle()*d;
+            double d(uniform(1.5*getRadius(), 2.5*getRadius()));
+            new_pos = getPosition() + Vec2d::fromRandomAngle()*d;
             ++i;
         } while (!(getAppEnv().addFlowerAt(new_pos)) and i < getAppConfig().flowers_max_failures);
     }

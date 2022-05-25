@@ -39,7 +39,7 @@ void ScoutBee::drawOn(sf::RenderTarget& target) const {
 
     Bee::drawOn(target);
 
-    Vec2d renderPos1(center.x(), center.y() + getAppConfig().scout_size*1.2);           // Pour afficher le type de l'abeille et son énergie
+    Vec2d renderPos1(getPosition().x(), getPosition().y() + getAppConfig().scout_size*1.2);           // Pour afficher le type de l'abeille et son énergie
     Vec2d renderPos2(renderPos1.x(), renderPos1.y() + 10);                              // Pour afficher l'état actuel de l'éclaireuse
 
     if (isDebugOn()){
@@ -82,7 +82,7 @@ void ScoutBee::onState(State state, sf::Time dt){
 
     } else if (state == LF_FLOWER){
 
-        memory = getAppEnv().getCollidingFlowerPosition(Collider(center, radius + getConfig()["visibility range"].toDouble()));
+        memory = getAppEnv().getCollidingFlowerPosition(Collider(getPosition(), getRadius() + getConfig()["visibility range"].toDouble()));
         bool seenFlowers(memory != nullptr);
 
         if (seenFlowers or (energy < getAppConfig().scout_energy_seek_flowers)){
