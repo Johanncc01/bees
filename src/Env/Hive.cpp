@@ -11,15 +11,34 @@
 // Constructeur et destructeur
 
 Hive::Hive(Vec2d const& cen, double rad)
-    : Collider(cen, rad), pollen(getAppConfig().hive_initial_nectar)
+    : Collider(cen, rad), pollen(getAppConfig().hive_initial_nectar), scoutNumber(0), workerNumber(0)
 {}
 
 Hive::~Hive(){
-    for (auto bee : bees){
+    for (auto& bee : bees){
         delete bee;
         bee = nullptr;
     }
     bees.clear();
+}
+
+
+// Getters
+
+bool Hive::isDead() const{
+    return (bees.empty() and pollen == 0);
+}
+
+double Hive::getPollen() const{
+    return pollen;
+}
+
+size_t Hive::getScoutNumber() const{
+    return scoutNumber;
+}
+
+size_t Hive::getWorkerNumber() const{
+    return workerNumber;
 }
 
 
@@ -56,7 +75,7 @@ void Hive::update(sf::Time dt){
     Bees inside;
 
     for (auto& bee : bees){
-        if (*bee|*this){
+        if (*this|*bee){
             inside.push_back(bee);
         }
     }
@@ -114,4 +133,23 @@ double Hive::takePollen(double qte){
         return left;
     }
 }
+
+
+
+void Hive::changeScoutNumber(bool add){
+    if (add){
+        ++scoutNumber;
+        return;
+    }
+    --scoutNumber;
+}
+
+void Hive::changeWorkerNumber(bool add){
+    if (add){
+        ++workerNumber;
+        return;
+    }
+    --workerNumber;
+}
+
 

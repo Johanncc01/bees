@@ -21,7 +21,8 @@ public:
     /*!
      * @brief Destructeur d'une fleur (par défaut)
      */
-    virtual ~Flower() = default;
+     ~Flower() = default;
+
 
 // Méthodes pures
 
@@ -30,14 +31,15 @@ public:
      *
      * @param "RenderTarget" sur laquelle la fleur est dessinée
      */
-    void drawOn(sf::RenderTarget&) const;
+    void drawOn(sf::RenderTarget&) const override;
 
     /*!
      * @brief Actualise la fleur et ses caractéristiques sur un temps donné
      *
      * @param temps dt sur lequel il faut actualiser la fleur
      */
-    void update(sf::Time);
+    void update(sf::Time) override;
+
 
 // Gestion du pollen
 
@@ -56,6 +58,7 @@ public:
      * @return vrai si la fleur a du pollen
      */
     bool hasPollen() const;
+
 
 private:
 

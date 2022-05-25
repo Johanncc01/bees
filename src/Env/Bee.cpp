@@ -7,10 +7,8 @@
 // Constructeur et destructeur
 
 Bee::Bee(Hive& h, Vec2d const& pos, States s, double rad, double en, double vit)
-    : Collider(pos, rad), CFSM(s), hive(h), energy(en), memory(nullptr), target(nullptr), mode(Mode::repos), isEating(false)
-{
-    vitesse = Vec2d::fromRandomAngle()*vit;
-}
+    : Collider(pos, rad), CFSM(s), hive(h), vitesse(Vec2d::fromRandomAngle()*vit), energy(en), memory(nullptr), target(nullptr), mode(Mode::repos)
+{}
 
 Bee::~Bee()
 {
@@ -29,6 +27,15 @@ j::Value const& Bee::getConfig() const{
     return getValueConfig();
 }
 
+// Getters pour les classes héritées
+
+Hive& Bee::getHive() const{
+    return hive;
+}
+
+
+
+
 
 // Méthodes pures
 
@@ -46,12 +53,14 @@ void Bee::drawOn(sf::RenderTarget& target) const{
 
     if (isDebugOn()){
         if (mode == Mode::random){
-            auto shape = buildAnnulus(center, radius, sf::Color::Black, 5.0);
+            auto shape = buildAnnulus(center, radius, sf::Color::Black, 3.0);
             target.draw(shape);
         } else if (mode == Mode::target){
             auto shape = buildAnnulus(center, radius, sf::Color::Blue, 3.0);
             target.draw(shape);
         }
+
+        //advancedDebugText(target);
     }
 }
 
@@ -59,7 +68,6 @@ void Bee::update(sf::Time dt){
 
     action(dt);
     move(dt);
-    clampCenter();
 
     switch (static_cast<short>(mode)){
     case 0 : energy -= double(getConfig()["energy"]["consumption rates"]["idle"].toDouble())*dt.asSeconds();
@@ -73,6 +81,7 @@ void Bee::update(sf::Time dt){
         energy = 0;
     }
 }
+
 
 // Déplacement
 
@@ -97,7 +106,7 @@ void Bee::randomMove(sf::Time dt){
     }
 
     if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
-        center += vitesse*dt.asSeconds();
+        *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamping
     } else {
         double beta;
         if (bernoulli(0.5)){
@@ -118,7 +127,7 @@ void Bee::targetMove(sf::Time dt){
     }
 
     if (getAppEnv().isWorldFlyable(center + vitesse*dt.asSeconds())){
-        center += vitesse*dt.asSeconds();
+        *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamp
     } else {
         avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
         double beta;
@@ -132,11 +141,35 @@ void Bee::targetMove(sf::Time dt){
 }
 
 
+// Interactions
+
 void Bee::learnFlowerLocation(Vec2d const& flowerPosition){
     memory = new Vec2d(flowerPosition);
 }
 
 
+// Fonctions d'implémentation
+
+void Bee::advancedDebugText(sf::RenderTarget& target) const{
+    Vec2d renderPos1(center.x(), center.y() - getAppConfig().scout_size*2);             // Pour afficher l'état de la mémoire
+    Vec2d renderPos2(renderPos1.x(), renderPos1.y() - 10);                              // Pour afficher l'état de la cible
+
+    if (memory == nullptr){
+        auto const text = buildText("memory : empty", renderPos1, getAppFont(), 10, sf::Color::Red);
+        target.draw(text);
+    } else {
+        auto const text = buildText("memory : full", renderPos1, getAppFont(), 10, sf::Color::Green);
+        target.draw(text);
+    }
+
+    if (Bee::target == nullptr){
+        auto const text = buildText("target : empty", renderPos2, getAppFont(), 10, sf::Color::Red);
+        target.draw(text);
+    } else {
+        auto const text = buildText("target : full", renderPos2, getAppFont(), 10, sf::Color::Green);
+        target.draw(text);
+    }
+}
 
 
 

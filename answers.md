@@ -178,6 +178,7 @@ Le test de disparition des abeilles se fera dans <tt>Hive::update(sf::Time dt)</
 **************************************************************
 ### Q4.14
 Car la méthode <tt>Hive::addBee()</tt> est <tt>protected</tt> et non publique, et on ne pourrait pas l'appeler depuis l'extérieur de la classe. C'est pourquoi on créé une sous-classe qui se chargera de l'appeler.
+Ce mécanisme permet aussi de vérifier que seules les ruches peuvent créer des abeilles, et non pas l'envrionnement par exemple (car méthode non publique).
 
 ## Partie 5
 
@@ -253,10 +254,19 @@ Dans la méthode <tt>Hive::update(sf::Time dt)</tt>, pour pouvoir d'une partie a
 
 **************************************************************
 ### Q6.1
-Comme nos éléments sont associés à un identifiant entier, on utilise des maps avec comme type de clé <tt>int</tt>, i.e. <br>
+Comme nos éléments sont associés à un identifiant entier, on utilise des maps avec comme type de clé <tt>int</tt>, i.e.
+
 - ```std::map<int, unique_ptr<Graph>> ```, appelé Graphs via un typedef <br>
 - ```std::map<int, std::string> ```, appelé Strings via un typedef <br>
 L'avantage de cette solution est que chaque élément pourra être retrouvé directement, et que l'ordre des ids n'a pas à être linéaire.
 
 **************************************************************
 ### Q6.2
+Il faudra ajouter les méthodes :
+
+- dans Env :
+	- ```std::unordered_map<std::string, double> fetchData(std::string) const;```
+	- ```size_t getHivesScoutNumber() const;``` et ```size_t getHivesWorkerNumber() const;```, qui parcourrent les ruches et somment leur nombres d'abeilles
+- dans Hive :
+	- ```size_t getScoutNumber() const;``` et ```size_t getWorkerNumber() const;```, getters pour l'attribut correspondant au nombre d'abeilles
+	- ```void changeScoutNumber(bool);```et ```void changeWorkerNumber(bool);```, qui seront appelées dans le constructeur et le destructeur des abeilles pour soit augmenter, soit diminuer l'attribut correspondant

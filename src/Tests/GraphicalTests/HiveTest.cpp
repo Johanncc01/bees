@@ -24,7 +24,7 @@ void HiveTest::onRun()
     // Setup stats
     Application::onRun();
     // add Stats graphs
-    setStats(false);
+    setStats(true);
     resetStats();
 }
 
@@ -129,7 +129,10 @@ void HiveTest::onSimulationStart()
 
 void HiveTest::resetStats(){
   Application::resetStats();
-  // add Stats graphs when needed
+  addGraph(s::GENERAL, { s::FLOWERS, s::HIVES, s::SCOUTS, s::WORKERS, }, 0, 300);
+  const auto hives_titles(getAppEnv().getHivesIds());
+  addGraph(s::HIVES, hives_titles , 0, 10000);
+  setActiveGraph(0);
 }
 
 std::string HiveTest::getHelpTextFile() const {

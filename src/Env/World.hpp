@@ -20,12 +20,12 @@ typedef std::vector<Kind> Cells;
 typedef std::vector<sf::Vertex> Vertexes;
 typedef std::vector<Seed> Seeds;
 typedef std::vector<double> Humidities;
+typedef std::vector<std::size_t> Ids;
 
 
 class World : public Drawable
 {
 public :
-
 // Constructeurs
 
     /*!
@@ -41,6 +41,7 @@ public :
     // Interdit les copies et affectations pour éviter les erreurs
     World(World const&) = delete;
     World& operator=(World const&) = delete;
+
 
 // Getters
 
@@ -88,6 +89,7 @@ public :
      */
     int getY(int) const;
 
+
 // Fonctions graphiques
 
     /*!
@@ -117,7 +119,7 @@ public :
      *
      * @param "RenderTarget" sur laquelle le monde est dessiné
      */
-    void drawOn(sf::RenderTarget&) const;
+    void drawOn(sf::RenderTarget&) const override;
 
     /*!
      * @brief Transpose les coordonnées données dans le monde torique
@@ -127,6 +129,7 @@ public :
      * @return Vec2d à l'intérieur du monde torique
      */
      Vec2d toricClamp(Vec2d const&) const;
+
 
 // Génération aléatoire
 
@@ -156,6 +159,7 @@ public :
      */
     void smooths(int, bool = false);
 
+
 // Sauvegarde
 
     /*!
@@ -168,13 +172,16 @@ public :
      */
     void saveToFile();
 
+
 // Humidity
+
     /*!
      * @brief Calcule l'impact d'humidité d'une cellule donnée sur le monde, puis l'ajoute au tableau humidity_
      *
      * @param id de la cellule à évaluer
      */
     void humidityImpact(size_t);
+
 
 // Tests (fleurs et ruches)
 
@@ -206,6 +213,7 @@ public :
      */
     bool isFlyable(Vec2d const&) const;
 
+
 private:
 
     int nb_cells;
@@ -224,7 +232,7 @@ private:
     Humidities humidity_;
     double humidityRange;
 
-    // Fonctions d'implémentation
+// Fonctions d'implémentation
 
     /*!
      * @brief Génère un vecteur unitaire dans une direction aléatoire
@@ -259,7 +267,15 @@ private:
      *
      * @return l'ensemble des indices à l'intérieur d'un rectangle dans le monde torique
      */
-    std::vector<std::size_t> indexesForRect(Vec2d const&, Vec2d const&) const;
+    Ids indexesForRect(Vec2d const&, Vec2d const&) const;
+
+    /*!
+     * @brief Ajoute à un tableau donné les ids correspondants à deux "for loops" paramétrées par des arguments
+     *
+     * @param les indices de départ et de fin des bouches (x4)
+     * @param tableau d'Ids à modifier
+     */
+    void doubleForLoop(size_t, size_t, size_t, size_t, Ids&) const;
 
 };
 

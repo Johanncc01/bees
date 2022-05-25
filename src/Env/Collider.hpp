@@ -11,7 +11,7 @@
 class Collider
 {
 public:
-// Constructeurs
+// Constructeurs et destructeur
 
     /*!
      * @brief Constructeur de base.
@@ -30,8 +30,10 @@ public:
 
     /*!
      * @brief Destructeur du Collider (par défaut)
+     *        Déclaré virtual pour que la destruction d'une sous-classe se fasse complètement
      */
     virtual ~Collider() = default;
+
 
 // Getters
 
@@ -48,6 +50,7 @@ public:
      * @return la taille du rayon
      */
     double getRadius() const;
+
 
 // Gestion des déplacements
 
@@ -94,6 +97,7 @@ public:
      */
     void move(Vec2d const&);
 
+
 // Gestion des collisions
 
     /*!
@@ -122,6 +126,7 @@ public:
      * @return true si le point est dans le Collider
      */
     bool isPointInside(Vec2d const&) const;
+
 
 // Surcharge des opérateurs
 
@@ -169,6 +174,7 @@ public:
      * @return true si les Colliders sont en contact
      */
     bool operator|(Collider const&) const;
+
 
 protected:
     Vec2d center;

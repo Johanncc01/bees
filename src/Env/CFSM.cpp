@@ -1,31 +1,26 @@
 #include <Env/CFSM.hpp>
 
+
+// Constructeur
+
 CFSM::CFSM(States s)
     : states(s), current(0)
 {}
 
 
+// Getter
+
 State CFSM::getState() const{
     return states[current];
 }
 
+
+// Gestion des états
+
 void CFSM::nextState(){
     ++current;
-    if (current >= states.size()){
-        current = 0;
-    }
-
-    //current = current % states.size();
-
+    current = current % states.size();              // Pour que l'indice de l'état courrant reste cohérent
     onEnterState(states[current]);
-}
-
-void CFSM::onEnterState(State s){
-
-}
-
-void CFSM::onState(State s, sf::Time dt){
-
 }
 
 void CFSM::action(sf::Time dt){

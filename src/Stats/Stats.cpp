@@ -2,11 +2,14 @@
 #include <Application.hpp>
 
 
-Stats::Stats()
-    : current(0)
-{
+// Constructeur
 
-}
+Stats::Stats()
+    : current(0), compteur(sf::Time::Zero)
+{}
+
+
+// Getters et setters
 
 void Stats::setActive(int id){
     current = id;
@@ -19,12 +22,6 @@ std::string Stats::getCurrentTitle() const{
 void Stats::next(){
     ++current;
     current = current % graphs.size();
-
-    /*
-    if (current >= graphs.size()){
-        current = 0;
-    }
-    */
 }
 
 void Stats::previous(){
@@ -34,15 +31,27 @@ void Stats::previous(){
     }
 }
 
+
+// Méthodes pures
+
 void Stats::drawOn(sf::RenderTarget& target) const{
     graphs.at(current)->drawOn(target);
 }
 
 void Stats::update(sf::Time dt){
-
+    compteur += dt;
+    if (compteur > sf::seconds(getAppConfig().stats_refresh_rate)){
+        std::unordered_map<std::string,double> new_data(getAppEnv().fetchData(strings[current]));
+        graphs[current]->updateData(compteur, new_data);
+        compteur = sf::Time::Zero;
+    }
 }
 
-void Stats::reset() const{
+
+// Gestion des statistiques
+
+void Stats::reset(){
+    compteur = sf::Time::Zero;
     for (auto& graph : graphs){
         graph.second->reset();
     }

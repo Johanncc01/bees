@@ -3,9 +3,14 @@
 #include <Random/Random.hpp>
 
 
+// Constructeur
+
 FlowerGenerator::FlowerGenerator()
     : compteur(sf::Time::Zero)
 {}
+
+
+// Gestion du générateur
 
 void FlowerGenerator::update(sf::Time dt){
     compteur += dt;
@@ -18,7 +23,6 @@ void FlowerGenerator::update(sf::Time dt){
             ++i;
         } while (!(getAppEnv().addFlowerAt(Vec2d(uniform(0.0, x), uniform(0.0, y)))) and i < 100);
     }
-
 }
 
 void FlowerGenerator::reset(){

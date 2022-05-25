@@ -143,7 +143,10 @@ void WorkerTest::onDraw(sf::RenderTarget& target)
 
 void WorkerTest::resetStats(){
   Application::resetStats();
-  // add Stats graphs when needed
+  addGraph(s::GENERAL, { s::FLOWERS, s::HIVES, s::SCOUTS, s::WORKERS, }, 0, 300);
+  const auto hives_titles(getAppEnv().getHivesIds());
+  addGraph(s::HIVES, hives_titles , 0, 10000);
+  setActiveGraph(0);
 }
 
 std::string WorkerTest::getHelpTextFile() const {

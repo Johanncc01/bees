@@ -337,7 +337,7 @@ bool World::isHiveable(Vec2d const& pos, double rad) const{
     Vec2d topLeft(toricClamp(pos - Vec2d(cote/2, cote/2)));
     Vec2d bottomRight(toricClamp(pos + Vec2d(cote/2, cote/2)));
 
-    std::vector<std::size_t> field(indexesForRect(topLeft, bottomRight));
+    Ids field(indexesForRect(topLeft, bottomRight));
 
     for (auto id : field){
         if (cells_[id] != Kind::herbe){
@@ -389,7 +389,7 @@ Vec2d World::coordsFromPos(Vec2d const& pos) const{
     return Vec2d(pos.x()/cell_size, pos.y()/cell_size);;
 }
 
-std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bot) const{
+Ids World::indexesForRect(Vec2d const& top, Vec2d const& bot) const{
     // Handle toric world coordinates for rectangles:
     //
     // case 1) if topLeft and bottomRight are really what they should be,
@@ -435,85 +435,51 @@ std::vector<std::size_t> World::indexesForRect(Vec2d const& top, Vec2d const& bo
 
     // Case 1 :
 
-    std::vector<std::size_t> ids;
+    Ids ids;
     Vec2d topCoords(coordsFromPos(top));
     Vec2d botCoords(coordsFromPos(bot));
 
     if ((topCoords.x() < botCoords.x()) and (topCoords.y() < botCoords.y())){
-        for (size_t i(topCoords.x()); i <= botCoords.x() ; ++i){
-            for (size_t j(topCoords.y()); j <= botCoords.y() ; ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
+        doubleForLoop(topCoords.x(), botCoords.x(), topCoords.y(), botCoords.y(), ids);
         return ids;
     }
 
     // Case 2 :
 
     if ((topCoords.x() > botCoords.x()) and (topCoords.y() > botCoords.y())){
-        for (size_t i(0); i <= botCoords.x(); ++i){
-            for (size_t j(0); j <= botCoords.y(); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
-
-        for (size_t i(0); i <= botCoords.x(); ++i){
-            for (int j(topCoords.y()); j <= (nb_cells-1); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
-
-        for (int i(topCoords.x()); i <= (nb_cells-1); ++i){
-            for (size_t j(0); j <= botCoords.y(); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
-
-        for (int i(topCoords.x()); i <= (nb_cells-1) ; ++i){
-            for (int j(topCoords.y()); j <= (nb_cells-1) ; ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
+        doubleForLoop(0, botCoords.x(), 0, botCoords.y(), ids);
+        doubleForLoop(0, botCoords.x(), topCoords.y(), nb_cells-1, ids);
+        doubleForLoop(topCoords.x(), nb_cells-1, 0, botCoords.y(), ids);
+        doubleForLoop(topCoords.x(), nb_cells-1, topCoords.y(), nb_cells-1, ids);
         return ids;
     }
 
     // Case 3 :
 
-    if ((topCoords.x() > botCoords.x()) and (topCoords.y() < botCoords.y())){
-        for (size_t i(0); i <= botCoords.x(); ++i){
-            for (size_t j(topCoords.y()); j <= botCoords.y(); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
-
-        for (int i(topCoords.x()); i <= (nb_cells-1); ++i){
-            for (size_t j(topCoords.y()); j <= botCoords.y(); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
+    if ((topCoords.x() > botCoords.x()) and (topCoords.y() < botCoords.y())){      
+        doubleForLoop(0, botCoords.x(), topCoords.y(), botCoords.y(), ids);
+        doubleForLoop(topCoords.x(), nb_cells-1, topCoords.y(), botCoords.y(), ids);
         return ids;
     }
 
     // Case 4 :
 
     if ((topCoords.x() < botCoords.x()) and (topCoords.y() > botCoords.y())){
-        for (size_t i(topCoords.x()); i <= botCoords.x(); ++i){
-            for (size_t j(0); j <= botCoords.y(); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
-
-        for (size_t i(topCoords.x()); i <= botCoords.x(); ++i){
-            for (int j(topCoords.y()); j <= (nb_cells-1); ++j){
-                ids.push_back(getId(i, j));
-            }
-        }
+        doubleForLoop(topCoords.x(), botCoords.x(), 0, botCoords.y(), ids);
+        doubleForLoop(topCoords.x(), botCoords.x(), topCoords.y(), nb_cells-1, ids);
         return ids;
     }
 
     return ids;
 }
 
+void World::doubleForLoop(size_t a, size_t b, size_t c, size_t d, Ids& tab) const{
+    for (size_t i(a); i <= b; ++i){
+        for (size_t j(c); j <= d; ++j){
+            tab.push_back(getId(i, j));
+        }
+    }
+}
 
 Vec2d World::toricClamp(Vec2d const& vect) const{
     double size(nb_cells*cell_size);

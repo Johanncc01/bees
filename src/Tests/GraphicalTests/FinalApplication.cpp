@@ -105,8 +105,8 @@ void FinalApplication::resetStats(){
   Application::resetStats();
   // UNCOMMENT WHEN STATS ARE CODED
    addGraph(s::GENERAL, { s::FLOWERS, s::HIVES, s::SCOUTS, s::WORKERS, }, 0, 300);
-   //const auto hives_titles(getAppEnv().getHivesIds());
-   //addGraph(s::HIVES, hives_titles , 0, 1000);
+   const auto hives_titles(getAppEnv().getHivesIds());
+   addGraph(s::HIVES, hives_titles , 0, 10000);
    setActiveGraph(0);
 
    

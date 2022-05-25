@@ -16,7 +16,7 @@ void WorldTest::onRun()
     // Setup stats
    Application::onRun();
    // add Stats graphs
-   setStats(false);
+   setStats(true);
    resetStats();
 }
 
@@ -76,7 +76,10 @@ void WorldTest::onDraw(sf::RenderTarget& target)
 
 void WorldTest::resetStats(){
   Application::resetStats();
-  // add specific graphs if needed
+  addGraph(s::GENERAL, { s::FLOWERS, s::HIVES, s::SCOUTS, s::WORKERS, }, 0, 300);
+  const auto hives_titles(getAppEnv().getHivesIds());
+  addGraph(s::HIVES, hives_titles , 0, 10000);
+  setActiveGraph(0);
 }
 
 void WorldTest::resetViewOnLoad(){

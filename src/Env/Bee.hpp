@@ -5,10 +5,11 @@
 #include <Interface/Updatable.hpp>
 #include <Env/Hive.hpp>
 
+// Prédéclaration des classes
 class ScoutBee;
 class WorkerBee;
 
-
+// Mode de déplacement des abeilles
 enum class Mode : short { repos, random, target};
 
 
@@ -30,9 +31,11 @@ public:
     Bee(Hive&, Vec2d const&, States, double, double, double);
 
     /*!
-     * @brief Destructeur de l'abeille, qui désalloue l'espace pour la mémoire et la cible
+     * @brief Destructeur d'une abeille, qui désalloue l'espace pour la mémoire et la cible
+     *        Déclaré virtual pour que la destruction des sous-classe se fasse complètement
      */
     virtual ~Bee();
+
 
 // Getters
 
@@ -43,6 +46,68 @@ public:
      */
     bool isDead();
 
+
+// Méthodes pures
+
+    /*!
+     * @brief Dessine l'abeille selon ses caractéristiques sur une cible donnée
+     *
+     * @param "RenderTarget" sur laquelle l'abeille est dessinée
+     */
+    virtual void drawOn(sf::RenderTarget&) const override;
+
+    /*!
+     * @brief Actualise l'abeille et ses caractéristiques sur un temps donné
+     *
+     * @param temps dt sur lequel il faut actualiser l'abeille
+     */
+    void update(sf::Time) override;
+
+
+// Interactions
+
+    /*!
+     * @brief Interragit avec une autre abeille (double dispatch : appelle la méthode interactWith() de l'autre abeille avec comme argument "this")
+     *
+     * @param pointeur sur l'abeille avec laquelle on veut interragir
+     */
+    virtual void interact(Bee*) = 0;
+
+    /*!
+     * @brief Interragit concrètement avec une autre abeille (l'instance courrante, pour que le polymorphisme fonctionne)
+     *
+     * @param pointeur sur l'abeille (éclaireuse) qui voulait interragir ("this" de Bee::interact())
+     */
+    virtual void interactWith(ScoutBee*) = 0;
+
+    /*!
+     * @brief Interragit concrètement avec une autre abeille (l'instance courrante, pour que le polymorphisme fonctionne)
+     *
+     * @param pointeur sur l'abeille (butineurse) qui voulait interragir ("this" de Bee::interact())
+     */
+    virtual void interactWith(WorkerBee*) = 0;
+
+    /*!
+     * @brief Fait mémoriser une position de fleur à l'instance
+     *
+     * @param le Vec2d associé à la position à mémoriser
+     */
+    void learnFlowerLocation(Vec2d const&);
+
+
+protected:
+
+    Hive& hive;
+    Vec2d vitesse;
+    double energy;
+
+    Vec2d const* memory;
+    Vec2d const* target;
+
+    Mode mode;
+
+// Getters pour les classes héritées
+
     /*!
      * @brief Getter de la configuration en fonction de la sous-classe d'abeille
      *
@@ -50,29 +115,21 @@ public:
      */
     virtual j::Value const& getConfig() const = 0;
 
-// Méthodes pures
-
     /*!
-     * @brief Dessine l'abeille selon ses caractéristiques sur une cible donnée
+     * @brief Getter de la ruche parente
      *
-     * @param "RenderTarget" sur laquelle la ruche est dessinée
+     * @return une référence à la ruche dont l'abeille appartient
      */
-    virtual void drawOn(sf::RenderTarget&) const;
+    Hive& getHive() const;
 
-    /*!
-     * @brief Actualise l'abeille et ses caractéristiques sur un temps donné
-     *
-     * @param temps dt sur lequel il faut actualiser l'abeille
-     */
-    void update(sf::Time);
 
 // Déplacement
 
     /*!
-    * @brief Déplace l'abeille sur un temps donné en fonction du mode actuel (attribut)
-    *
-    * @param temps dt sur lequel le déplacement est calculé
-    */
+     * @brief Déplace l'abeille sur un temps donné en fonction du mode actuel (attribut)
+     *
+     * @param temps dt sur lequel le déplacement est calculé
+     */
     void move(sf::Time);
 
     /*!
@@ -90,30 +147,18 @@ public:
     void targetMove(sf::Time);
 
 
-
-    void learnFlowerLocation(Vec2d const&);
-
-// Interaction
-
-    virtual void interact(Bee* other) = 0;
-    virtual void interactWith(ScoutBee*) = 0;
-    virtual void interactWith(WorkerBee*) = 0;
-
-
-protected:
-
-    Hive& hive;
-    Vec2d vitesse;
-    double energy;
-
-    Vec2d const* memory;
-    Vec2d const* target;
-
-    Mode mode;
-    bool isEating;
-
 private:
 
+
     sf::Time avoidanceClock_;
+
+    // Fonctions d'implémentation
+
+    /*!
+     * @brief Affiche des informations avancées (état de la mémoire + cible) de l'abeille sur une cible donnée
+     *
+     * @param "RenderTarget" sur laquelle le texte est affiché
+     */
+    void advancedDebugText(sf::RenderTarget&) const;
 };
 

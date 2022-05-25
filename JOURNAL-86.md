@@ -170,4 +170,25 @@
 ## 18.05 (mercredi)
 - partie 6
 	- résolution de l'incompréhension : il fallait utiliser des maps indexées avec les ids (entiers) pour Graphs et Strings.
+
+*************************************************
+## 23.05 (lundi)
+- fin de la partie 6
+	- graphs <tt>s::GENERAL</tt> et <tt>s::HIVES</tt> implémentés et fonctionnels
+	- méthodes <tt>Env::fetchData()</tt>, <tt>Env::getHivesIds()</tt>, et d'autres méthodes dans Hive et Bee pour accéder aux données lors de l'actualisation
+- reste à faire :
+	- terminer les commentaires des parties précédentes
+	- revoir dans Collider et Bee pour que tous les attributs soit privés (et non protected) pour l'encapsulation
+
+*************************************************
+## 25.05 (mercredi)
+- commentaires de toutes les classes .hpp terminés : reste à voir si les .cpp sont assez commentés
+- code archivé pour la partie 6 et préparé pour le rendu (toutes les parties dans différents dossiers)
+- à voir si on a le temps + envie de faire des extensions
+
+*************************************************
+## 27.05 (vendredi)
+- rendu final effectué
+	- les parties 1 à 6 fonctionnent
+
 		

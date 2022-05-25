@@ -40,6 +40,7 @@ bool Env::isWorldFlyable(Vec2d const& pos) const{
 
 void Env::update(sf::Time dt){
     generator.update(dt);
+
     size_t taille(flowers.size());
     for (size_t i(0); i < taille; ++i){
         flowers[i]->update(dt);
@@ -52,7 +53,12 @@ void Env::update(sf::Time dt){
 
     for (auto& hive : hives){
         hive->update(dt);
+        if (hive->isDead()){
+            delete hive;
+            hive = nullptr;
+        }
     }
+    hives.erase(std::remove(hives.begin(), hives.end(), nullptr), hives.end());
 }
 
 void Env::drawOn(sf::RenderTarget& target) const{
@@ -104,6 +110,8 @@ bool Env::addFlowerAt(Vec2d const& p){
 
 void Env::drawFlowerZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double size(getAppConfig().flower_manual_size);
+
+    // N'affiche pas la zone si elle est en dehors de la zone de simulation
     if ((pos.x() < 0) or (pos.x() > terrain.getSize()) or (pos.y() < 0) or (pos.y() > terrain.getSize())){
         return;
     }
@@ -117,7 +125,7 @@ void Env::drawFlowerZone(sf::RenderTarget& target, Vec2d const& pos) const{
 }
 
 Flower* Env::getCollidingFlower(Collider const& body) const{
-    for (auto flower : flowers){
+    for (auto& flower : flowers){
         if (*flower|body){
             return flower;
         }
@@ -135,12 +143,10 @@ Vec2d const* Env::getCollidingFlowerPosition(Collider const& body) const{
 }
 
 
-
 // Hive
 
 bool Env::addHiveAt(Vec2d const& p){
     double size(getAppConfig().hive_manual_size);
-    //double size(uniform(getAppConfig().hive_min_size, getAppConfig().hive_max_size));
     Collider hive(p, size);
     bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
     if (terrain.isHiveable(p, size) and libre){
@@ -156,6 +162,7 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     double size(getAppConfig().hive_manual_size);
     double cote(size*factor);
 
+    // N'affiche pas la zone si elle est en dehors de la zone de simulation
     if ((pos.x() < 0-cote/2) or (pos.x() > terrain.getSize() + cote/2) or (pos.y() < 0-cote/2) or (pos.y() > terrain.getSize() + cote/2)){
         return;
     }
@@ -181,7 +188,7 @@ Hive* Env::getCollidingHive(Collider const& body) const{
     double size(getAppConfig().hive_manual_size);
     double factor(getAppConfig().hiveable_factor);
 
-    for (auto hive : hives){
+    for (auto& hive : hives){
         Collider factoredHive(hive->getPosition(), size*factor);
         if (factoredHive|body){
             return hive;
@@ -189,6 +196,33 @@ Hive* Env::getCollidingHive(Collider const& body) const{
     }
     return nullptr;
 }
+
+
+// Stats
+
+Data Env::fetchData(std::string string) const{
+    Data new_data;
+    if (string == s::GENERAL){
+        new_data[s::FLOWERS] = flowers.size();
+        new_data[s::HIVES] = hives.size();
+        new_data[s::SCOUTS] = double(getHivesScoutNumber());
+        new_data[s::WORKERS] = double(getHivesWorkerNumber());
+    } else if (string == s::HIVES){
+        for (size_t i(0); i < hives.size(); ++i){
+            new_data["hive #"+to_nice_string(i)] = hives[i]->getPollen();
+        }
+    }
+    return new_data;
+}
+
+std::vector<std::string> Env::getHivesIds() const{
+    std::vector<std::string> ids;
+    for (size_t i(0); i < hives.size(); ++i){
+        ids.push_back("hive #"+to_nice_string(i));
+    }
+    return ids;
+}
+
 
 
 // Fonctions d'implémentation
@@ -277,6 +311,21 @@ void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& 
 
 
 
+size_t Env::getHivesScoutNumber() const {
+    size_t number(0);
+    for (auto hive : hives){
+        number += hive->getScoutNumber();
+    }
+    return number;
+}
+
+size_t Env::getHivesWorkerNumber() const {
+    size_t number(0);
+    for (auto hive : hives){
+        number += hive->getWorkerNumber();
+    }
+    return number;
+}
 
 
 

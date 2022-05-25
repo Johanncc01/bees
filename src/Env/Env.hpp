@@ -12,11 +12,10 @@
 // typedef des types complexes
 typedef std::vector<Flower*> Flowers;
 typedef std::vector<Hive*> Hives;
+typedef std::unordered_map<std::string, double> Data;
 
 class Env : public Drawable , public Updatable
-
 {
-
 public:
 // Constructeur et destructeur
 
@@ -33,6 +32,7 @@ public:
     // Interdit les copies et affectations pour éviter les erreurs
     Env(Env const&) = delete;
     Env operator=(Env const&) = delete;
+
 
 // Getters
 
@@ -61,6 +61,7 @@ public:
      */
     bool isWorldFlyable(Vec2d const&) const;
 
+
 // Méthodes pures
 
     /*!
@@ -68,14 +69,14 @@ public:
      *
      * @param temps dt sur lequel il faut actualiser l'environnement
      */
-    void update(sf::Time dt);
+    void update(sf::Time dt) override;
 
     /*!
      * @brief Dessine l'environnement (terrain, fleurs et ruches) sur une cible donnée en appeleant les méthodes drawOn()
      *
      * @param "RenderTarget" sur laquelle l'environnement est dessinée
      */
-    void drawOn(sf::RenderTarget& target) const;
+    void drawOn(sf::RenderTarget& target) const override;
 
     /*!
      * @brief Réinitialise l'environnement en appeleant les méthodes reset() (terrain et générateur), puis en supprimant les fleurs et ruches
@@ -87,6 +88,7 @@ public:
      */
     void resetControls();
 
+
 // World
     /*!
      * @brief Charge un monde depuis un fichier, en initialisant tous les attributs nécessaires (et détruit les fleurs et ruches)
@@ -96,6 +98,7 @@ public:
      * @brief Sauvegarde le monde actuel dans un fichier, selon les conventions de loadFromFile()
      */
     void saveWorldToFile();
+
 
 // Flower
     /*!
@@ -124,7 +127,15 @@ public:
      */
     Flower* getCollidingFlower(Collider const&) const;
 
+    /*!
+     * @brief recherche la position d'une fleur de l'environnement en collision avec un collider donné (via getCollidingFlower())
+     *
+     * @param un collider dont on veut tester les collisions
+     *
+     * @return un pointeur sur la position de la fleur correspondante, ou "nullptr" si aucun résultat
+     */
     Vec2d const* getCollidingFlowerPosition(Collider const&) const;
+
 
 // Hive
 
@@ -155,6 +166,23 @@ public:
     Hive* getCollidingHive(Collider const&) const;
 
 
+// Stats
+
+    /*!
+     * @brief actualise les données pour un graphe de titre donné
+     *
+     * @param le titre du graphe
+     *
+     * @return un tableau contenant les données, indexé par les titres des séries du graphe
+     */
+    Data fetchData(std::string) const;
+
+    /*!
+     * @brief répertorie les identifiants des ruches pour créer les statistiques correspondantes
+     *
+     * @return un tableau contenant les noms des ruches
+     */
+    std::vector<std::string> getHivesIds() const;
 
 
 private:
@@ -176,5 +204,19 @@ private:
      * @brief Affiche le carré de création de la ruche dans un monde torique
      */
     void toricHivable(sf::RenderTarget&, Vec2d const&, Vec2d const&, sf::Color) const;
+
+    /*!
+     * @brief Getter du nombre d'éclaireuses
+     *
+     * @return le nombre total d'éclaireuses à travers les ruches
+     */
+    size_t getHivesScoutNumber() const;
+
+    /*!
+     * @brief Getter du nombre de butineuses
+     *
+     * @return le nombre total de butineuses à travers les ruches
+     */
+    size_t getHivesWorkerNumber() const;
 
 };

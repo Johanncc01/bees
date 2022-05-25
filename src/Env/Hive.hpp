@@ -4,7 +4,6 @@
 #include <Interface/Updatable.hpp>
 
 
-
 // Prédéclaration de la classe
 class Bee;
 
@@ -33,6 +32,38 @@ public:
     Hive(Hive const&) = delete;
     Hive& operator=(Hive const&) = delete;
 
+
+// Getters
+
+    /*!
+     * @brief Getter de la vie de la ruche
+     *
+     * @return vrai si la ruche n'a plus de pollen ni d'abeilles
+     */
+    bool isDead() const;
+
+    /*!
+     * @brief Getter de la quantité de pollen de la ruche
+     *
+     * @return le pollen présent dans la ruche
+     */
+    double getPollen() const;
+
+    /*!
+     * @brief Getter du nombre d'éclaireuses de la ruche
+     *
+     * @return le nombre d'éclaireuses associées à la ruche
+     */
+    size_t getScoutNumber() const;
+
+    /*!
+     * @brief Getter du nombre de butineuses de la ruche
+     *
+     * @return le nombre de butineuses associées à la ruche
+     */
+    size_t getWorkerNumber() const;
+
+
 // Méthodes pures
 
     /*!
@@ -40,14 +71,15 @@ public:
      *
      * @param "RenderTarget" sur laquelle la ruche est dessinée
      */
-    void drawOn(sf::RenderTarget&) const;
+    void drawOn(sf::RenderTarget&) const override;
 
     /*!
      * @brief Actualise la ruche et ses caractéristiques sur un temps donné
      *
      * @param temps dt sur lequel il faut actualiser la ruche
      */
-    void update(sf::Time);
+    void update(sf::Time) override;
+
 
 // Pollen
 
@@ -67,18 +99,41 @@ public:
      */
     double takePollen(double);
 
+
+// Stats
+
+    /*!
+     * @brief Adapte le nombre d'éclaireuses de la ruche (appelé dans le constructeur/destructeur)
+     *
+     * @param vrai pour en ajouter (constructeur), faux pour en retirer une (destructeur)
+     */
+    void changeScoutNumber(bool);
+
+    /*!
+     * @brief Adapte le nombre de butineuses de la ruche (appelé dans le constructeur/destructeur)
+     *
+     * @param vrai pour en ajouter une (constructeur), faux pour en retirer une (destructeur)
+     */
+    void changeWorkerNumber(bool);
+
+
 protected:
+
 // Bees
 
-        /*!
-         * @brief Ajoute une abeille dans la ruche
-         */
-        Bee* addBee(double scoutProb = 0);
+    /*!
+    * @brief Ajoute une abeille dans la ruche
+    */
+    Bee* addBee(double scoutProb = 0);
+
 
 private:
 
     Bees bees;
     double pollen;
+
+    size_t scoutNumber;
+    size_t workerNumber;
 
 };
 

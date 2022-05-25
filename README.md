@@ -11,5 +11,9 @@
 	- <tt>World::isHiveable(Vec2d const& pos, double rad)</tt>
 	- <tt>World::indexesForRect(Vec2d const& top, Vec2d const& bot)</tt>
 	- <tt>Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos)</tt>
+- Affichage de statistiques
+	- <tt>class Stat</tt>
+	- méthodes supplémentaires pour acccéder aux données dans <tt>Env, Hive, Bee </tt>
 
 ## Extensions :
+- Les ruches disparaissent si elles ne contiennent plus d'abeilles ni de pollen
