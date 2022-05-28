@@ -127,6 +127,8 @@ public :
      * @param Vec2d à traiter
      *
      * @return Vec2d à l'intérieur du monde torique
+     *
+     * @note en public car appel nécessaire dans Env
      */
      Vec2d toricClamp(Vec2d const&) const;
 
@@ -233,6 +235,31 @@ private:
     double humidityRange;
 
 // Fonctions d'implémentation
+
+    /*!
+     * @brief Modifie les tableaux de Vertexes selon cells_ et humidity_, avant l'affichage sur un renderingCache
+     *
+     * @param x de la cellule à vérifier
+     * @param y de la cellule à vérifier
+     * @param niveau maximum d'humidité du tableau (pour l'affichage relatif)
+     * @param niveau minimum d'humidité du tableau (pour l'affichage relatif)
+     */
+    void updateVertexes(int, int, double, double);
+
+    /*!
+     * @brief Initialise les graines selon la configuration (après un reset())
+     */
+    void seedsReset();
+
+    /*!
+     * @brief Calcule le nombre de cellules d'eau et d'herbes voisines à une cellule d'id donné
+     *
+     * @param id de la cellule à analyser
+     * @param nombre de cellules voisines (modifié par la fonction)
+     * @param nombre de cellules d'eau voisines (modifié par la fonction)
+     * @param nombre de cellules d'herbe voisines (modifié par la fonction)
+     */
+    void cellCounter(size_t, double&, double&, double&) const;
 
     /*!
      * @brief Génère un vecteur unitaire dans une direction aléatoire

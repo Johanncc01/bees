@@ -18,6 +18,7 @@ Env::Env()
 }
 
 Env::~Env(){
+    // Fonction qui s'occupe de désallouer les fleurs et les ruches
     destroyAll();
 }
 
@@ -40,30 +41,15 @@ bool Env::isWorldFlyable(Vec2d const& pos) const{
 
 void Env::update(sf::Time dt){
     generator.update(dt);
-
-    size_t taille(flowers.size());
-    for (size_t i(0); i < taille; ++i){
-        flowers[i]->update(dt);
-        if (!(flowers[i]->hasPollen())){                    // Suppression des fleurs sans pollen
-            delete flowers[i];
-            flowers[i] = nullptr;
-        }
-    }
-    flowers.erase(std::remove(flowers.begin(), flowers.end(), nullptr), flowers.end());
-
-    for (auto& hive : hives){
-        hive->update(dt);
-        if (hive->isDead()){
-            delete hive;
-            hive = nullptr;
-        }
-    }
-    hives.erase(std::remove(hives.begin(), hives.end(), nullptr), hives.end());
+    updateFlowers(dt);
+    updateHives(dt);
 }
 
 void Env::drawOn(sf::RenderTarget& target) const{
     terrain.drawOn(target);
-    if (!getAppConfig().showHumidity()){                // Affichage des fleurs et ruches uniquement si pas en mode humidité
+
+    // Affichage des fleurs et ruches uniquement si pas en mode humidité
+    if (!getAppConfig().showHumidity()){
         for (auto fleur : flowers){
             fleur->drawOn(target);
         }
@@ -147,6 +133,7 @@ Vec2d const* Env::getCollidingFlowerPosition(Collider const& body) const{
 
 bool Env::addHiveAt(Vec2d const& p){
     double size(getAppConfig().hive_manual_size);
+    //double size(uniform(getAppConfig().hive_min_size, getAppConfig().hive_max_size));
     Collider hive(p, size);
     bool libre((getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr));
     if (terrain.isHiveable(p, size) and libre){
@@ -175,11 +162,11 @@ void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& pos) const{
     bool herbe(terrain.isHiveable(pos, size));
 
     if (!libre){
-        toricHivable(target, topLeft, bottomRight, sf::Color::Blue);
+        drawToricHivable(target, topLeft, bottomRight, sf::Color::Blue);
     } else if (libre and !herbe){
-        toricHivable(target, topLeft, bottomRight, sf::Color::Red);
+        drawToricHivable(target, topLeft, bottomRight, sf::Color::Red);
     } else {
-        toricHivable(target, topLeft, bottomRight, sf::Color::Green);
+        drawToricHivable(target, topLeft, bottomRight, sf::Color::Green);
     }
 }
 
@@ -224,7 +211,6 @@ std::vector<std::string> Env::getHivesIds() const{
 }
 
 
-
 // Fonctions d'implémentation
 
 void Env::destroyAll(){
@@ -241,9 +227,35 @@ void Env::destroyAll(){
     hives.clear();
 }
 
+void Env::updateFlowers(sf::Time dt){
+    size_t taille(flowers.size());
+    // Itère seulement sur les fleurs existantes au début de l'update (indice fixé)
+    for (size_t i(0); i < taille; ++i){
+        flowers[i]->update(dt);
+        // Suppression des fleurs sans pollen
+        if (!(flowers[i]->hasPollen())){
+            delete flowers[i];
+            flowers[i] = nullptr;
+        }
+    }
+    // Supression des pointeurs nuls du vector
+    flowers.erase(std::remove(flowers.begin(), flowers.end(), nullptr), flowers.end());
+}
 
+void Env::updateHives(sf::Time dt){
+    for (auto& hive : hives){
+        hive->update(dt);
+        // Suppression des fleurs sans pollen
+        if (hive->isDead()){
+            delete hive;
+            hive = nullptr;
+        }
+    }
+    // Supression des pointeurs nuls du vector
+    hives.erase(std::remove(hives.begin(), hives.end(), nullptr), hives.end());
+}
 
-void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& bot, sf::Color color) const{
+void Env::drawToricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& bot, sf::Color color) const{
     Vec2d topClamp(terrain.toricClamp(top));
     Vec2d botClamp(terrain.toricClamp(bot));
 
@@ -308,8 +320,6 @@ void Env::toricHivable(sf::RenderTarget& target, Vec2d const& top, Vec2d const& 
         target.draw(shape2);
     }
 }
-
-
 
 size_t Env::getHivesScoutNumber() const {
     size_t number(0);

@@ -135,5 +135,27 @@ private:
     size_t scoutNumber;
     size_t workerNumber;
 
+// Fonctions d'implémentation
+
+    /*!
+     * @brief Actualise les abeilles
+     *
+     * @param temps dt sur lequel il faut actualiser les abeilles
+     */
+    void updateBees(sf::Time);
+
+    /*!
+     * @brief Recense puis fait interagir les abeilles à l'intérieur de la ruche
+     *
+     * @param si vrai, considère une abeille à l'intérieur selon son état (par défaut)
+     *        si faux, condisère une abeille à l'intérieur selon sa position
+     */
+    void interactBees(bool = true);
+
+    /*!
+     * @brief Fait reproduire les abeilles en fonction du pollen de la ruche
+     */
+    void reproductBees();
+
 };
 

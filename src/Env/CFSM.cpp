@@ -19,7 +19,8 @@ State CFSM::getState() const{
 
 void CFSM::nextState(){
     ++current;
-    current = current % states.size();              // Pour que l'indice de l'état courrant reste cohérent
+    // Pour que l'indice de l'état courrant reste cohérent
+    current = current % states.size();
     onEnterState(states[current]);
 }
 

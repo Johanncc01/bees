@@ -21,6 +21,23 @@ public:
     ~WorkerBee();
 
 
+// Getters
+
+    /*!
+     * @brief Getter de la configuration d'une butineuse
+     *
+     * @return un tableau contenant les valeurs coresspondantes aux butineuses dans le .json
+     */
+    j::Value const& getConfig() const override;
+
+    /*!
+    * @brief Getter de l'état "in_hive"
+    *
+    * @return vrai si l'abeille est en état "in_hive"
+    */
+    bool isStateHive() const override;
+
+
 // Dessin d'une abeille (substitution depuis Bee)
 
     /*!
@@ -82,15 +99,6 @@ private:
     static State const BACK_TO_HIVE;
 
     double pollenQty;
-
-// Getter privé
-
-    /*!
-    * @brief Getter de la configuration d'une butineuse
-    *
-    * @return un tableau contenant les valeurs coresspondantes aux butineuses dans le .json
-    */
-    j::Value const& getConfig() const override;
 
 };
 

@@ -24,6 +24,16 @@ public:
      ~Flower() = default;
 
 
+// Getter
+
+    /*!
+     * @brief Vérifie si un fleur a du pollen
+     *
+     * @return vrai si la fleur a du pollen
+     */
+    bool hasPollen() const;
+
+
 // Méthodes pures
 
     /*!
@@ -52,16 +62,18 @@ public:
      */
     double takePollen(double);
 
-    /*!
-     * @brief Vérifie si un fleur a du pollen
-     *
-     * @return vrai si la fleur a du pollen
-     */
-    bool hasPollen() const;
-
 
 private:
 
     double pollen;
     sf::Texture texture;
+
+// Fonction d'implémentation
+
+    /*!
+     * @brief Affiche le niveau de pollen de la fleur sur une cible donnée
+     *
+     * @param "RenderTarget" sur laquelle le texte est affiché
+     */
+    void advancedDebugText(sf::RenderTarget&) const;
 };

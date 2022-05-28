@@ -65,7 +65,7 @@ public:
 // Méthodes pures
 
     /*!
-     * @brief Actualise l'environnement (fleurs + générateur)
+     * @brief Actualise l'environnement (fleurs + ruches + générateur)
      *
      * @param temps dt sur lequel il faut actualiser l'environnement
      */
@@ -201,9 +201,23 @@ private:
     void destroyAll();
 
     /*!
+     * @brief Actualise les fleurs
+     *
+     * @param temps dt sur lequel il faut actualiser les fleurs
+     */
+    void updateFlowers(sf::Time dt);
+
+    /*!
+     * @brief Actualise les ruches
+     *
+     * @param temps dt sur lequel il faut actualiser les ruches
+     */
+    void updateHives(sf::Time dt);
+
+    /*!
      * @brief Affiche le carré de création de la ruche dans un monde torique
      */
-    void toricHivable(sf::RenderTarget&, Vec2d const&, Vec2d const&, sf::Color) const;
+    void drawToricHivable(sf::RenderTarget&, Vec2d const&, Vec2d const&, sf::Color) const;
 
     /*!
      * @brief Getter du nombre d'éclaireuses

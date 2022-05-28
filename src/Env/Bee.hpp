@@ -32,7 +32,7 @@ public:
 
     /*!
      * @brief Destructeur d'une abeille, qui désalloue l'espace pour la mémoire et la cible
-     *        Déclaré virtual pour que la destruction des sous-classe se fasse complètement
+     *        Déclaré virtual pour que la destruction des sous-classes se fasse complètement
      */
     virtual ~Bee();
 
@@ -45,6 +45,8 @@ public:
      * @return vrai si l'énergie n'est pas nulle ou négative
      */
     bool isDead();
+
+    virtual bool isStateHive() const = 0;
 
 
 // Méthodes pures
@@ -97,16 +99,7 @@ public:
 
 protected:
 
-    Hive& hive;
-    Vec2d vitesse;
-    double energy;
-
-    Vec2d const* memory;
-    Vec2d const* target;
-
-    Mode mode;
-
-// Getters pour les classes héritées
+// Getters et setters pour les classes héritées
 
     /*!
      * @brief Getter de la configuration en fonction de la sous-classe d'abeille
@@ -121,6 +114,55 @@ protected:
      * @return une référence à la ruche dont l'abeille appartient
      */
     Hive& getHive() const;
+
+    /*!
+     * @brief Getter de l'énergie de l'abeille
+     *
+     * @return la valeur de l'énergie (double)
+     */
+    double getEnergy() const;
+
+    /*!
+     * @brief Setter de l'énergie de l'abeille
+     *
+     * @param la nouvelle valeur de l'énergie (double)
+     */
+    void setEnergy(double);
+
+    /*!
+     * @brief Getter de la mémoire de l'abeille
+     *
+     * @return le pointeur sur Vec2d mémorisé
+     */
+    Vec2d const* getMemory() const;
+
+    /*!
+     * @brief Setter de la mémoire de l'abeille
+     *
+     * @param la nouvelle valeur pour la mémoire (Vec2d const*)
+     */
+    void setMemory(Vec2d const*);
+
+    /*!
+     * @brief Getter de la cible de l'abeille
+     *
+     * @return le pointeur sur Vec2d ciblé
+     */
+    Vec2d const* getTarget() const;
+
+    /*!
+     * @brief Setter de la cible de l'abeille
+     *
+     * @param la nouvelle valeur pour la cible (Vec2d const*)
+     */
+    void setTarget(Vec2d const*);
+
+    /*!
+     * @brief Setter du mode de déplaacement de l'abeille
+     *
+     * @return le nouveau mode (enum) de l'abeille
+     */
+    void setMode(Mode);
 
 
 // Déplacement
@@ -149,10 +191,17 @@ protected:
 
 private:
 
+    Hive& hive;
+    Vec2d vitesse;
+    double energy;
 
+    Vec2d const* memory;
+    Vec2d const* target;
+
+    Mode mode;
     sf::Time avoidanceClock_;
 
-    // Fonctions d'implémentation
+    // Fonction d'implémentation
 
     /*!
      * @brief Affiche des informations avancées (état de la mémoire + cible) de l'abeille sur une cible donnée

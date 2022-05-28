@@ -27,19 +27,45 @@ j::Value const& Bee::getConfig() const{
     return getValueConfig();
 }
 
-// Getters pour les classes héritées
+// Getters et setters pour les classes héritées
 
 Hive& Bee::getHive() const{
     return hive;
 }
 
+double Bee::getEnergy() const{
+    return energy;
+}
 
+void Bee::setEnergy(double newEnergy){
+    energy = newEnergy;
+}
 
+Vec2d const* Bee::getMemory() const{
+    return memory;
+}
+
+void Bee::setMemory(Vec2d const* newMemory){
+    memory = newMemory;
+}
+
+Vec2d const* Bee::getTarget() const{
+    return target;
+}
+
+void Bee::setTarget(Vec2d const* newTarget){
+    target = newTarget;
+}
+
+void Bee::setMode(Mode newMode){
+    mode = newMode;
+}
 
 
 // Méthodes pures
 
 void Bee::drawOn(sf::RenderTarget& target) const{
+    // Dessine la texture associée à l'abeille courante
     auto const& texture = getAppTexture(getConfig()["texture"].toString());
     auto beeSprite = buildSprite(getPosition(), getRadius(), texture);
 
@@ -59,14 +85,16 @@ void Bee::drawOn(sf::RenderTarget& target) const{
             auto shape = buildAnnulus(getPosition(), getRadius(), sf::Color::Blue, 3.0);
             target.draw(shape);
         }
-
-        //advancedDebugText(target);
+        // Pour afficher le debug memory et target (voir README)
+        // advancedDebugText(target);
     }
 }
 
 void Bee::update(sf::Time dt){
 
+    // Fait agir l'abeille en fonction de son état
     action(dt);
+    // Fait bouger l'abeille en fonction de son mode de déplacement
     move(dt);
 
     switch (static_cast<short>(mode)){
@@ -106,7 +134,8 @@ void Bee::randomMove(sf::Time dt){
     }
 
     if (getAppEnv().isWorldFlyable(getPosition() + vitesse*dt.asSeconds())){
-        *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamping
+        // appelle Collider::move(dx), qui s'occupe du clamping
+        *this += vitesse*dt.asSeconds();
     } else {
         double beta;
         if (bernoulli(0.5)){
@@ -127,7 +156,8 @@ void Bee::targetMove(sf::Time dt){
     }
 
     if (getAppEnv().isWorldFlyable(getPosition() + vitesse*dt.asSeconds())){
-        *this += vitesse*dt.asSeconds();                                 // appelle Collider::move(dx), qui s'occupe du clamp
+        // appelle Collider::move(dx), qui s'occupe du clamp
+        *this += vitesse*dt.asSeconds();
     } else {
         avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
         double beta;
@@ -151,8 +181,10 @@ void Bee::learnFlowerLocation(Vec2d const& flowerPosition){
 // Fonctions d'implémentation
 
 void Bee::advancedDebugText(sf::RenderTarget& target) const{
-    Vec2d renderPos1(getPosition().x(), getPosition().y() - getAppConfig().scout_size*2);             // Pour afficher l'état de la mémoire
-    Vec2d renderPos2(renderPos1.x(), renderPos1.y() - 10);                              // Pour afficher l'état de la cible
+    // Pour afficher l'état de la mémoire
+    Vec2d renderPos1(getPosition().x(), getPosition().y() - getAppConfig().scout_size*2);
+    // Pour afficher l'état de la cible
+    Vec2d renderPos2(renderPos1.x(), renderPos1.y() - 10);
 
     if (memory == nullptr){
         auto const text = buildText("memory : empty", renderPos1, getAppFont(), 10, sf::Color::Red);
@@ -170,6 +202,5 @@ void Bee::advancedDebugText(sf::RenderTarget& target) const{
         target.draw(text);
     }
 }
-
 
 

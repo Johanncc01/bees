@@ -239,7 +239,7 @@ Au travers du mot réservé const, on ne pourra pas modifier la variable à trav
 **************************************************************
 ### Q. ICC
 Si la vérification de la possibilité d'interaction se fait dans l'appel de <tt>interact()</tt>, on sait déjà que l'on itère sur des combinaisons d'abeilles valables, i.e. on a pas de risque de tomber sur une des deux abeilles à l'extérieur de la ruche et on économise des appels de fonctions qui pourraient ralentir l'exécution.
-Cela permet de réduire la complexité en moyenne.
+Cela permet de réduire la complexité en moyenne, car il est quand même possible que toutes les abeilles soient dans la ruche (pire cas).s
 
 **************************************************************
 ### Q5.12

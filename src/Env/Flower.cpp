@@ -9,10 +9,18 @@
 Flower::Flower(Vec2d const& cen, double rad, double pol)
     : Collider(cen, rad), pollen(pol)
 {
+    // Attribution de la texture aléatoire dans le constructeur, pour que la fleur ait toujours la même
     auto const& textures(getAppConfig().flower_textures);
     int taille(textures.size());
     int random(uniform(0, taille-1));
-    texture = (sf::Texture const&)(getAppTexture(textures[random].toString()));     // Attribution de la texture aléatoire dans le constructeur, pour que la fleur ait toujours la même
+    texture = (sf::Texture const&)(getAppTexture(textures[random].toString()));
+}
+
+
+// Getter
+
+bool Flower::hasPollen() const{
+    return (pollen > 0);
 }
 
 
@@ -21,24 +29,23 @@ Flower::Flower(Vec2d const& cen, double rad, double pol)
 void Flower::drawOn(sf::RenderTarget& target) const{
     auto flowerSprite = buildSprite(getPosition(), getRadius(), texture);
     target.draw(flowerSprite);
-
-    /*
     if (isDebugOn()){
-        Vec2d affichage(getPosition().x(),getPosition().y()-10);
-        auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 8, sf::Color::Black);
-        target.draw(text);
+        // Pour afficher le debug pollen (voir README)
+        // advancedDebugText(target);
     }
-    */
 }
 
 void Flower::update(sf::Time dt){
     double seuil(getAppConfig().flower_growth_threshold);
-    double humidity(getAppEnv().getWorldHumidity(getPosition()));          // Utilisation du getter de l'humidité (la fleur n'a pas accès aux attributs privés de World)
+    // Utilisation du getter de l'humidité (la fleur n'a pas accès aux attributs privés de World)
+    double humidity(getAppEnv().getWorldHumidity(getPosition()));
+
     pollen += (dt.asSeconds() * log(humidity/seuil));
-    int i(0);
-    Vec2d new_pos;
+
     if (pollen > getAppConfig().flower_growth_split){
         pollen /= 2;
+        Vec2d new_pos;
+        int i(0);
         do {
             double d(uniform(1.5*getRadius(), 2.5*getRadius()));
             new_pos = getPosition() + Vec2d::fromRandomAngle()*d;
@@ -61,6 +68,11 @@ double Flower::takePollen(double asked){
     }
 }
 
-bool Flower::hasPollen() const{
-    return (pollen > 0);
+
+// Fonction d'implémentation
+
+void Flower::advancedDebugText(sf::RenderTarget& target) const{
+    Vec2d affichage(getPosition().x(),getPosition().y()-10);
+    auto const text = buildText(to_nice_string(pollen), affichage, getAppFont(), 8, sf::Color::Black);
+    target.draw(text);
 }

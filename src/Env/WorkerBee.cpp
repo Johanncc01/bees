@@ -15,11 +15,11 @@ State const WorkerBee::BACK_TO_HIVE(createUid());
 WorkerBee::WorkerBee(Hive& h, Vec2d const& pos)
     : Bee(h, pos, {IN_HIVE, TO_FLOWER, COLLECT_POLLEN, BACK_TO_HIVE}, getAppConfig().worker_size, getAppConfig().worker_initial_energy, getAppConfig().worker_speed), pollenQty(0)
 {
-    hive.changeWorkerNumber(true);
+    getHive().changeWorkerNumber(true);
 }
 
 WorkerBee::~WorkerBee(){
-    hive.changeWorkerNumber(false);
+    getHive().changeWorkerNumber(false);
 }
 
 
@@ -29,6 +29,10 @@ j::Value const& WorkerBee::getConfig() const{
     return getValueConfig()["simulation"]["bees"]["worker"];
 }
 
+bool WorkerBee::isStateHive() const{
+    return getState() == IN_HIVE;
+}
+
 
 // Dessin d'une butineuse
 
@@ -36,12 +40,15 @@ void WorkerBee::drawOn(sf::RenderTarget& target) const {
 
     Bee::drawOn(target);
 
-    Vec2d renderPos1(getPosition().x(), getPosition().y() + getAppConfig().worker_size*1.2);          // Pour afficher le type de l'abeille et son énergie
-    Vec2d renderPos2(renderPos1.x(), renderPos1.y() + 10);                          // Pour afficher l'état actuel de la butineuse
-    Vec2d renderPos3(renderPos1.x(), renderPos1.y() + 20);                          // Pour afficher la quantité de pollen de la butineuse
+    // Pour afficher le type de l'abeille et son énergie
+    Vec2d renderPos1(getPosition().x(), getPosition().y() + getAppConfig().worker_size*1.2);
+    // Pour afficher l'état actuel de la butineuse
+    Vec2d renderPos2(renderPos1.x(), renderPos1.y() + 10);
+    // Pour afficher la quantité de pollen de la butineuse
+    Vec2d renderPos3(renderPos1.x(), renderPos1.y() + 20);
 
     if (isDebugOn()){
-        auto const text = buildText("Worker: energy "+ to_nice_string(energy), renderPos1, getAppFont(), 10, sf::Color::Black);
+        auto const text = buildText("Worker: energy "+ to_nice_string(getEnergy()), renderPos1, getAppFont(), 10, sf::Color::Black);
         target.draw(text);
 
         auto const text2 = buildText("pollenQty : "+ to_nice_string(pollenQty), renderPos3, getAppFont(), 10, sf::Color::Black);
@@ -63,11 +70,11 @@ void WorkerBee::drawOn(sf::RenderTarget& target) const {
             auto const text = buildText("in_hive_pollen", renderPos2, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         }
-        else if (energy < getAppConfig().worker_energy_to_leave_hive){
+        else if (getEnergy() < getAppConfig().worker_energy_to_leave_hive){
             auto const text = buildText("in_hive_eating", renderPos2, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         }
-        else if (memory == nullptr){
+        else if (getMemory() == nullptr){
             auto const text = buildText("in_hive_no_flower", renderPos2, getAppFont(), 10, sf::Color::Black);
             target.draw(text);
         } else {
@@ -87,28 +94,26 @@ void WorkerBee::onState(State state, sf::Time dt){
         if (pollenQty > 0){
             double computed(dt.asSeconds()*getAppConfig().worker_transfer_rate);
             if (pollenQty > computed){
-                pollenQty -= hive.dropPollen(computed);
+                pollenQty -= getHive().dropPollen(computed);
             } else {
-                hive.dropPollen(pollenQty);
+                getHive().dropPollen(pollenQty);
                 pollenQty = 0;
             }
         }
 
         if (pollenQty == 0){
-            if (energy < getAppConfig().worker_energy_to_leave_hive){
-                energy += hive.takePollen(dt.asSeconds()*getAppConfig().worker_eating_rate);
+            if (getEnergy() < getAppConfig().worker_energy_to_leave_hive){
+                setEnergy(getEnergy() + getHive().takePollen(dt.asSeconds()*getAppConfig().worker_eating_rate));
             } else {
-                if (memory != nullptr){
+                if (getMemory() != nullptr){
                     nextState();
-                    delete memory;
-                    memory = nullptr;
                 }
             }
         }
 
     } else if (state == TO_FLOWER){
 
-        if (*this>Collider(*target, getAppConfig().flower_manual_size)){
+        if (*this>Collider(*getTarget(), getAppConfig().flower_manual_size)){
             if (getAppEnv().getCollidingFlower(*this) == nullptr) {
                 nextState();
             }
@@ -138,7 +143,7 @@ void WorkerBee::onState(State state, sf::Time dt){
         }
 
     } else if (state == BACK_TO_HIVE){
-        if (hive>*this){
+        if (getHive()>*this){
             nextState();
         }
     }
@@ -146,24 +151,24 @@ void WorkerBee::onState(State state, sf::Time dt){
 
 void WorkerBee::onEnterState(State state){
     if (state == IN_HIVE){
-        mode = Mode::repos;
-        delete target;
-        target = nullptr;
+        setMode(Mode::repos);
+        delete getTarget();
+        setTarget(nullptr);
 
     } else if (state == TO_FLOWER){
-        mode = Mode::target;
-        target = new Vec2d(*memory);
-        delete memory;
-        memory = nullptr;
+        setMode(Mode::target);
+        setTarget(new Vec2d(*getMemory()));
+        delete getMemory();
+        setMemory(nullptr);
 
     } else if (state == COLLECT_POLLEN){
-        mode = Mode::repos;
-        delete target;
-        target = nullptr;
+        setMode(Mode::repos);
+        delete getTarget();
+        setTarget(nullptr);
 
     } else if (state == BACK_TO_HIVE){
-        mode = Mode::target;
-        target = new Vec2d(hive.getPosition());
+        setMode(Mode::target);
+        setTarget(new Vec2d(getHive().getPosition()));
     }
 }
 
@@ -181,3 +186,4 @@ void WorkerBee::interactWith(ScoutBee*){
 void WorkerBee::interactWith(WorkerBee*){
     return;
 }
+

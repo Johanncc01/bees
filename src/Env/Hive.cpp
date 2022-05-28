@@ -60,43 +60,11 @@ void Hive::drawOn(sf::RenderTarget& target) const{
 }
 
 
-void Hive::update(sf::Time dt){
-    for (auto& bee : bees){
-        bee->update(dt);
-        if (bee->isDead()){
-            delete bee;
-            bee = nullptr;
-        }
-    }
-    bees.erase(std::remove(bees.begin(), bees.end(), nullptr), bees.end());
-
-
-
-    Bees inside;
-
-    for (auto& bee : bees){
-        if (*this|*bee){
-            inside.push_back(bee);
-        }
-    }
-
-    for (auto& bee1 : inside){
-        for (auto& bee2 : inside){
-            if (bee1 != bee2){
-                bee1->interact(bee2);
-            }
-        }
-    }
-
-    double reproduction(getAppConfig().hive_reproduction_nectar_threshold);
-    double maxBees(getAppConfig().hive_reproduction_max_bees);
-
-    if ((pollen >= reproduction) and bees.size() < maxBees){
-        addBee(getAppConfig().hive_reproduction_scout_proba);
-    }
-
+void Hive::update(sf::Time dt){   
+    updateBees(dt);
+    interactBees();
+    reproductBees();
 }
-
 
 
 // Bees
@@ -153,3 +121,54 @@ void Hive::changeWorkerNumber(bool add){
 }
 
 
+// Fonctions d'implémentations
+
+void Hive::updateBees(sf::Time dt){
+    for (auto& bee : bees){
+        bee->update(dt);
+        if (bee->isDead()){
+            delete bee;
+            bee = nullptr;
+        }
+    }
+    bees.erase(std::remove(bees.begin(), bees.end(), nullptr), bees.end());
+}
+
+void Hive::interactBees(bool state){
+
+    // Répertorie les abeilles à l'intérieur de la ruche pour les faire interragir entre elles
+    Bees inside;
+
+    if (state){
+        for (auto& bee : bees){
+            if (bee->isStateHive()){
+                inside.push_back(bee);
+            }
+        }
+    } else {
+        for (auto& bee : bees){
+            if (*this|*bee){
+                inside.push_back(bee);
+            }
+        }
+    }
+    // Fait interragir les abeilles à l'intérieur
+    for (auto& bee1 : inside){
+        for (auto& bee2 : inside){
+            if (bee1 != bee2){
+                bee1->interact(bee2);
+            }
+        }
+    }
+}
+
+void Hive::reproductBees(){
+    double reproduction(getAppConfig().hive_reproduction_nectar_threshold);
+    double maxBees(getAppConfig().hive_reproduction_max_bees);
+    double ratioScout(scoutNumber/maxBees);
+
+    if ((pollen >= reproduction) and bees.size() < maxBees){
+        // Adapte la probabilité d'une scout selon la population actuelle (pour garder un équilibre)
+        addBee(1-ratioScout);
+    }
+}

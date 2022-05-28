@@ -188,7 +188,13 @@
 
 *************************************************
 ## 27.05 (vendredi)
-- rendu final effectué
+- Ecapsulation réglée : plus aucun attribut en protected (ni dans Collider, ni dans Bee)
+- Quelques petites extensions codées (adaptation du code à la simulation, voir README)
+- Rédaction du README
+
+*************************************************
+## 29.05 (dimanche)
+- Dernières vérifications et rendu final effectué
 	- les parties 1 à 6 fonctionnent
 
 		
