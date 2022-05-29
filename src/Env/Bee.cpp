@@ -96,18 +96,8 @@ void Bee::update(sf::Time dt){
     action(dt);
     // Fait bouger l'abeille en fonction de son mode de déplacement
     move(dt);
-
-    switch (static_cast<short>(mode)){
-    case 0 : energy -= double(getConfig()["energy"]["consumption rates"]["idle"].toDouble())*dt.asSeconds();
-             break;
-    case 1 :
-    case 2 : energy -= double(getConfig()["energy"]["consumption rates"]["moving"].toDouble())*dt.asSeconds();
-             break;
-    }
-
-    if (energy < 0){
-        energy = 0;
-    }
+    // Fait diminuer l'énergie en fonction du mode de déplaacement
+    updateEnergy(dt);
 }
 
 
@@ -179,6 +169,20 @@ void Bee::learnFlowerLocation(Vec2d const& flowerPosition){
 
 
 // Fonctions d'implémentation
+
+void Bee::updateEnergy(sf::Time dt){
+    switch (static_cast<short>(mode)){
+    case 0 : energy -= double(getConfig()["energy"]["consumption rates"]["idle"].toDouble())*dt.asSeconds();
+             break;
+    case 1 :
+    case 2 : energy -= double(getConfig()["energy"]["consumption rates"]["moving"].toDouble())*dt.asSeconds();
+             break;
+    }
+
+    if (energy < 0){
+        energy = 0;
+    }
+}
 
 void Bee::advancedDebugText(sf::RenderTarget& target) const{
     // Pour afficher l'état de la mémoire

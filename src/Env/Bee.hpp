@@ -203,6 +203,8 @@ private:
 
     // Fonction d'implémentation
 
+    void updateEnergy(sf::Time dt);
+
     /*!
      * @brief Affiche des informations avancées (état de la mémoire + cible) de l'abeille sur une cible donnée
      *
