@@ -1,6 +1,6 @@
-#Programmation Orientée-objets (SV)
+# Programmation Orientée-objets (SV)
 
-##JOURNAL du groupe *86* (*Johann Clausen* & *Victor Galhaud*)
+## JOURNAL du groupe *86* (*Johann Clausen* & *Victor Galhaud*)
 
 *************************************************
 ## 21.03 (lundi)
