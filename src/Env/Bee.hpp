@@ -188,6 +188,13 @@ protected:
      */
     void targetMove(sf::Time);
 
+    /*!
+     * @brief Calcule l'énergie nécessaire pour rentrer à la ruche
+     *
+     * @return double représentant l'énergie
+     */
+    double computeEnergy() const;
+
 
 private:
 
@@ -201,12 +208,17 @@ private:
     Mode mode;
     sf::Time avoidanceClock_;
 
-    // Fonction d'implémentation
+    // Fonctions d'implémentation
 
+    /*!
+     * @brief Actualise l'énergie des abeilles
+     *
+     * @param temps dt sur lequel il faut actualiser l'énergie
+     */
     void updateEnergy(sf::Time dt);
 
     /*!
-     * @brief Affiche des informations avancées (état de la mémoire + cible) de l'abeille sur une cible donnée
+     * @brief Affiche des informations avancées (état de la mémoire + cible et valeur de computeEnergy()) de l'abeille sur une cible donnée
      *
      * @param "RenderTarget" sur laquelle le texte est affiché
      */

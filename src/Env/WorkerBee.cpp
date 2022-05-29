@@ -120,6 +120,11 @@ void WorkerBee::onState(State state, sf::Time dt){
             nextState();
         }
 
+        if (getEnergy() < computeEnergy()){
+            nextState();
+            nextState();
+        }
+
     } else if (state == COLLECT_POLLEN){
 
         Flower* eating(getAppEnv().getCollidingFlower(*this));
@@ -140,6 +145,10 @@ void WorkerBee::onState(State state, sf::Time dt){
             if (computed != left){
                 nextState();
             }
+        }
+
+        if (getEnergy() < computeEnergy()){
+            nextState();
         }
 
     } else if (state == BACK_TO_HIVE){

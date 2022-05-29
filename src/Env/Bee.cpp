@@ -85,8 +85,8 @@ void Bee::drawOn(sf::RenderTarget& target) const{
             auto shape = buildAnnulus(getPosition(), getRadius(), sf::Color::Blue, 3.0);
             target.draw(shape);
         }
-        // Pour afficher le debug memory et target (voir README)
-        // advancedDebugText(target);
+        // Pour afficher le debug memory, target et computeEnergy() (voir README)
+         advancedDebugText(target);
     }
 }
 
@@ -138,6 +138,7 @@ void Bee::randomMove(sf::Time dt){
 }
 
 void Bee::targetMove(sf::Time dt){
+
     if (avoidanceClock_ < sf::Time::Zero){
         Vec2d normalised(directionTo(*target)/distanceTo(*target));
         vitesse = normalised * vitesse.length();
@@ -158,6 +159,13 @@ void Bee::targetMove(sf::Time dt){
         }
         vitesse.rotate(beta);
     }
+}
+
+double Bee::computeEnergy() const{
+    double dist(distanceTo(getHive().getPosition()));
+    double rate(getConfig()["energy"]["consumption rates"]["moving"].toDouble());
+    return rate*(dist/vitesse.length()) + 1;
+
 }
 
 
@@ -189,6 +197,8 @@ void Bee::advancedDebugText(sf::RenderTarget& target) const{
     Vec2d renderPos1(getPosition().x(), getPosition().y() - getAppConfig().scout_size*2);
     // Pour afficher l'état de la cible
     Vec2d renderPos2(renderPos1.x(), renderPos1.y() - 10);
+    // Pour afficher l'énergie nécessaire pour rentrer à la ruche
+    Vec2d renderPos3(renderPos2.x(), renderPos2.y() - 10);
 
     if (memory == nullptr){
         auto const text = buildText("memory : empty", renderPos1, getAppFont(), 10, sf::Color::Red);
@@ -205,6 +215,9 @@ void Bee::advancedDebugText(sf::RenderTarget& target) const{
         auto const text = buildText("target : full", renderPos2, getAppFont(), 10, sf::Color::Green);
         target.draw(text);
     }
+
+    auto const text = buildText("energy to return home : "+ to_nice_string(computeEnergy()), renderPos3, getAppFont(), 10, sf::Color::Black);
+    target.draw(text);
 }
 
 

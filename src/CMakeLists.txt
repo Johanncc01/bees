@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Bee_Colony_Simulator_SSV_2022_STEP6)
+project(Bee_Colony_Simulator_SSV_2022_STEP7)
 
 #set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra" )
 
 set(TEST_DIR "${PROJECT_SOURCE_DIR}/Tests")
 set(CACHE_DIR "${PROJECT_SOURCE_DIR}/../extlib/Catch/include")

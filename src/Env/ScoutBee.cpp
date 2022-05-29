@@ -91,7 +91,7 @@ void ScoutBee::onState(State state, sf::Time dt){
         setMemory(getAppEnv().getCollidingFlowerPosition(Collider(getPosition(), getRadius() + getConfig()["visibility range"].toDouble())));
         bool seenFlowers(getMemory() != nullptr);
 
-        if (seenFlowers or (getEnergy() < getAppConfig().scout_energy_seek_flowers)){
+        if (seenFlowers or (getEnergy() < computeEnergy())){
             nextState();
         }
 

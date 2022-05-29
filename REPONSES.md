@@ -6,35 +6,35 @@
 
 **************************************************************
 ### Q1.1
-Pour éviter la duplication de code, il faut mettre <tt>clamp()</tt> dans une méthode de la classe. 
-Comme cette méthode ne sera appelée qu'à l'intérieur de la classe, il serait judicieux de la prototyper en private (détail d'implémentation).
+Pour éviter la duplication de code, il faut mettre `clamp()` dans une méthode de la classe. 
+Comme cette méthode ne sera appelée qu'à l'intérieur de la classe, il serait judicieux de la prototyper en `private` (détail d'implémentation).
 **************************************************************
 ### Q1.2
 En utilisant deux boucles imbriquées avec des indices de -1 à 1, on peut parcourir toutes les combinaisons de vecteurs de l'espace torique.
 Il suffit de comparer la distance entre le nouveau vecteur et le vecteur max à chaque tour de boucle.
 **************************************************************
 ### Q1.3
-Il faut passer les <tt>Collider</tt> et les <tt>Vec2d</tt> en référence constante, car c'est des classes complexes.
-Pour les <tt>double</tt>, le passage par valeur suffit.
+Il faut passer les `Collider` et les `Vec2d` en référence constante, car ce sont des classes complexes.
+Pour les `double`, le passage par valeur suffit.
 **************************************************************
 ### Q1.4
 Les méthodes affichant la distance et la direction n'ont pas besoin de modifier les attributs privés.
-Pour la fonction move, elle déplace le <tt>Collider</tt>, et doit donc accéder à <tt>center</tt>. Elle ne doit pas être déclarée comme <tt>const</tt>.
+Pour la fonction move, elle déplace le `Collider`, et doit donc accéder à `center`. Elle ne doit pas être déclarée comme `const`.
 **************************************************************
 ### Q1.5
 Il suffit de return les résultats des fonctions rédigées auparavant.
 **************************************************************
 ### Q1.6
 Pour tous les opérateurs (sauf <<), il faut utiliser la surcharge interne. Les opérateurs sont "proches de la classe", ils ont besoin d'accès internes (+= modifie l'objet). 
-Pour l'opérateur d'affichage, il faut le faire en externe car on ne peut pas redéfinir la classe iostream, et que <tt>Collider</tt> n'est pas l'opérande de gauche.
+Pour l'opérateur d'affichage, il faut le faire en externe car on ne peut pas redéfinir la classe iostream, et que `Collider` n'est pas l'opérande de gauche.
 **************************************************************
 ### Q1.7
-Comme auparavant, il faut passer les classes (<tt>Collider</tt>, <tt>Vec2d</tt>) en référence constante, les types de base (<tt>double</tt>) par valeur.
-Notons qu'il est nécesssaire de passer le <tt>ostream</tt> par référence (non constante), car il s'agit d'un flot.
+Comme auparavant, il faut passer les classes (`Collider`, `Vec2d`) en référence constante, les types de base (`double`) par valeur.
+Notons qu'il est nécessaire de passer le `ostream` par référence (non constante), car il s'agit d'un flot.
 **************************************************************
 ### Q1.8
-Les seules méthodes qui peuvent modifier l'instance de <tt>Collider</tt> devraient être l'opérateur "=" et "+=".
-Toutes les autres méthodes peuvent être déclarées comme <tt>const</tt>.
+Les seules méthodes qui peuvent modifier l'instance de `Collider` devraient être l'opérateur "=" et "+=".
+Toutes les autres méthodes peuvent être déclarées comme `const`.
 **************************************************************
 
 
@@ -42,29 +42,29 @@ Toutes les autres méthodes peuvent être déclarées comme <tt>const</tt>.
 
 **************************************************************
 ### Q2.1
-Le nombre de cellules totales dans le vector est <tt>nb_ cells</tt> * <tt>nb_ cells</tt>.
-En effet, il ne s'agit pas de <tt>world_ size</tt> au carré, car cette valeur sera utilisée par SFML pour afficher nos cellules de largeur <tt>cell_size</tt>.
+Le nombre de cellules totales dans le `vector` est `nb_cells` * `nb_cells`.
+En effet, il ne s'agit pas de `world_ size` au carré, car cette valeur sera utilisée par SFML pour afficher nos cellules de largeur `cell_size`.
 **************************************************************
 ### Q2.2
-<tt> world_cells : "simulation", "world", "default cells" <br>
-world_size : "simulation", "world", "default size"</tt>
+`world_cells : "simulation", "world", "default cells"`
+`world_size : "simulation", "world", "default size"`
 **************************************************************
 ### Q2.3
-Il faut d'abord appeler <tt>reloadConfig()</tt>, qui s'occupera des arguments <tt>nb_cells</tt>, <tt>cell_size</tt>, et du tableau <tt>cells_ </tt>.
-Ensuite, <tt>reloadCacheStructure()</tt> utilisera les nouvelles valeurs des attributs pour initialiser les vertexes et <tt>renderingCache_ </tt>.
-Enfin, <tt>updateCache()</tt>, afin d'appliquer les changements dans renderingCache_.
+Il faut d'abord appeler `reloadConfig()`, qui s'occupera des arguments `nb_cells`, `cell_size`, et du tableau `cells_ `.
+Ensuite, `reloadCacheStructure()` utilisera les nouvelles valeurs des attributs pour initialiser les vertexes et `renderingCache_ `.
+Enfin, `updateCache()`, afin d'appliquer les changements dans `renderingCache_`.
 **************************************************************
 ### Q2.4
 Le changement de fichier source pour le terrain peut se faire sans recompiler le programme en entier.
-On peut, à l'aide de paramètres de ligne de commande, modifier le fichier désiré pour le chargement (info retrouvée à l'aide de <tt>getApp()</tt> et <tt>getAppConfig()</tt>)
+On peut, à l'aide de paramètres de ligne de commande, modifier le fichier désiré pour le chargement (info retrouvée à l'aide de `getApp()` et `getAppConfig()`)
 **************************************************************
 ### Q2.5
-Elle doit appeler les fonctions : <tt>reloadCacheStructure()</tt> et <tt>updateCache()</tt>.
-Ces appels permettront d'initialiser les <tt>vertexes</tt> et <tt>renderingCache_</tt>, ainsi que de d'actualiser les changements.
+Elle doit appeler les fonctions : `reloadCacheStructure()` et `updateCache()`.
+Ces appels permettront d'initialiser les `vertexes` et `renderingCache_`, ainsi que de d'actualiser les changements.
 **************************************************************
 ### Q2.6 
-Nous avons choisi de représenter l'ensemble <tt>seeds_</tt> par un vector de <tt>Seeds</tt>.
-Nous avons privilégié le type <tt>vector</tt> au type <tt>array</tt> car nous ne connaissons pas la taille de cet ensemble au moment où nous l'initialisons.
+Nous avons choisi de représenter l'ensemble `seeds_` par un vector de `Seeds`.
+Nous avons privilégié le type `vector` au type `array` car nous ne connaissons pas la taille de cet ensemble au moment où nous l'initialisons.
 **************************************************************
 
 
@@ -72,60 +72,71 @@ Nous avons privilégié le type <tt>vector</tt> au type <tt>array</tt> car nous 
 
 **************************************************************
 ### Q3.1
-Pour le moment, comme notre <tt>Env</tt> ne contient que le terrain, il suffit d'appeler les méthodes correspondantes dans la classe <tt>world</tt>. C'est à dire respectivement les méthodes <tt> updateCache(), drawOn() et reset()</tt> contenues dans la classe <tt>World</tt>.
+Pour le moment, comme notre `Env` ne contient que le terrain, il suffit d'appeler les méthodes correspondantes dans la classe `world`. C'est à dire respectivement les méthodes ` updateCache(), drawOn() et reset()` contenues dans la classe `World`.
 **************************************************************
 ### Q3.2
-Il s'agit d'une méthode qui pour l'attribut terrain de <tt>Env</tt>, appelle sa méthode <tt>loadFromFile()</tt> codée à la partie précédente. Cette fonction met déjà à jour l'affichage du monde. On peut donc remplacer les appels dans le constructeur de <tt>Env</tt>. <br>
-Le fichier utilisé est déterminé dans la méthode <tt> World::loadFromFile()</tt>, où il est repris depuis le json de configuration choisi. <br>
-L'appel de <tt>Env::reset()</tt> lors de l'appui sur la touche 'r' est réalisé dans <tt> Application.cpp</tt>, plus précisement aux lignes 519 à 529.
+Il s'agit d'une méthode qui pour l'attribut terrain de `Env`, appelle sa méthode `loadFromFile()` codée à la partie précédente. Cette fonction met déjà à jour l'affichage du monde. On peut donc remplacer les appels dans le constructeur de `Env`.
+
+Le fichier utilisé est déterminé dans la méthode ` World::loadFromFile()`, où il est repris depuis le .json de configuration sélectionné.
+
+L'appel de `Env::reset()` lors de l'appui sur la touche 'r' est réalisé dans ` Application.cpp`, plus précisément aux lignes 519 à 529.
 **************************************************************
 ### Q3.3
-Tous les endroits où une graine transmet son type à <tt> cells_</tt>, i.e. dans : 
-<ul> - l'initialisation des graines dans <tt>World::reset()</tt> <br> - l'avancement des graines dans <tt> World::step()</tt> <br> - le lissage dans <tt>World::smooth()</tt> </ul>
-Nous avons créé une nouvelle méthode <tt>World::humidityImpact(int id)</tt>, qui prend en argument l'id de la cellule c1 qui devient une cellule d'eau, et qui met à jour le taux d'humidité des cellules influencées par c1. Elle sera appelée juste après la modification de <tt>cells</tt>.
+Tous les endroits où une graine transmet son type à ` cells_`, i.e. dans : 
+
+ - l'initialisation des graines dans `World::reset()` 
+ - l'avancement des graines dans ` World::step()`
+ - le lissage dans `World::smooth()`
+
+Nous avons créé une nouvelle méthode `World::humidityImpact(int id)`, qui prend en argument l'id de la cellule c1 qui devient une cellule d'eau, et qui met à jour le taux d'humidité des cellules influencées par c1. Elle sera appelée juste après la modification de `cells`.
 **************************************************************
 ### Q3.4
-Il suffit d'intégrer à la boucle existante le traitement de l'humidité, i.e. calculer <tt>niveau bleu</tt> pour chaque cellule et l'assigner au <tt> humidityVertexes</tt> pour chaque indice des quads. (au même endroit que l'herbe, l'eau et la pierre)
+Il suffit d'intégrer à la boucle existante le traitement de l'humidité, i.e. calculer `niveau bleu` pour chaque cellule et l'assigner au ` humidityVertexes` pour chaque indice des quads (au même endroit que l'herbe, l'eau et la pierre).
 **************************************************************
 ### Q3.5
-Il faut faire en sorte que <tt>Flower</tt> hérite de la classe <tt>Collider</tt>, pour que les méthodes déjà définies pour la gestion des collisions soient disponibles pour cette nouvelle classe.
+Il faut faire en sorte que `Flower` hérite de la classe `Collider`, pour que les méthodes déjà définies pour la gestion des collisions soient disponibles pour cette nouvelle classe.
 **************************************************************
 ### Q3.6
-Pour que le choix de la texture se fasse uniquement à la création de la fleur, nous pourrions déplacer les traitements nécessaires dans le constructeur de <tt>Flower</tt>. Ainsi, la texture serait déterminée dès le début de vie et ne changerait pas.
+Pour que le choix de la texture se fasse uniquement à la création de la fleur, nous pourrions déplacer les traitements nécessaires dans le constructeur de `Flower`. Ainsi, la texture serait déterminée dès le début de vie et ne changerait pas.
 **************************************************************
 ### Q3.7
-Pour prévoir les différentes sortes de fleurs, qui peuvent avoir des traitements différents selon leur nature, il faut définir la collection de fleurs de façon à pouvoir utiliser le polymorphisme, i.e. comme une collection de pointeurs sur <tt>Flower</tt>.
+Pour prévoir les différentes sortes de fleurs, qui peuvent avoir des traitements différents selon leur nature, il faut définir la collection de fleurs de façon à pouvoir utiliser le polymorphisme, i.e. comme une collection de pointeurs sur `Flower`.
 
 **************************************************************
 ### Q3.8
-Lors de la destruction d'un <tt>Env</tt>, il faut penser à également détruire tous les éléments qui ne peuvent pas vivre en dehors de lui, ici les fleurs. Ce traitement sera spécifié dans le destructeur de <tt>Env</tt>.
+Lors de la destruction d'un `Env`, il faut penser à également détruire tous les éléments qui ne peuvent pas vivre en dehors de lui, ici les fleurs. Ce traitement sera spécifié dans le destructeur de `Env`.
 **************************************************************
 ### Q3.9
-De placer ces suppressions dans les instructions liées au destructeur de <tt>Env</tt>, qui prendra donc soin de supprimer à la fois les fleurs et le terrain.
+De placer ces suppressions dans les instructions liées au destructeur de `Env`, qui prendra donc soin de supprimer à la fois les fleurs et le terrain.
 **************************************************************
 ### Q3.10
-<tt>Env::drawOn</tt> doit maintenant appeler <tt>Flower::drawOn</tt> pour chaque fleur faisant partie de l'environnement, en plus de l'appel existant à <tt>World::drawOn</tt>.
+`Env::drawOn` doit maintenant appeler `Flower::drawOn` pour chaque fleur faisant partie de l'environnement, en plus de l'appel existant à `World::drawOn`.
 **************************************************************
 ### Q3.11
-Comme la méthode doit avoir accès au tableau des valeurs d'humidités, il faut la placer dans <tt>World</tt>, puis l'appeler à partir d'une nouvelle méthode de <tt>Env</tt>. (accessible grâce à <tt>getAppEnv()</tt>)
+Comme la méthode doit avoir accès au tableau des valeurs d'humidités, il faut la placer dans `World`, puis l'appeler à partir d'une nouvelle méthode de `Env` (accessible grâce à `getAppEnv()`).
 **************************************************************
 ### Q3.12
-Il faut faire en sorte que la méthode <tt>Env::update(sf::Time dt)</tt> appelle pour chaque fleur de la collection de fleurs sa méthode <tt>Flower::update(sf::Time dt)</tt>. Attention à itérer sur l'ensemble initial et pas sur les fleurs nouvellement ajoutées.
+Il faut faire en sorte que la méthode `Env::update(sf::Time dt)` appelle pour chaque fleur de la collection de fleurs sa méthode `Flower::update(sf::Time dt)`. Attention à itérer sur l'ensemble initial et pas sur les fleurs nouvellement ajoutées.
 **************************************************************
 ### Q3.13
-Après l'appel de <tt>Flower::update(sf::Time dt)</tt> dans <tt> Env::update(sf::Time dt)</tt>, si la quantité de pollen de la fleur en cours est nulle, il faut alors la supprimer (via delete) et assigner son pointeur dans le tableau à <tt>nullptr</tt>. A la fin de la boucle, l'insctruction donnée dans l'énoncé permet de supprimer tous les <tt>nullptr</tt> présents dans le vector de fleurs de <tt>Env</tt>.
+Après l'appel de `Flower::update(sf::Time dt)` dans ` Env::update(sf::Time dt)`, si la quantité de pollen de la fleur en cours est nulle, il faut alors la supprimer (via `delete`) et assigner son pointeur dans le tableau à `nullptr`. 
+
+A la fin de la boucle, l'instruction donnée dans l'énoncé permet de supprimer tous les `nullptr` présents dans le vector de fleurs de `Env`.
 **************************************************************
 ### Q3.14
-Les classes <tt>Drawable</tt> et <tt> Updatable</tt> possèdent respectivement des méhthodes virtuelles pures <tt> virtual void drawOn(sf::RenderTarget) const = 0</tt> et <tt> virtual void update(sf::Time) const = 0</tt>. <br>
-Il faut donc faire hériter de ces classes toutes nos classes qui ont une méthode <tt>drawOn</tt> ou <tt> update</tt>, i.e. :
-<ul> - <tt>Env</tt> : les deux  <br> - <tt>Flower</tt> : les deux <br> - <tt>World</tt> : juste <tt>Drawable</tt> </ul>
+Les classes `Drawable` et ` Updatable` possèdent respectivement des méthodes virtuelles pures ` virtual void drawOn(sf::RenderTarget) const = 0` et ` virtual void update(sf::Time) const = 0`. Il faut donc faire hériter de ces classes toutes nos classes qui ont une méthode `drawOn` ou ` update`, i.e. :
+
+- `Env` : les deux
+- `Flower` : les deux
+- `World` : juste `Drawable`
+
 L'avantage conceptionnel est que nous sommes forcés à redéfinir ces méthodes dans nos sous-classes.
 **************************************************************
 ### Q3.15
-Il faut penser à supprimer le constructeur de copie, et l'opérateur d'affectation dans <tt>World</tt> et <tt> Env</tt> avec le mot clé <tt>delete</tt>.
+Il faut penser à supprimer le constructeur de copie, et l'opérateur d'affectation dans `World` et ` Env` avec le mot clé `delete`.
 **************************************************************
 ### Q3.16
-Il faut maintenant appeller la méthode <tt>FlowerGenerator::update</tt> dans <tt>Env::reset</tt>.
+Il faut maintenant appeler la méthode `FlowerGenerator::update` dans `Env::reset`.
 **************************************************************
 
 
@@ -133,79 +144,88 @@ Il faut maintenant appeller la méthode <tt>FlowerGenerator::update</tt> dans <t
 
 **************************************************************
 ### Q4.1
-Notre classe <tt>Bee</tt> sera certainement une super-classe dont vont hériter tout les différents types d'abaeilles que nous allons implémenter. Pour utiliser le polymorphisme, nous aurons donc besoin d'utiliser un vecteur de pointeurs sur <tt>Bee</tt> dans les ruches où nous allons les stocker.
+Notre classe `Bee` sera certainement une super-classe dont vont hériter tous les différents types d'abeilles que nous allons implémenter. Pour utiliser le polymorphisme, nous aurons donc besoin d'utiliser un vecteur de pointeurs sur `Bee` dans les ruches où nous allons les stocker.
 **************************************************************
 ### Q4.2
-<tt>Hive</tt> héritera de :
-<ul> - <tt> Collider</tt>, pour avoir directement les tests de collision <br> - <tt>Drawable</tt> car elle contient une méthode <tt>drawOn</tt> <br> - <tt>Updatable</tt> car elle contient une méthode <tt>update</tt> </ul> 
-Elle contiendra évidemment un vector de <tt>Bees</tt> et un double de pollen, pour modéliser les fonctions comme demandé dans l'énoncé.
+`Hive` héritera de :
+
+- ` Collider`, pour avoir directement les tests de collision 
+- `Drawable` car elle contient une méthode `drawOn` 
+- `Updatable` car elle contient une méthode `update`
+
+Elle contiendra évidemment un vector de `Bees` et un double de pollen, pour modéliser les fonctions comme demandé dans l'énoncé.
 **************************************************************
 ### Q4.3
-Nous supprimerons le constructeur de copie, et l'opérateur d'affectation dans <tt>Hive</tt> avec le mot clé <tt>delete</tt>, comme à la question 3.15.
+Nous supprimerons le constructeur de copie, et l'opérateur d'affectation dans `Hive` avec le mot clé `delete`, comme à la question 3.15.
 **************************************************************
 ### Q4.4
-Dans le destructeur de <tt>Hive</tt>, il ne faut pas oublier de <tt>delete</tt> tous les éléments pointés par le vector <tt>bees</tt> de <tt>Hive</tt>, ainsi que de le vider.
+Dans le destructeur de `Hive`, il ne faut pas oublier de `delete` tous les éléments pointés par le vector `bees` de `Hive`, ainsi que de le vider.
 **************************************************************
 ### Q4.5
-Non, elles doivent disparaître dans le destructeur de <tt>Env</tt>.
+Non, elles doivent disparaître dans le destructeur de `Env`.
 **************************************************************
 ### Q4.6
-Il faut modifier <tt>World::isGrowable</tt> pour qu'elle détecte la présence de ruches, en utilisant <tt>Env::getCollidingHive</tt> via <tt>getAppEnv</tt>.
+Il faut modifier `World::isGrowable` pour qu'elle détecte la présence de ruches, en utilisant `Env::getCollidingHive` via `getAppEnv`.
 **************************************************************
 ### Q4.7
-Il faut ajouter une itération sur les pointeurs sur <tt>Hive</tt> pour détruire leur contenu comme fait pour les fleurs précedemment.
+Il faut ajouter une itération sur les pointeurs sur `Hive` pour détruire leur contenu comme fait pour les fleurs précédemment.
 **************************************************************
 ### Q4.8
-<tt>Bee</tt> héritera de :
-<ul> - <tt> Collider</tt>, pour avoir directement les tests de collision <br> - <tt>Drawable</tt> car elle contient une méthode <tt>drawOn</tt> <br> - <tt>Updatable</tt> car elle contient une méthode <tt>update</tt> </ul> 
-Elle contiendra donc une référence sur une <tt>Hive</tt>, un vecteur vitesse et un <tt>double</tt> d'énergie. On déclare également les méthodes <tt>Bee::move(sf::Time st)</tt> (déplacement sur un temps donné) et <tt>Bee::isDead()</tt> (teste si l'énergie est nulle ou négative).
+`Bee` héritera de :
+
+- ` Collider`, pour avoir directement les tests de collision 
+- `Drawable` car elle contient une méthode `drawOn` 
+- `Updatable` car elle contient une méthode `update`
+
+Elle contiendra donc une référence sur une `Hive`, un vecteur vitesse et un `double` d'énergie. On déclare également les méthodes `Bee::move(sf::Time st)` (déplacement sur un temps donné) et `Bee::isDead()` (teste si l'énergie est nulle ou négative).
 **************************************************************
 ### Q4.9
-Il faut penser à la déclarer comme virtuelle, à l'aide du mot-clé <tt>virtual</tt>  en début de ligne dans le hpp.
+Il faut penser à la déclarer comme virtuelle, à l'aide du mot-clé `virtual` en début de ligne dans le `.hpp`.
 **************************************************************
 ### Q4.10
-Si on utilise la méthode polymorphique <tt>Bee::getConfig()</tt>, on obtient un tableau contenant toutes les caractéristiques concernant le type d'abeille avec lequel on travaille actuellement. On peut retrouver 
+Si on utilise la méthode polymorphique `Bee::getConfig()`, on obtient un tableau contenant toutes les caractéristiques concernant le type d'abeille avec lequel on travaille actuellement. On peut retrouver 
 **************************************************************
 ### Q4.11
-Il faut utiliser cette tournure, plutôt que les raccourcis d'écriture, car ces derniers ne pourront pas être redéfinis dans les sous-classes de manière polymorphique. Avec la méthode <tt>Bee::getConfig()</tt>, on peut choisir de quel type d'abeille on veut retrouver la configuration.
+Il faut utiliser cette tournure, plutôt que les raccourcis d'écriture, car ces derniers ne pourront pas être redéfinis dans les sous-classes de manière polymorphique. Avec la méthode `Bee::getConfig()`, on peut choisir de quel type d'abeille on veut retrouver la configuration.
 **************************************************************
 ### Q4.12
-Adaptons déjà les méthodes <tt>Hive::drawOn(sf::RenderTarget& target)</tt> et <tt>Hive::update(sf::Time dt)</tt>, respectivement pour qu'elles affichent toutes les abeilles du vector du pointeur de <tt>Bees</tt>, et qu'elles les actualisent. Rajoutons également l'actualisation des ruches dans <tt>Env::update(sf::Time dt)</tt>, qui appellera l'actualisation des abeilles.
-Le dessin des ruches (et donc de leurs abeilles) était déjà implémenté dans <tt>Env</tt>.
+Adaptons déjà les méthodes `Hive::drawOn(sf::RenderTarget& target)` et `Hive::update(sf::Time dt)`, respectivement pour qu'elles affichent toutes les abeilles du vector du pointeur de `Bees`, et qu'elles les actualisent. Rajoutons également l'actualisation des ruches dans `Env::update(sf::Time dt)`, qui appellera l'actualisation des abeilles.
+Le dessin des ruches (et donc de leurs abeilles) était déjà implémenté dans `Env`.
 **************************************************************
 ### Q4.13
-Le test de disparition des abeilles se fera dans <tt>Hive::update(sf::Time dt)</tt>, à l'aide de <tt>Bee::isDead()</tt>. Si elle n'a plus d'énergie, nous la supprimerons du vector de pointeur sur <tt>Bee</tt>. Ce n'est donc pas dans <tt>Env</tt> que ce traitement aura lieu, car il ne contient pas le vector. 
+Le test de disparition des abeilles se fera dans `Hive::update(sf::Time dt)`, à l'aide de `Bee::isDead()`. Si elle n'a plus d'énergie, nous la supprimerons du vector de pointeur sur `Bee`. Ce n'est donc pas dans `Env` que ce traitement aura lieu, car il ne contient pas le vector. 
 **************************************************************
 ### Q4.14
-Car la méthode <tt>Hive::addBee()</tt> est <tt>protected</tt> et non publique, et on ne pourrait pas l'appeler depuis l'extérieur de la classe. C'est pourquoi on créé une sous-classe qui se chargera de l'appeler.
-Ce mécanisme permet aussi de vérifier que seules les ruches peuvent créer des abeilles, et non pas l'envrionnement par exemple (car méthode non publique).
+Car la méthode `Hive::addBee()` est `protected` et non publique, et on ne pourrait pas l'appeler depuis l'extérieur de la classe. C'est pourquoi on utilise une sous-classe qui se chargera de l'appeler.
+Ce mécanisme permet aussi de vérifier que seules les ruches peuvent créer des abeilles, et non pas l'environnement par exemple (car méthode non publique).
 
 ## Partie 5
 
 **************************************************************
 ### Q5.1
-- Il faut les redéfinir dans les sous-classes <tt>ScoutBee</tt> et <tt>WorkerBee</tt>, avec le mot clé <tt>override</tt>, de sorte à ce qu'elles renvoient un tableau contenant les configurations des éclaireuses et des butineuses respectivement.
-- Pour empêcher l'instanciation d'une abeille générique, la méthode <tt>Bee::getConfig()</tt> doit être déclarée virutelle pure, ce qui oblige la redéfinition dans les sous-classes.
-- Pour drawOn, les méthodes n'ont pas besoin d'être redéfinies, car l'appel à <tt>getConfig()</tt> existe déjà et sera adapté en fonction de la sous-classe qui les appelle.
+- Il faut les redéfinir dans les sous-classes `ScoutBee` et `WorkerBee`, avec le mot clé `override`, de sorte qu'elles renvoient un tableau contenant les configurations des éclaireuses et des butineuses respectivement.
+- Pour empêcher l'instanciation d'une abeille générique, la méthode `Bee::getConfig()` doit être déclarée virtuelle pure, ce qui oblige la redéfinition dans les sous-classes.
+- Pour drawOn, les méthodes n'ont pas besoin d'être redéfinies, car l'appel à `getConfig()` existe déjà et sera adapté en fonction de la sous-classe qui les appelle.
 
 **************************************************************
 ### Q5.2
-Car lors de la construction de la sous-classe, la méthode <tt>getConfig()</tt> n'est pas encore redéfinie, et c'est celle de la super-classe Bee qui sera appelée. Or, ce n'est pas le résultat souhaité à travers le polymorphisme. Il est donc plus simple d'utiliser un appel unique à <tt>getAppConfig()</tt> pour le constructeur.
+Car lors de la construction de la sous-classe, la méthode `getConfig()` n'est pas encore redéfinie, et c'est celle de la super-classe Bee qui sera appelée. Or, ce n'est pas le résultat souhaité à travers le polymorphisme. Il est donc plus simple d'utiliser un appel unique à `getAppConfig()` pour le constructeur.
 
 **************************************************************
 ### Q5.3
-Les constructeurs de <tt>ScoutBee</tt> et <tt>WorkerBee</tt> doivent donc être modifiés pour fournir un vector contenant l'état <tt>IN_HIVE</tt> (pour l'instant), car le constructeur de <tt>Bee</tt> a été adapté après l'héritage de <tt>CFSM</tt>.
+Les constructeurs de `ScoutBee` et `WorkerBee` doivent donc être modifiés pour fournir un vector contenant l'état `IN_HIVE` (pour l'instant), car le constructeur de `Bee` a été adapté après l'héritage de `CFSM`.
 
 **************************************************************
 ### Q5.4
-Comme une abeille peut oublier une position, un pointeur sur un Vec2d paraît judicieux. En effet, lorsque l'attribut mémoire sera à <tt>nullptr</tt>, c'est que l'abeille n'aura rien en mémoire (≠ vecteur nul, qui la ramènerait à l'origine). Comme la mémoire est commune à toutes les abeilles, on peut l'implémenter dans la super-classe <tt>Bee</tt>, et son constructeur devra l'initialiser à <tt>nullptr</tt>.
+Comme une abeille peut oublier une position, un pointeur sur un Vec2d paraît judicieux. En effet, lorsque l'attribut mémoire sera à `nullptr`, c'est que l'abeille n'aura rien en mémoire (≠ vecteur nul, qui la ramènerait à l'origine). Comme la mémoire est commune à toutes les abeilles, on peut l'implémenter dans la super-classe `Bee`, et son constructeur devra l'initialiser à `nullptr`.
 
 **************************************************************
 ### Q5.5
-Les méthodes qui doivent être redéfinies dans les sous-classes pour qu'elles soient instanciables sont celles qui sont virtuelles pures dans les super-classes, i.e. : <br>
-- <tt>virtual void onState(State, sf::Time) = 0;</tt> , héritée de CFSM <br>
-- <tt>virtual void onEnterState(State) = 0;</tt> , héritée de CFSM <br>
-- <tt>virtual j::Value const& getConfig() const = 0;</tt> , héritée de Bee
+Les méthodes qui doivent être redéfinies dans les sous-classes pour qu'elles soient instanciables sont celles qui sont virtuelles pures dans les super-classes, i.e. :
+
+- `virtual void onState(State, sf::Time) = 0;` , héritée de CFSM
+- `virtual void onEnterState(State) = 0;` , héritée de CFSM
+- `virtual j::Value const& getConfig() const = 0;` , héritée de Bee
 
 **************************************************************
 ### Q5.6
@@ -213,11 +233,11 @@ On crée un type énuméré pour les modes de déplacement possible, et on ajout
 
 **************************************************************
 ### Q5.7
-Car on fait appel au polymorphisme via la méthode virtuelle <tt>getConfig()</tt>, qui redéfinit les valeurs dans les sous-classes.
+Car on fait appel au polymorphisme via la méthode virtuelle `getConfig()`, qui redéfinit les valeurs dans les sous-classes.
 
 **************************************************************
 ### Q5.8
-Il faut créer les 3 variables statiques de classe pour <tt>ScoutBee</tt> représentant les différents états. Ceci sera fait par des déclarations au début de <tt>ScoutBee.cpp</tt>, puis en transmettant au constructeur de <tt>ScoutBee</tt> un vector contenant ces états, qui sera transféré au constructeur de <tt>CFSM</tt>.
+Il faut créer les 3 variables statiques de classe pour `ScoutBee` représentant les différents états. Ceci sera fait par des déclarations au début de `ScoutBee.cpp`, puis en transmettant au constructeur de `ScoutBee` un vector contenant ces états, qui sera transféré au constructeur de `CFSM`.
 
 **************************************************************
 ### Q5.9
@@ -226,20 +246,22 @@ Il faut créer les 3 variables statiques de classe pour <tt>ScoutBee</tt> repré
 
 **************************************************************
 ### Q5.10
-Les traitements peuvent se faire dans la fonction <tt>onState()</tt> de ScoutBee, en appellant la méthode codée <tt>Env::getCollidingFlowerPosition(Collider)</tt>.
-Au travers du mot réservé const, on ne pourra pas modifier la variable à travers ce pointeur, ce qui semble logique car la mémoire n'est pas sensé changer jusqu'à sa destruction.
+Les traitements peuvent se faire dans la fonction `onState()` de ScoutBee, en appelant la méthode codée `Env::getCollidingFlowerPosition(Collider)`.
+Au travers du mot réservé const, on ne pourra pas modifier la variable à travers ce pointeur, ce qui semble logique car la mémoire n'est pas sensée changer jusqu'à sa destruction.
 
 **************************************************************
 ### Q5.11
 1. De toFlower à collectPollen, elle n'a plus besoin de cibler la fleur si elle y est
-2. De inHive à toFlower, pour le bon fonctionnement du déplacment ciblé
+2. De inHive à toFlower, pour le bon fonctionnement du déplacement ciblé
 3. De collectPollen à backToHive, car le début du déplacement ciblé demande une cible à viser.
-4. Le déplacement aléatoire ne sera pas utilisé pour les <tt>WorkerBee</tt>, mais le déplacement ciblé interviendra au début de toFlower et de backToHive
+4. Le déplacement aléatoire ne sera pas utilisé pour les `WorkerBee`, mais le déplacement ciblé interviendra au début de toFlower et de backToHive
 
 **************************************************************
 ### Q. ICC
-Si la vérification de la possibilité d'interaction se fait dans l'appel de <tt>interact()</tt>, on sait déjà que l'on itère sur des combinaisons d'abeilles valables, i.e. on a pas de risque de tomber sur une des deux abeilles à l'extérieur de la ruche et on économise des appels de fonctions qui pourraient ralentir l'exécution.
-Cela permet de réduire la complexité en moyenne, car il est quand même possible que toutes les abeilles soient dans la ruche (pire cas).s
+Si la vérification de la possibilité d'interaction se fait dans l'appel de `interact()`, on sait déjà que l'on itère sur des combinaisons d'abeilles valables, i.e. on n'a pas de risque de tomber sur une des deux abeilles à l'extérieur de la ruche et on économise des appels de fonctions qui pourraient ralentir l'exécution.
+
+
+Cela permet de réduire la complexité en moyenne, car il est quand même possible que toutes les abeilles soient dans la ruche (pire cas).
 
 **************************************************************
 ### Q5.12
@@ -247,17 +269,18 @@ Les tests de type sont mauvais, car ils sont difficiles à implémenter de mani�
 
 **************************************************************
 ### Q5.13
-Dans la méthode <tt>Hive::update(sf::Time dt)</tt>, pour pouvoir d'une partie ajouter des abeilles, mais aussi pour avoir accès à la taille du vector de bees.
+Dans la méthode `Hive::update(sf::Time dt)`, pour pouvoir d'une partie ajouter des abeilles, mais aussi pour avoir accès à la taille du vector de bees.
 
 
 ## Partie 6
 
 **************************************************************
 ### Q6.1
-Comme nos éléments sont associés à un identifiant entier, on utilise des maps avec comme type de clé <tt>int</tt>, i.e.
+Comme nos éléments sont associés à un identifiant entier, on utilise des `maps` avec comme type de clé `int`, i.e.
 
-- ```std::map<int, unique_ptr<Graph>> ```, appelé Graphs via un typedef <br>
-- ```std::map<int, std::string> ```, appelé Strings via un typedef <br>
+- ```std::map<int, unique_ptr<Graph>> ```, appelé Graphs via un `typedef`
+- ```std::map<int, std::string> ```, appelé Strings via un `typedef`
+
 L'avantage de cette solution est que chaque élément pourra être retrouvé directement, et que l'ordre des ids n'a pas à être linéaire.
 
 **************************************************************
@@ -266,7 +289,11 @@ Il faudra ajouter les méthodes :
 
 - dans Env :
 	- ```std::unordered_map<std::string, double> fetchData(std::string) const;```
-	- ```size_t getHivesScoutNumber() const;``` et ```size_t getHivesWorkerNumber() const;```, qui parcourrent les ruches et somment leur nombres d'abeilles
+	- ```size_t getHivesScoutNumber() const;``` et ```size_t getHivesWorkerNumber() const;```, qui parcourent les ruches et somment leurs nombres d'abeilles
 - dans Hive :
 	- ```size_t getScoutNumber() const;``` et ```size_t getWorkerNumber() const;```, getters pour l'attribut correspondant au nombre d'abeilles
-	- ```void changeScoutNumber(bool);```et ```void changeWorkerNumber(bool);```, qui seront appelées dans le constructeur et le destructeur des abeilles pour soit augmenter, soit diminuer l'attribut correspondant
+	- ```void changeScoutNumber(bool);```et ```void changeWorkerNumber(bool);```, qui seront appelées dans le constructeur et le destructeur des abeilles pour soit augmenter, soit diminuer l'attribut correspondant.
+
+## Autres fichiers
+- [README](README.md)
+- [Journal](JOURNAL-86.md)
