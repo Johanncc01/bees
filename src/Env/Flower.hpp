@@ -20,8 +20,9 @@ public:
 
     /*!
      * @brief Destructeur d'une fleur (par défaut)
+     *        Déclaré virtual en prévision de futures sous-classes
      */
-     ~Flower() = default;
+    virtual ~Flower() = default;
 
 
 // Getter

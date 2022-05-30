@@ -47,7 +47,7 @@ Pour les conditions initiales du .json, la simulation se déroule bien jusqu'à 
 
 On remarque aussi que pour une carte plus grande (`app"0".json`), la survie est plus difficile car le nombre de fleurs maximales reste constant alors que l'espace à parcourir est plus vaste. L'énergie des abeilles baisse donc plus rapidement.
 
-Il faut aussi remarquer qu'avec la conception de l'énoncé, il peut y avoir des problèmes dans les cas limites de `Collider::isInside()`. En effet, si les valeurs à comparer sont les mêmes, alors la méthode retournera `false`. Ceci peut poser des problèmes d'exécution avec `app.json`, où le `Collider` des butineuses ont exactement la même taille que celui d'ruche et ne peuvent pas y rentrer.
+Il faut aussi remarquer qu'avec la conception de l'énoncé, il peut y avoir des problèmes dans les cas limites de `Collider::isInside()`. En effet, si les valeurs à comparer sont les mêmes, alors la méthode retournera `false`. Ceci peut poser des problèmes d'exécution avec `app.json`, où le `Collider` des butineuses ont exactement la même taille que celui de la ruche et ne peuvent pas y rentrer.
 
 ## Contrôles :
 - L : reset de la simulation et chargement du monde à partir du fichier
@@ -64,7 +64,7 @@ Il faut aussi remarquer qu'avec la conception de l'énoncé, il peut y avoir des
 - flèches directionnelles : déplacer la fenêtre de simulation
 - ESC : quitte la simulation
 
-Les commandes pour l'utilisation d'une cible particulière sont données dans un panneau d'aide à gauche de la fenêtre de simulation.
+Les commandes pour l'utilisation d'une cible particulière sont données dans un panneau d'aide à droite de la fenêtre de simulation.
 
 ## Bonus :
 - Sauvegarde du monde généré dans un fichier .map
@@ -82,11 +82,11 @@ Les commandes pour l'utilisation d'une cible particulière sont données dans un
 ## Extensions :
 1. Les ruches disparaissent si elles ne contiennent plus d'abeilles ni de pollen 
 	- Getter `Hive::isDead()`
-2. Affichages supplémentaires de debug pour les fleurs et les abeilles (appels commentés)
+2. Affichages supplémentaires de debug pour les fleurs et les abeilles (appels commentés aux lignes `Flower.cpp:34` et `Bee.cpp:89`)
 	- `Flower::advancedDebugText(sf::RenderTarget&) const` pour le niveau de pollen d'une fleur
 	- `Bee::advancedDebugText(sf::RenderTarget&) const` pour l'état de la mémoire et de la cible (pointeurs), ainsi que l'énergie pour rentrer (extension #4)
 3. Probabilité de reproduction dynamique selon la population, pour optimiser la survie de la ruche
-	-  Dans `Hive::update(sf::Time dt)`, calcul de la probabilité adapté à chaque update.
+	-  Dans `Hive::update(sf::Time dt)`, calcul de la probabilité d'appartition d'une éclaireuse ou butineuse adapté à la populattion actuelle de la ruche à chaque update.
 4. Calcul de l'énergie nécessaire pour rentrer à la ruche en fonction de la position de l'abeille
 	- `Bee::computeEnergy()` retourne cette valeur, qui est maintenant utilisée dans les conditions de passage à l'état suivant dans `ScoutBee::onState(State)` et `WorkerBee::onState(State)`.
 	- **ATTENTION** : présent uniquement dans la partie 7. Pour qu'il soit pleinement fonctionnel, il faut modifier dans le .json le `worker_energy_to_leave_hive` pour le mettre à la même valeur que `scout_energy_to_leave_hive`, i.e. à 3.

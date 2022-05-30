@@ -17,8 +17,9 @@ public:
 
     /*!
      * @brief Destructeur d'une éclaireuse (par défaut)
+     *        Déclaré virtual en prévision de futures sous-classes
      */
-    ~ScoutBee();
+    virtual ~ScoutBee();
 
 // Getters
 

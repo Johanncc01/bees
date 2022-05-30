@@ -25,8 +25,9 @@ public:
 
     /*!
      * @brief Destructeur de la ruche, qui détruit les abeilles
+     *        Déclaré virtual en prévision de futures sous-classes
      */
-    ~Hive();
+    virtual ~Hive();
 
     // Interdit les copies et affectations pour éviter les erreurs
     Hive(Hive const&) = delete;

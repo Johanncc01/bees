@@ -89,24 +89,24 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 
       ## Graphical tests:
 	## WorldTest
-        #add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-        #target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
+        add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+        target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
 
         ## FlowerTest
-        #add_executable (flowerTest  ${TEST_DIR}/GraphicalTests/FlowerTest.cpp ${SOURCES_GFX})
-        #target_link_libraries(flowerTest sfml-graphics sfml-window sfml-system)
+        add_executable (flowerTest  ${TEST_DIR}/GraphicalTests/FlowerTest.cpp ${SOURCES_GFX})
+        target_link_libraries(flowerTest sfml-graphics sfml-window sfml-system)
 
 	## HiveTest
         #add_executable (hiveTest  ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})
         #target_link_libraries(hiveTest sfml-graphics sfml-window sfml-system)
 
         ## WorkerTest
-        add_executable (workerTest  ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
-        target_link_libraries(workerTest sfml-graphics sfml-window sfml-system)
+        ##add_executable (workerTest  ${TEST_DIR}/GraphicalTests/WorkerTest.cpp ${SOURCES_GFX})
+        ##target_link_libraries(workerTest sfml-graphics sfml-window sfml-system)
        
         ## ScoutTest
-        add_executable (scoutTest  ${TEST_DIR}/GraphicalTests/ScoutTest.cpp ${SOURCES_GFX})
-        target_link_libraries(scoutTest sfml-graphics sfml-window sfml-system)
+        ##add_executable (scoutTest  ${TEST_DIR}/GraphicalTests/ScoutTest.cpp ${SOURCES_GFX})
+        ##target_link_libraries(scoutTest sfml-graphics sfml-window sfml-system)
 
         ## CollaborationTest
         add_executable (collaborationTest  ${TEST_DIR}/GraphicalTests/CollaborationTest.cpp ${SOURCES_GFX})
@@ -142,12 +142,12 @@ find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
 
             ## Graphical tests:
               ## WorldTest
-              #add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
-              #target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
+              add_executable (worldTest  ${TEST_DIR}/GraphicalTests/WorldTest.cpp ${SOURCES_GFX})
+              target_link_libraries(worldTest sfml-graphics sfml-window sfml-system)
 
               ## FlowerTest
-              #add_executable (flowerTest  ${TEST_DIR}/GraphicalTests/FlowerTest.cpp ${SOURCES_GFX})
-              #target_link_libraries(flowerTest sfml-graphics sfml-window sfml-system)
+              add_executable (flowerTest  ${TEST_DIR}/GraphicalTests/FlowerTest.cpp ${SOURCES_GFX})
+              target_link_libraries(flowerTest sfml-graphics sfml-window sfml-system)
 
               ## HiveTest
               #add_executable (hiveTest  ${TEST_DIR}/GraphicalTests/HiveTest.cpp ${SOURCES_GFX})

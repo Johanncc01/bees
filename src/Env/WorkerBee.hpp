@@ -17,8 +17,9 @@ public:
 
     /*!
      * @brief Destructeur d'une butineuse (par défaut)
+     *        Déclaré virtual en prévision de futures sous-classes
      */
-    ~WorkerBee();
+    virtual ~WorkerBee();
 
 
 // Getters

@@ -86,7 +86,7 @@ void Bee::drawOn(sf::RenderTarget& target) const{
             target.draw(shape);
         }
         // Pour afficher le debug memory, target et computeEnergy() (voir README)
-         advancedDebugText(target);
+        // advancedDebugText(target);
     }
 }
 
